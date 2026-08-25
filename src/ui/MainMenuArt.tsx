@@ -6,6 +6,7 @@ import { useId } from 'react';
  *
  * The footballer is deliberately a generic back view: no name on the shirt, no club marks,
  * no face — it stands for "a player", not for the career the user happens to have running.
+ * Proportions follow a ~7.5-head athletic figure on a 320x760 canvas, centred on x=160.
  */
 
 interface PlayerSilhouetteProps {
@@ -19,98 +20,103 @@ export function PlayerSilhouette({ variant = 'full', className = '' }: PlayerSil
   const shirt = `${uid}-shirt`;
   const skin = `${uid}-skin`;
   const shorts = `${uid}-shorts`;
+  const sock = `${uid}-sock`;
   const glow = `${uid}-glow`;
 
   return (
     <svg
-      viewBox={variant === 'full' ? '0 0 240 560' : '60 14 120 202'}
+      viewBox={variant === 'full' ? '0 0 320 760' : '64 30 192 300'}
       className={className}
       role="presentation"
       aria-hidden="true"
       preserveAspectRatio="xMidYMax meet"
     >
       <defs>
-        <linearGradient id={shirt} x1="0.2" y1="0" x2="0.8" y2="1">
-          <stop offset="0%" stopColor="#22303f" />
-          <stop offset="50%" stopColor="#121b25" />
-          <stop offset="100%" stopColor="#070b10" />
+        <linearGradient id={shirt} x1="0.15" y1="0" x2="0.85" y2="1">
+          <stop offset="0%" stopColor="#2a3a4c" />
+          <stop offset="45%" stopColor="#16202b" />
+          <stop offset="100%" stopColor="#080d13" />
         </linearGradient>
         {/* the figure is backlit by the floodlights, so skin stays nearly as dark as the kit
             and the shape reads by its rim light rather than by colour */}
-        <linearGradient id={skin} x1="0.2" y1="0" x2="0.8" y2="1">
-          <stop offset="0%" stopColor="#221b18" />
-          <stop offset="100%" stopColor="#0d0908" />
+        <linearGradient id={skin} x1="0.15" y1="0" x2="0.85" y2="1">
+          <stop offset="0%" stopColor="#1d1917" />
+          <stop offset="100%" stopColor="#0b0908" />
         </linearGradient>
-        <linearGradient id={shorts} x1="0.2" y1="0" x2="0.8" y2="1">
-          <stop offset="0%" stopColor="#182330" />
-          <stop offset="100%" stopColor="#060a0f" />
+        <linearGradient id={shorts} x1="0.15" y1="0" x2="0.85" y2="1">
+          <stop offset="0%" stopColor="#1d2b3a" />
+          <stop offset="100%" stopColor="#070c11" />
+        </linearGradient>
+        <linearGradient id={sock} x1="0.15" y1="0" x2="0.85" y2="1">
+          <stop offset="0%" stopColor="#16212c" />
+          <stop offset="100%" stopColor="#070b0f" />
         </linearGradient>
         <radialGradient id={glow} cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#17c964" stopOpacity="0.3" />
+          <stop offset="0%" stopColor="#17c964" stopOpacity="0.34" />
           <stop offset="100%" stopColor="#17c964" stopOpacity="0" />
         </radialGradient>
       </defs>
 
-      {/* floodlit haze behind the figure */}
-      <ellipse cx="120" cy="310" rx="140" ry="235" fill={`url(#${glow})`} />
-      <ellipse cx="120" cy="519" rx="86" ry="13" fill="#02060a" opacity="0.6" />
+      {/* floodlit haze and the shadow the figure casts on the grass */}
+      <ellipse cx="160" cy="400" rx="200" ry="340" fill={`url(#${glow})`} />
+      <ellipse cx="160" cy="728" rx="126" ry="18" fill="#02060a" opacity="0.6" />
 
-      {/* head and neck */}
-      <path d="M120 22c15 0 25 12 25 30 0 17-11 30-25 30s-25-13-25-30c0-18 10-30 25-30z" fill={`url(#${skin})`} />
-      <path d="M96 56c-1-22 10-34 24-34s25 12 24 34c-3-14-11-21-24-21s-21 7-24 21z" fill="#080c11" />
-      <path d="M109 74h22v18h-22z" fill="#120d0c" />
+      {/* head, hair and neck */}
+      <path d="M160 40c-20 0-36 18-36 46 0 20 6 36 16 44 6 5 13 8 20 8s14-3 20-8c10-8 16-24 16-44 0-28-16-46-36-46z" fill={`url(#${skin})`} />
+      <path d="M160 40c20 0 36 18 36 46 0 10-2 19-5 27-2-21-7-34-16-40-5-4-10-6-15-6s-10 2-15 6c-9 6-14 19-16 40-3-8-5-17-5-27 0-28 16-46 36-46z" fill="#070b10" />
+      <path d="M138 118h44v34c0 8-10 12-22 12s-22-4-22-12z" fill="#0e0b0a" />
 
-      {/* shirt with short sleeves — blank back, no name plate */}
+      {/* legs, drawn before the shorts so the hem overlaps the thighs */}
+      <path d="M108 430c-4 50-2 100 6 148 6 42 4 82 8 128h28c2-46 2-86 4-128 2-48 2-98 2-148z" fill={`url(#${skin})`} />
+      <path d="M212 430c4 50 2 100-6 148-6 42-4 82-8 128h-28c-2-46-2-86-4-128-2-48-2-98-2-148z" fill={`url(#${skin})`} />
+
+      {/* socks with a colour band at the turnover, then boots */}
+      <path d="M114 578c6 42 4 82 8 128h28c2-46 2-86 4-128z" fill={`url(#${sock})`} />
+      <path d="M206 578c-6 42-4 82-8 128h-28c-2-46-2-86-4-128z" fill={`url(#${sock})`} />
+      <path d="M114 580h41v22h-39z" fill="#17c964" opacity="0.5" />
+      <path d="M206 580h-41v22h39z" fill="#17c964" opacity="0.5" />
+      <path d="M120 700h32l3 18c1 10-8 16-22 16h-28c-10 0-14-8-7-14z" fill="#05080c" />
+      <path d="M200 700h-32l-3 18c-1 10 8 16 22 16h28c10 0 14-8 7-14z" fill="#05080c" />
+
+      {/* shorts */}
+      <path d="M106 430c-4 0-7 5-7 12l-2 66c0 12 8 20 21 20h24c8 0 12-4 13-12l5-46 5 46c1 8 5 12 13 12h24c13 0 21-8 21-20l-2-66c0-7-3-12-7-12z" fill={`url(#${shorts})`} />
+      <path d="M102 500h28M190 500h28" stroke="#17c964" strokeOpacity="0.25" strokeWidth="5" strokeLinecap="round" />
+
+      {/* shirt: broad shoulders, short sleeves, blank back above the number */}
       <path
-        d="M120 86c-14 0-27 4-38 12-8 6-13 19-16 38-2 11 0 20 5 24l22-5c-2 30-4 60-4 87 0 7 4 11 11 11h40c7 0 11-4 11-11 0-27-2-57-4-87l22 5c5-4 7-13 5-24-3-19-8-32-16-38-11-8-24-12-38-12z"
+        d="M160 150c-10 0-18 1-24 3-12 5-24 13-32 23-12 10-22 18-26 32-4 24-4 52-2 74l34 8c-3 36-5 76-5 116 0 22 6 34 19 36h72c13-2 19-14 19-36 0-40-2-80-5-116l34-8c2-22 2-50-2-74-4-14-14-22-26-32-8-10-20-18-32-23-6-2-14-3-24-3z"
         fill={`url(#${shirt})`}
       />
+      <path d="M108 300c-2 38-4 76-4 114M212 300c2 38 4 76 4 114" fill="none" stroke="#050a0f" strokeOpacity="0.5" strokeWidth="3" />
       <text
-        x="120"
-        y="205"
+        x="160"
+        y="392"
         textAnchor="middle"
         className="font-display"
-        fontSize="46"
+        fontSize="112"
         fontWeight="600"
-        letterSpacing="2"
+        letterSpacing="5"
         fill="#e6f0fa"
-        fillOpacity="0.16"
+        fillOpacity="0.2"
       >
         10
       </text>
 
       {/* arms */}
-      <path d="M72 154L93 160c-3 25-6 45-8 58-2 20-3 34-4 46-1 9-4 14-9 14s-8-5-7-14c1-14 2-29 3-46 1-18 2-42 4-64z" fill={`url(#${skin})`} />
-      <path d="M168 154l-21 6c3 25 6 45 8 58 2 20 3 34 4 46 1 9 4 14 9 14s8-5 7-14c-1-14-2-29-3-46-1-18-2-42-4-64z" fill={`url(#${skin})`} />
+      <path d="M76 288l32 8c-2 34-4 94-6 144-1 30-2 55-2 76 0 12-6 20-14 20s-14-8-13-18c2-38 1-118 1-158 0-30 1-54 2-72z" fill={`url(#${skin})`} />
+      <path d="M244 288l-32 8c2 34 4 94 6 144 1 30 2 55 2 76 0 12 6 20 14 20s14-8 13-18c-2-38-1-118-1-158 0-30-1-54-2-72z" fill={`url(#${skin})`} />
 
-      {/* legs, socks, boots — drawn before the shorts so the hem overlaps the thighs */}
-      <path d="M92 300h26l-3 100c-1 14-2 28-3 48h-10c-1-20-2-34-3-48z" fill={`url(#${skin})`} />
-      <path d="M148 300h-26l3 100c1 14 2 28 3 48h10c1-20 2-34 3-48z" fill={`url(#${skin})`} />
-      <path d="M101 444h15l-2 54h-11z" fill="#0c141c" />
-      <path d="M139 444h-15l2 54h11z" fill="#0c141c" />
-      <rect x="100" y="446" width="17" height="6" rx="2" fill="#17c964" opacity="0.5" />
-      <rect x="123" y="446" width="17" height="6" rx="2" fill="#17c964" opacity="0.5" />
-      <path d="M103 494h12l1 12c0 6-5 9-12 9h-9c-5 0-7-5-3-9z" fill="#060a0e" />
-      <path d="M137 494h-12l-1 12c0 6 5 9 12 9h9c5 0 7-5 3-9z" fill="#060a0e" />
-
-      {/* shorts */}
-      <path
-        d="M89 254h62c6 0 11 5 11 12l-3 62c0 8-5 12-12 12h-16c-4 0-6-2-7-6l-4-30-4 30c-1 4-3 6-7 6H93c-7 0-12-4-12-12l-3-62c0-7 5-12 11-12z"
-        fill={`url(#${shorts})`}
-      />
-
-      {/* ball on the grass */}
-      <ellipse cx="182" cy="514" rx="18" ry="5" fill="#02060a" opacity="0.55" />
-      <circle cx="182" cy="500" r="17" fill="#e6edf4" />
-      <path d="M182 490l7 5-3 8h-8l-3-8z" fill="#0b1218" />
-      <path d="M168 494l3 6-4 6-3-6zM196 494l-3 6 4 6 3-6z" fill="#0b1218" opacity="0.7" />
+      {/* ball on the grass, at the right boot */}
+      <ellipse cx="252" cy="724" rx="28" ry="7" fill="#02060a" opacity="0.55" />
+      <circle cx="252" cy="700" r="27" fill="#e8eef5" />
+      <path d="M252 683l11 8-4 13h-14l-4-13z" fill="#0b1218" />
+      <path d="M229 691l6 9-7 10-5-10zM275 691l-6 9 7 10 5-10z" fill="#0b1218" opacity="0.7" />
 
       {/* stadium rim light along the contour */}
-      <path d="M99 36c4-9 11-14 21-14s17 5 21 14" fill="none" stroke="#dceeff" strokeOpacity="0.4" strokeWidth="3" strokeLinecap="round" />
-      <path d="M82 98c11-8 24-12 38-12s27 4 38 12" fill="none" stroke="#dceeff" strokeOpacity="0.38" strokeWidth="3.5" strokeLinecap="round" />
-      <path d="M68 148c2-18 6-32 12-40M172 148c-2-18-6-32-12-40" fill="none" stroke="#dceeff" strokeOpacity="0.26" strokeWidth="3" strokeLinecap="round" />
-      <path d="M71 168c-2 32-4 66-6 96M169 168c2 32 4 66 6 96" fill="none" stroke="#dceeff" strokeOpacity="0.15" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M93 344c-1 32-2 66-3 98M147 344c1 32 2 66 3 98" fill="none" stroke="#dceeff" strokeOpacity="0.11" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M126 70c8-20 20-30 34-30s26 10 34 30" fill="none" stroke="#dceeff" strokeOpacity="0.45" strokeWidth="4.5" strokeLinecap="round" />
+      <path d="M76 208c4-14 14-22 26-32 8-10 20-18 32-23 6-2 14-3 26-3s20 1 26 3c12 5 24 13 32 23 12 10 22 18 26 32" fill="none" stroke="#dceeff" strokeOpacity="0.45" strokeWidth="5.5" strokeLinecap="round" />
+      <path d="M74 300c-2 44-4 100-5 144M246 300c2 44 4 100 5 144" fill="none" stroke="#dceeff" strokeOpacity="0.16" strokeWidth="4" strokeLinecap="round" />
+      <path d="M108 452c-3 44-1 84 6 122M212 452c3 44 1 84-6 122" fill="none" stroke="#dceeff" strokeOpacity="0.13" strokeWidth="4" strokeLinecap="round" />
     </svg>
   );
 }
@@ -125,11 +131,11 @@ export function LockerIllustration({ className = '' }: { className?: string }) {
     <svg viewBox="0 0 120 120" className={className} role="presentation" aria-hidden="true">
       <defs>
         <linearGradient id={panel} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1d2b39" />
+          <stop offset="0%" stopColor="#1f2e3d" />
           <stop offset="100%" stopColor="#0b1119" />
         </linearGradient>
         <linearGradient id={kit} x1="0.2" y1="0" x2="0.8" y2="1">
-          <stop offset="0%" stopColor="#3b5470" />
+          <stop offset="0%" stopColor="#3f5972" />
           <stop offset="100%" stopColor="#1b2937" />
         </linearGradient>
       </defs>
@@ -138,31 +144,31 @@ export function LockerIllustration({ className = '' }: { className?: string }) {
       <path d="M30 8v104M90 8v104" stroke="#0a1017" strokeWidth="3" opacity="0.7" />
 
       {/* rail and hanger */}
-      <path d="M14 24h92" stroke="#48596a" strokeWidth="3" strokeLinecap="round" />
-      <path d="M60 24v6" stroke="#48596a" strokeWidth="2" />
-      <path d="M43 40l17-11 17 11" fill="none" stroke="#5a6d80" strokeWidth="3" strokeLinejoin="round" />
+      <path d="M14 24h92" stroke="#4d5f71" strokeWidth="4" strokeLinecap="round" />
+      <path d="M60 24v6" stroke="#4d5f71" strokeWidth="3" />
+      <path d="M43 40l17-11 17 11" fill="none" stroke="#5f7488" strokeWidth="3.5" strokeLinejoin="round" />
 
-      {/* hanging kit — blank back, green collar accent */}
+      {/* hanging kit — blank back, colour collar accent */}
       <path
         d="M60 38c-11 0-21 4-27 10-4 4-6 10-7 17-1 4 1 7 4 7l9-2-2 34c0 4 2 6 6 6h34c4 0 6-2 6-6l-2-34 9 2c3 0 5-3 4-7-1-7-3-13-7-17-6-6-16-10-27-10z"
         fill={`url(#${kit})`}
       />
-      <path d="M39 45c6-5 13-7 21-7s15 2 21 7" fill="none" stroke="#17c964" strokeWidth="3" strokeLinecap="round" />
-      <rect x="52" y="62" width="16" height="5" rx="2" fill="#17c964" opacity="0.4" />
+      <path d="M39 45c6-5 13-7 21-7s15 2 21 7" fill="none" stroke="#17c964" strokeWidth="3.5" strokeLinecap="round" />
+      <rect x="51" y="62" width="18" height="6" rx="3" fill="#17c964" opacity="0.4" />
 
       {/* bench, boots and ball */}
-      <rect x="8" y="100" width="104" height="8" rx="4" fill="#2b3c4d" />
+      <rect x="8" y="100" width="104" height="8" rx="4" fill="#314356" />
       <path d="M18 100v-9h13l4 9zM38 100v-9h13l4 9z" fill="#101922" />
-      <circle cx="93" cy="91" r="9" fill="#e6edf4" />
-      <path d="M93 84l4 3-1 5h-6l-1-5z" fill="#0b1218" />
+      <circle cx="93" cy="90" r="10" fill="#e8eef5" />
+      <path d="M93 83l5 3-2 6h-6l-2-6z" fill="#0b1218" />
     </svg>
   );
 }
 
-/** Neutral national mark: three colour bands, no emblem. */
+/** Neutral national mark: three colour bands, no emblem. Sizing comes from the caller. */
 export function FlagMark({ bands, className = '' }: { bands: [string, string, string]; className?: string }) {
   return (
-    <span className={`inline-flex h-3.5 w-5 shrink-0 overflow-hidden rounded-[3px] ring-1 ring-white/20 ${className}`} aria-hidden="true">
+    <span className={`inline-flex shrink-0 overflow-hidden rounded ring-1 ring-white/20 ${className}`} aria-hidden="true">
       {bands.map((color, i) => (
         <span key={i} className="flex-1" style={{ background: color }} />
       ))}
