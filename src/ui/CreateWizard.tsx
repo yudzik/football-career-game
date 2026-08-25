@@ -4,6 +4,7 @@ import { POSITIONS } from '../data/positions';
 import { PROFILES } from '../data/profiles';
 import { DIFFICULTIES } from '../data/difficulties';
 import type { Country, Difficulty, Position, Profile } from '../types';
+import { GAME_LOGO, STADIUM_BG } from '../data/assets';
 
 const OPTION_BTN = (active: boolean) => `text-left p-3 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 ${active ? 'bg-slate-800 border-amber-400' : 'bg-slate-900 border-slate-700'}`;
 
@@ -37,7 +38,18 @@ export function CreateWizard({ step, setStep, name, setName, surname, setSurname
     !!difficulty;
 
   return (
-    <div className="flex-1 flex flex-col p-5 gap-4 min-h-0">
+    <div className="relative flex-1 flex flex-col min-h-0">
+      {/* Stadium backdrop for the game's front screen, dimmed so the wizard stays readable. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${STADIUM_BG})` }}
+      />
+      <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/88 to-slate-950/96" />
+
+      <div className="relative flex-1 flex flex-col p-5 gap-4 min-h-0">
+      <img src={GAME_LOGO} alt="Football Career Game" className="w-full max-w-[15rem] mx-auto shrink-0" />
+
       <div className="shrink-0">
         <p className="font-data text-amber-400 text-xs tracking-widest uppercase mb-1">Создание футболиста · Шаг {step} из 6</p>
         <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
@@ -134,6 +146,7 @@ export function CreateWizard({ step, setStep, name, setName, surname, setSurname
           <button disabled={!canNext} onClick={onGenerate}
             className="flex-1 py-3.5 rounded-lg bg-amber-400 text-slate-950 font-display font-semibold disabled:bg-slate-800 disabled:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-400">Создать игрока</button>
         )}
+      </div>
       </div>
     </div>
   );

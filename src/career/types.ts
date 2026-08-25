@@ -24,6 +24,7 @@ export interface DayResult {
 
 export interface PostMatchSummary {
   opponentName: string;
+  opponentCrest: string;
   scoreP: number;
   scoreO: number;
   minutesPlayed: number;

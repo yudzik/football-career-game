@@ -229,7 +229,7 @@ export default function App() {
     setPlayer(updatedPlayer);
     setHistory((h) => [...h, { opponent: match!.opponent.name, scoreP: match!.scoreP, scoreO: match!.scoreO, rating, goals: match!.playerGoals, assists: match!.playerAssists }]);
     setPostMatchSummary({
-      opponentName: match!.opponent.name, scoreP: match!.scoreP, scoreO: match!.scoreO, minutesPlayed,
+      opponentName: match!.opponent.name, opponentCrest: match!.opponent.crest, scoreP: match!.scoreP, scoreO: match!.scoreO, minutesPlayed,
       goals: match!.playerGoals, assists: match!.playerAssists, goodActions, badActions, rating, statChanges, formDelta, fatigueDelta,
       nextScreen: nextIndex >= 5 ? 'seasonEnd' : 'home',
     });

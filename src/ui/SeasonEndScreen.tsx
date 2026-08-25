@@ -1,6 +1,7 @@
 import { Trophy } from 'lucide-react';
-import { CLUB_NAME } from '../data/constants';
+import { CLUB_NAME, CLUB_CREST } from '../data/constants';
 import type { HistoryEntry, Player } from '../types';
+import { Crest } from './Crest';
 
 interface SeasonEndScreenProps {
   player: Player;
@@ -21,7 +22,10 @@ export function SeasonEndScreen({ player, history, startOvr }: SeasonEndScreenPr
       <div className="text-center">
         <Trophy className="mx-auto text-amber-400" size={32} />
         <h1 className="font-display text-2xl font-semibold mt-2">Сезон завершён</h1>
-        <p className="font-data text-xs text-slate-400 mt-1">{player.name} {player.surname} · {CLUB_NAME}</p>
+        <div className="flex items-center justify-center gap-2 mt-1">
+          <Crest src={CLUB_CREST} name={CLUB_NAME} size={28} />
+          <p className="font-data text-xs text-slate-400">{player.name} {player.surname}</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-2.5">

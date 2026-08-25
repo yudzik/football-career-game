@@ -1,5 +1,6 @@
-import { CLUB_NAME } from '../data/constants';
+import { CLUB_NAME, CLUB_CREST } from '../data/constants';
 import type { PostMatchSummary } from '../career/types';
+import { Crest } from './Crest';
 
 interface PostMatchScreenProps {
   summary: PostMatchSummary;
@@ -7,14 +8,18 @@ interface PostMatchScreenProps {
 }
 
 export function PostMatchScreen({ summary, onContinue }: PostMatchScreenProps) {
-  const { opponentName, scoreP, scoreO, minutesPlayed, goals, assists, goodActions, badActions, rating, statChanges, formDelta, fatigueDelta } = summary;
+  const { opponentName, opponentCrest, scoreP, scoreO, minutesPlayed, goals, assists, goodActions, badActions, rating, statChanges, formDelta, fatigueDelta } = summary;
   const resultLabel = scoreP > scoreO ? 'Победа' : scoreP < scoreO ? 'Поражение' : 'Ничья';
   const resultColor = scoreP > scoreO ? 'text-emerald-400' : scoreP < scoreO ? 'text-rose-400' : 'text-slate-300';
   return (
     <div className="flex-1 flex flex-col p-5 gap-4">
       <div className="text-center">
         <p className={`font-data text-xs uppercase tracking-widest ${resultColor}`}>{resultLabel}</p>
-        <p className="font-display text-2xl font-bold mt-1">{CLUB_NAME} {scoreP}–{scoreO} {opponentName}</p>
+        <div className="flex items-center justify-center gap-4 mt-1">
+          <Crest src={CLUB_CREST} name={CLUB_NAME} size={44} />
+          <p className="font-display text-2xl font-bold tabular-nums">{scoreP}–{scoreO}</p>
+          <Crest src={opponentCrest} name={opponentName} size={44} />
+        </div>
       </div>
 
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
