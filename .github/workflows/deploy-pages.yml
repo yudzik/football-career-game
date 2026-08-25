@@ -35,8 +35,14 @@ jobs:
           GH_PAGES: 'true'
         run: npm run build
 
+      # enablement provisions the Pages site itself when the repository has none, instead of
+      # failing with "Get Pages site failed ... Not Found" and requiring a trip to Settings.
+      # It still cannot create a site the repository is not entitled to: Pages on a private
+      # repository needs a paid plan, so on the free plan the repository must be public.
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
