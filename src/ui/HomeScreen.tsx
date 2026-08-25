@@ -1,6 +1,7 @@
 import { Play, Dumbbell, HeartPulse, Moon, Calendar } from 'lucide-react';
 import { OPPONENTS } from '../data/opponents';
-import { STAT_LABELS, CLUB_NAME } from '../data/constants';
+import { STAT_LABELS, CLUB_NAME, CLUB_CREST } from '../data/constants';
+import { Crest } from './Crest';
 import { squadStatus } from '../career/squadStatus';
 import { formatDate } from '../career/calendar';
 import { StatBar } from './StatBar';
@@ -30,17 +31,23 @@ export function HomeScreen({ player, matchIndex, history, currentDate, prepDaysU
           <p className="font-display text-lg font-semibold">{formatDate(currentDate)}</p>
         </div>
         {isMatchDay ? (
-          <p className="font-data text-amber-400 text-sm mt-1 uppercase tracking-wide">Матч сегодня — {opponent.name}</p>
+          <div className="flex items-center gap-2 mt-1">
+            <Crest src={opponent.crest} name={opponent.name} size={34} />
+            <p className="font-data text-amber-400 text-sm uppercase tracking-wide">Матч сегодня</p>
+          </div>
         ) : (
-          <p className="font-data text-xs text-slate-400 mt-1">До матча с {opponent.name}: {3 - prepDaysUsed} дн. · Матч {matchIndex + 1} из 5</p>
+          <div className="flex items-center gap-2 mt-1">
+            <Crest src={opponent.crest} name={opponent.name} size={30} />
+            <p className="font-data text-xs text-slate-400">До матча: {3 - prepDaysUsed} дн. · Матч {matchIndex + 1} из 5</p>
+          </div>
         )}
       </div>
 
       <div>
         <h1 className="font-display text-2xl font-semibold">{player.name} {player.surname}</h1>
         <p className="font-data text-xs text-slate-400">{player.positionLabel} · {player.profileName} · {player.age} лет · {player.country}</p>
-        <div className="flex gap-2 mt-2">
-          <span className="font-data text-xs px-2 py-1 rounded bg-slate-800 text-slate-300">{CLUB_NAME}</span>
+        <div className="flex items-center gap-2 mt-2">
+          <Crest src={CLUB_CREST} name={CLUB_NAME} size={40} />
           <span className={`font-data text-xs px-2 py-1 rounded ${status === 'Основа' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-400'}`}>{status}</span>
         </div>
       </div>

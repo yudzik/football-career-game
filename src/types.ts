@@ -34,6 +34,7 @@ export interface Difficulty {
 export interface Opponent {
   name: string;
   strength: number;
+  crest: string;
 }
 
 export interface CareerStats {

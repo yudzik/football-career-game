@@ -1,7 +1,8 @@
-import { CLUB_NAME } from '../data/constants';
+import { CLUB_NAME, CLUB_CREST } from '../data/constants';
 import { getStageData } from '../engine/resolve';
 import type { MatchState, MomentOption } from '../engine/types';
 import { Ticker } from './Ticker';
+import { Crest } from './Crest';
 
 interface MatchScreenProps {
   match: MatchState;
@@ -20,9 +21,9 @@ export function MatchScreen({ match, onSelectOption, onContinue }: MatchScreenPr
     <div className="flex-1 flex flex-col p-5 gap-4 relative"
       style={{ backgroundImage: 'repeating-linear-gradient(135deg, rgba(16,185,129,0.035) 0px, rgba(16,185,129,0.035) 40px, transparent 40px, transparent 80px)' }}>
       <div className="flex items-center justify-between bg-slate-900 rounded-lg px-4 py-3 border border-slate-800">
-        <span className="font-body text-sm text-slate-300 truncate">{CLUB_NAME}</span>
+        <Crest src={CLUB_CREST} name={CLUB_NAME} size={40} />
         <span className="font-display text-3xl font-bold tabular-nums">{scoreP} : {scoreO}</span>
-        <span className="font-body text-sm text-slate-300 truncate text-right">{opponent.name}</span>
+        <Crest src={opponent.crest} name={opponent.name} size={40} />
       </div>
 
       <Ticker log={log} />
