@@ -12,17 +12,22 @@ import { formatDate, addDays } from './career/calendar';
 import { clamp } from './utils';
 import type { DayActionType, DayResult, PostMatchSummary, StatEffect } from './career/types';
 import type { Country, Difficulty, HistoryEntry, Player, Position, Profile, StatKey } from './types';
+import { showcaseOvr } from './career/showcase';
+import { DEFAULT_LANGUAGE } from './data/languages';
+import type { Language } from './data/languages';
 import { CreateWizard } from './ui/CreateWizard';
+import { MainMenuScreen } from './ui/MainMenuScreen';
 import { HomeScreen } from './ui/HomeScreen';
 import { DayResultScreen } from './ui/DayResultScreen';
 import { MatchScreen } from './ui/MatchScreen';
 import { PostMatchScreen } from './ui/PostMatchScreen';
 import { SeasonEndScreen } from './ui/SeasonEndScreen';
 
-type Screen = 'create' | 'home' | 'dayResult' | 'match' | 'postMatch' | 'seasonEnd';
+type Screen = 'mainMenu' | 'create' | 'home' | 'dayResult' | 'match' | 'postMatch' | 'seasonEnd';
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>('create');
+  const [screen, setScreen] = useState<Screen>('mainMenu');
+  const [language, setLanguage] = useState<Language>(DEFAULT_LANGUAGE);
   const [createStep, setCreateStep] = useState(1);
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
@@ -44,10 +49,35 @@ export default function App() {
   const [consecutiveTraining, setConsecutiveTraining] = useState(0);
   const [dayResult, setDayResult] = useState<DayResult | null>(null);
 
+  function handleNewCareer() {
+    setCreateStep(1);
+    setScreen('create');
+  }
+
+  function handleContinueCareer() {
+    if (player) setScreen('home');
+  }
+
+  function handleExit() {
+    // Only the native shells and script-opened windows can actually close themselves; in a
+    // normal browser tab this is a no-op until a platform exit is wired up.
+    window.close();
+  }
+
+  // A career always starts from a clean run: the season counters below outlive the old Player,
+  // so starting a second career from the main menu has to reset them too.
   function handleGenerate() {
     const p = generatePlayer(name.trim(), surname.trim(), age, selectedCountry!, selectedPosition!, selectedProfile!, selectedDifficulty!);
     setPlayer(p);
     setStartOvr(p.ovr);
+    setMatchIndex(0);
+    setHistory([]);
+    setMatch(null);
+    setPostMatchSummary(null);
+    setDayResult(null);
+    setCurrentDate(new Date(2026, 7, 1));
+    setPrepDaysUsed(0);
+    setConsecutiveTraining(0);
     setScreen('home');
   }
 
@@ -250,6 +280,22 @@ export default function App() {
     setPostMatchSummary(null);
   }
 
+  // The main screen is a horizontal desktop/tablet layout and owns the whole viewport; the
+  // career screens keep the narrow column they were built in.
+  if (screen === 'mainMenu') {
+    return (
+      <MainMenuScreen
+        ovr={showcaseOvr(player)}
+        hasCareer={!!player}
+        language={language}
+        onLanguageChange={setLanguage}
+        onNewCareer={handleNewCareer}
+        onContinueCareer={handleContinueCareer}
+        onExit={handleExit}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 flex justify-center font-body">
       <div className="w-full max-w-md flex flex-col min-h-screen">
@@ -263,10 +309,11 @@ export default function App() {
             profile={selectedProfile} setProfile={setSelectedProfile}
             difficulty={selectedDifficulty} setDifficulty={setSelectedDifficulty}
             onGenerate={handleGenerate}
+            onBackToMenu={() => setScreen('mainMenu')}
           />
         )}
         {screen === 'home' && player && (
-          <HomeScreen player={player} matchIndex={matchIndex} history={history} currentDate={currentDate} prepDaysUsed={prepDaysUsed} onDayAction={handleDayAction} onPlay={handlePlay} />
+          <HomeScreen player={player} matchIndex={matchIndex} history={history} currentDate={currentDate} prepDaysUsed={prepDaysUsed} onDayAction={handleDayAction} onPlay={handlePlay} onExitToMenu={() => setScreen('mainMenu')} />
         )}
         {screen === 'dayResult' && dayResult && (
           <DayResultScreen dayResult={dayResult} onContinue={handleDayResultContinue} />

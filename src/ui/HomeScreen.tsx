@@ -1,4 +1,4 @@
-import { Play, Dumbbell, HeartPulse, Moon, Calendar } from 'lucide-react';
+import { Play, Dumbbell, HeartPulse, Moon, Calendar, Menu } from 'lucide-react';
 import { OPPONENTS } from '../data/opponents';
 import { STAT_LABELS, CLUB_NAME, CLUB_CREST } from '../data/constants';
 import { Crest } from './Crest';
@@ -16,9 +16,11 @@ interface HomeScreenProps {
   prepDaysUsed: number;
   onDayAction: (actionType: DayActionType) => void;
   onPlay: () => void;
+  /** Back to the main screen, which is what makes «Продолжить карьеру» reachable again. */
+  onExitToMenu?: () => void;
 }
 
-export function HomeScreen({ player, matchIndex, history, currentDate, prepDaysUsed, onDayAction, onPlay }: HomeScreenProps) {
+export function HomeScreen({ player, matchIndex, history, currentDate, prepDaysUsed, onDayAction, onPlay, onExitToMenu }: HomeScreenProps) {
   const opponent = OPPONENTS[matchIndex];
   const status = squadStatus(player);
   const isMatchDay = prepDaysUsed >= 3;
@@ -29,6 +31,12 @@ export function HomeScreen({ player, matchIndex, history, currentDate, prepDaysU
         <div className="flex items-center gap-2">
           <Calendar size={16} className="text-amber-400" />
           <p className="font-display text-lg font-semibold">{formatDate(currentDate)}</p>
+          {onExitToMenu && (
+            <button onClick={onExitToMenu} title="Главное меню" aria-label="Главное меню"
+              className="ml-auto flex items-center gap-1 rounded-lg border border-slate-700 px-2 py-1 font-data text-[0.6rem] uppercase tracking-wider text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400">
+              <Menu size={12} /> Меню
+            </button>
+          )}
         </div>
         {isMatchDay ? (
           <div className="flex items-center gap-2 mt-1">

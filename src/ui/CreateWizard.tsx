@@ -26,9 +26,11 @@ interface CreateWizardProps {
   difficulty: Difficulty | null;
   setDifficulty: Dispatch<SetStateAction<Difficulty | null>>;
   onGenerate: () => void;
+  /** Back out of step 1 to the main menu, so entering the wizard is not a one-way door. */
+  onBackToMenu?: () => void;
 }
 
-export function CreateWizard({ step, setStep, name, setName, surname, setSurname, age, setAge, country, setCountry, position, setPosition, profile, setProfile, difficulty, setDifficulty, onGenerate }: CreateWizardProps) {
+export function CreateWizard({ step, setStep, name, setName, surname, setSurname, age, setAge, country, setCountry, position, setPosition, profile, setProfile, difficulty, setDifficulty, onGenerate, onBackToMenu }: CreateWizardProps) {
   const canNext =
     step === 1 ? name.trim().length > 0 :
     step === 2 ? true :
@@ -136,8 +138,10 @@ export function CreateWizard({ step, setStep, name, setName, surname, setSurname
       )}
 
       <div className="flex gap-2 shrink-0">
-        {step > 1 && (
+        {step > 1 ? (
           <button onClick={() => setStep(step - 1)} className="px-4 py-3 rounded-lg bg-slate-900 border border-slate-700 font-body text-sm text-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-400">Назад</button>
+        ) : onBackToMenu && (
+          <button onClick={onBackToMenu} className="px-4 py-3 rounded-lg bg-slate-900 border border-slate-700 font-body text-sm text-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-400">В меню</button>
         )}
         {step < 6 ? (
           <button disabled={!canNext} onClick={() => setStep(step + 1)}

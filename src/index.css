@@ -1,6 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 @import 'tailwindcss';
 
+/* Brand green sampled from the game logo (#00B050) — the main screen's primary accent.
+   Registered as a theme colour so it works everywhere Tailwind expects one (bg-pitch-500,
+   text-pitch-400, ring-pitch-400/40 ...). Existing screens keep their amber accent. */
+@theme {
+  --color-pitch-300: #5ce89a;
+  --color-pitch-400: #17c964;
+  --color-pitch-500: #00b050;
+  --color-pitch-600: #009243;
+  --color-pitch-700: #067038;
+}
+
 .font-display {
   font-family: 'Oswald', sans-serif;
 }
