@@ -1,0 +1,232 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>FC Draft Online</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>:root{--bg:#0d1113;--fg:#e8eceb}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1113;--fg:#e8eceb}}:root[data-theme="dark"]{--bg:#0d1113;--fg:#e8eceb}
+*{box-sizing:border-box}html,body{background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif;margin:0}
+#app{max-width:480px;margin:0 auto;padding:12px 12px calc(76px + env(safe-area-inset-bottom,0px));padding-top:calc(12px + env(safe-area-inset-top,0px))}
+.b{display:block;width:100%;padding:13px;border-radius:12px;font-weight:800;background:#d4a72c;color:#1a1400;margin-top:8px;text-align:center}.b.g{background:#222b2f;color:#e8eceb}.b.v{background:#10b981;color:#04130d}.b:disabled{opacity:.35}
+.c{background:#171d20;border:1px solid #28323a;border-radius:14px;padding:10px;margin-top:8px}
+input,select{width:100%;background:#0d1113;border:1px solid #2f3a40;border-radius:10px;padding:10px;color:#fff;margin-top:4px;font-size:16px}
+h2{font-size:1.2rem;font-weight:900;color:#d4a72c;margin-top:6px}
+.pitch{position:relative;width:100%;padding-top:128%;border-radius:16px;overflow:hidden;background:repeating-linear-gradient(0deg,#0f5c34 0 10%,#12683a 10% 20%);border:2px solid #1e8a52}
+.pitch:before{content:"";position:absolute;inset:4%;border:2px solid #ffffff40;border-radius:6px}.pitch:after{content:"";position:absolute;left:30%;right:30%;top:42%;height:16%;border:2px solid #ffffff30;border-radius:50%}
+.sl{position:absolute;transform:translate(-50%,50%);z-index:2}
+.pc{width:54px;text-align:center;border-radius:8px 8px 15px 15px;padding:3px 0 2px;color:#1a1400;font-size:9px;line-height:1.1;background:linear-gradient(160deg,var(--c),#7a5a10);box-shadow:0 2px 6px #0008}.pc b{display:block;font-size:17px}.pc i{display:block;font-style:normal;font-weight:700}.pc span{display:block;overflow:hidden;white-space:nowrap;font-weight:700}
+.sel .pc{outline:3px solid #fff}.nav{position:fixed;left:0;right:0;bottom:0;background:#11171a;border-top:1px solid #28323a;display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:20}.nav button{flex:1;padding:12px 2px;font-size:11px;font-weight:700;color:#8a979d}.nav button.on{color:#d4a72c}
+.crest{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-size:9px;font-weight:900;border:2px solid #fff3;flex:none}
+.mini{position:relative;width:100%;padding-top:130%;background:#0f5c34;border-radius:8px}.mini i{position:absolute;width:7px;height:7px;border-radius:50%;background:#facc15;transform:translate(-50%,50%)}
+.hero{position:relative;border-radius:20px;overflow:hidden;padding:24px 16px 18px;margin-top:6px;background:radial-gradient(120% 90% at 50% 0%,#14783f 0%,#0b3d24 55%,#0d1113 100%);border:1px solid #1e8a52}
+.hero:before{content:"";position:absolute;inset:10px;border:2px solid #ffffff22;border-radius:12px;pointer-events:none}
+.hero:after{content:"";position:absolute;left:50%;top:50%;width:130px;height:130px;margin:-65px 0 0 -65px;border:2px solid #ffffff14;border-radius:50%;pointer-events:none}
+.hero>*{position:relative;z-index:1}.logo{font-weight:900;font-size:2.1rem;line-height:1;letter-spacing:-.02em}.logo em{font-style:normal;color:#f5c542}
+.chip{background:#0009;border:1px solid #ffffff30;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700}
+.seg{display:flex;background:#0d1113;border:1px solid #2f3a40;border-radius:12px;padding:4px;gap:4px}.seg button{flex:1;padding:10px;border-radius:9px;font-weight:800;color:#8a979d}.seg button.on{background:#d4a72c;color:#1a1400}
+.step{display:flex;gap:10px;align-items:flex-start;margin-top:10px}.step i{flex:none;width:24px;height:24px;border-radius:50%;background:#d4a72c;color:#1a1400;font-style:normal;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center}
+.ov{position:fixed;inset:0;background:#000d;z-index:50;overflow:auto;padding:16px}
+.top{display:flex;align-items:center;gap:8px;font-size:12px;color:#8a979d;margin-bottom:4px}.top b{color:#e8eceb}.top button{margin-left:auto;padding:4px 10px;border-radius:8px;background:#222b2f;color:#e8eceb;font-weight:700}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:#eab308;color:#1a1400;font-weight:800;padding:10px 16px;border-radius:12px;z-index:60;max-width:90vw;text-align:center}
+.warn{background:#3a2a06;border:1px solid #eab308;color:#fde68a;border-radius:12px;padding:8px 10px;font-size:13px;margin-top:6px}</style></head>
+<body><div id="app"></div><div id="nav"></div>
+<script>
+const POS={G:'ВРТ',C:'ЦЗ',L:'ЛЗ',R:'ПЗ',M:'ЦП',D:'ОП',A:'ЦАП',W:'ЛФА',X:'ПФА',S:'НАП'},STY={K:'Хищник',W:'Стена',M:'Метроном',D:'Дриблер',E:'Мотор'},DS={G:'W',S:'K',X:'D',W:'D',A:'M',M:'M',D:'E'};
+const FM={'4-3-3':[['G'],['L','C','C','R'],['M','D','M'],['W','S','X']],'4-4-2':[['G'],['L','C','C','R'],['W','M','M','X'],['S','S']],'4-2-3-1':[['G'],['L','C','C','R'],['D','D'],['W','A','X'],['S']],'3-5-2':[['G'],['C','C','C'],['W','M','D','M','X'],['S','S']],'5-3-2':[['G'],['L','C','C','C','R'],['M','D','M'],['S','S']],'4-1-4-1':[['G'],['L','C','C','R'],['D'],['W','M','M','X'],['S']],'4-3-1-2':[['G'],['L','C','C','R'],['M','D','M'],['A'],['S','S']]};
+const slots=f=>FM[f].flat(),dots=f=>{const F=FM[f],o=[];F.forEach((r,i)=>r.forEach((_,j)=>o.push([(j+1)*100/(r.length+1),8+i*(F.length>1?80/(F.length-1):0)])));return o};
+const CL=[['Реал Мадрид','RM','#fff','#1e3a8a'],['Манчестер Сити','MCI','#6cabdd','#fff'],['Барселона','FCB','#a50044','#004d98'],['Ливерпуль','LIV','#c8102e','#fff'],['Бавария','BAY','#dc052d','#fff'],['ПСЖ','PSG','#004170','#e11d48'],['Арсенал','ARS','#ef0107','#fff'],['Интер','INT','#0068a8','#111'],['Челси','CHE','#034694','#fff'],['Ювентус','JUV','#fff','#111'],['Милан','MIL','#e11d48','#111'],['Боруссия Д','BVB','#fde100','#111'],['Атлетико','ATM','#cb3524','#fff'],['Манчестер Юн','MUN','#da291c','#fff'],['Тоттенхэм','TOT','#fff','#132257'],['Наполи','NAP','#12a0d7','#fff'],['Леверкузен','B04','#e32221','#111'],['Астон Вилла','AVL','#670e36','#95bfe5'],['Ньюкасл','NEW','#fff','#111'],['Рома','ROM','#8e1f2f','#f0bc42']];
+const CO=[['Гвардиола','🇪🇸','atk','+3 к атаке'],['Анчелотти','🇮🇹','chem','+2 к атаке и защите (сыгранность)'],['Клопп','🇩🇪','atk','+3 к атаке'],['Моуринью','🇵🇹','def','+3 к защите'],['Артета','🇪🇸','chem','+2 к атаке и защите (сыгранность)'],['Симеоне','🇦🇷','def','+3 к защите'],['Флик','🇩🇪','atk','+3 к атаке'],['Индзаги','🇮🇹','coin','+1 монета за победу'],['Луис Энрике','🇪🇸','coin','+1 монета за победу'],['Конте','🇮🇹','def','+3 к защите'],['Тен Хаг','🇳🇱','coin','+1 монета за победу'],['Матрас','🇫🇷','chem','+2 к атаке и защите (сыгранность)'],['Манчини','🇮🇹','def','+3 к защите'],['Алонсо','🇪🇸','atk','+3 к атаке'],['Наглесманн','🇩🇪','atk','+3 к атаке'],['Постекоглу','🇦🇺','atk','+3 к атаке'],['Эмери','🇪🇸','chem','+2 к атаке и защите (сыгранность)'],['Дешам','🇫🇷','def','+3 к защите'],['Спаллетти','🇮🇹','coin','+1 монета за победу'],['Холанд-Ст','🇳🇴','coin','+1 монета за победу']];
+const DB=`Alisson/G89 Courtois/G89 Donnarumma/G88 Maignan/G87 Ederson/G86 Oblak/G86 TerStegen/G85 EMartinez/G86 Raya/G84 Sommer/G84 Kobel/G84 Onana/G82 Vicario/G82 Pickford/G82 Meret/G80
+VanDijk/C89 Dias/C88 Marquinhos/C87 Saliba/C87 Gabriel/C86 Rudiger/C86 Araujo/C86 Bastoni/C86 Gvardiol/C85 Militao/C85 Romero/C85 Stones/C84 Upamecano/C84 Konate/C84 Tah/C83 Cubarsi/C83 Skriniar/C82 Calafiori/C82 Pacho/C82 Hincapie/C81 Schlotterbeck/C81 Botman/C80 Huijsen/C80 Koulibaly/C78 Rrahmani/C78
+Theo/L85 Grimaldo/L85 Dimarco/L84 Davies/L83 Mendes/L84 Robertson/L83 Cucurella/L82 Gosens/L78
+Hakimi/R88 Trent/R86 Kimmich/R86 Carvajal/R85 Kounde/R85 Frimpong/R83 Walker/R82 Dumfries/R82 Molina/R81
+Rodri/D91 Rice/D88E Zubimendi/D86 Caicedo/D85 Tchouameni/D85 Palhinha/D83 Casemiro/D79
+Valverde/M88E Barella/M87E Pedri/M87 MacAllister/M87 Vitinha/M86 Szoboszlai/M85E Frenkie/M85 Camavinga/M84 Tonali/M84E Enzo/M84 Ruiz/M84 Kovacic/M82 Modric/M82 Zielinski/M82 Gavi/M82E
+Bellingham/A90D Musiala/A89 Palmer/A89 Odegaard/A88 Wirtz/A88 Bruno/A87 Foden/A87 Fernandez/A80
+Vinicius/W91 Kvaratskhelia/W88 Leao/W87 LuisDiaz/W87 NWilliams/W86 Coman/W84 Doku/W83 Gakpo/W83 Garnacho/W82 Rashford/W80 Grealish/W80
+Yamal/X90 Salah/X90K Saka/X89 Dembele/X89 Raphinha/X88 Olise/X87 Rodrygo/X85 Lookman/X84 Cunha/X84 Mbeumo/X83 Bowen/X83 Kulusevski/X83 Pulisic/X82
+Mbappe/S91 Haaland/S91 Kane/S91 Lautaro/S89 Lewandowski/S87 Isak/S87 Osimhen/S86 Gyokeres/S86 JAlvarez/S86 MThuram/S84 Watkins/S84 Havertz/S83 Nunez/S82 Vlahovic/S82 Sesko/S82 Ekitike/S82 Retegui/S81 KoloMuani/S81 Openda/S80 JoaoPedro/S80 Morata/S78`.trim().split(/\s+/).map((e,i)=>{const[n,r]=e.split('/');return{id:i,n,p:r[0],o:+r.slice(1,3),s:r[3]||DS[r[0]]||'E'}});
+const $=id=>document.getElementById(id),rnd=n=>Math.floor(Math.random()*n),pick=a=>a[rnd(a.length)],shuf=a=>a.slice().sort(()=>Math.random()-.5);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let S=null,ME=null,isHost=false,NET=null,NB=0,CODE='',lastHB=0,HBW=false,TOAST='',TAB='sq',SEL=null,TR={f:0,g:'',r:'',c:0},FMO=false,AC=null,LT=-1,LS=-1,ERR='',NK='',RC='',HT='',CR=1,BD=20,BUSY=false;
+const SITE='https://yudzik.github.io/football-career-game/draft/',ONSITE=/github\.io$/.test(location.hostname);
+const BROKERS=['wss://broker.emqx.io:8084/mqtt','wss://broker.hivemq.com:8884/mqtt','wss://test.mosquitto.org:8081/mqtt'],PFX='fcdraft-yd1/';
+const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+try{NK=localStorage.getItem('fdt_nk')||''}catch(e){}
+const pl=id=>S.P[id]||DB[id],mi=pid=>S.M.findIndex(m=>m.pid==pid),me=()=>S.M[mi(ME)],cl=k=>CL.find(c=>c[0]==k),rc=o=>o>=88?'#5eead4':o>=80?'#f5c542':o>=71?'#cbd5e1':'#c2793a';
+const crest=k=>{const c=cl(k);return c?`<span class="crest" style="background:${c[2]};color:${c[3]}">${c[1]}</span>`:'<span class="crest" style="background:#333">?</span>'};
+// ---- audio
+function au(){AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state=='suspended')AC.resume();return AC}
+function tone(f,d,t='sine',v=.2,at=0){try{const c=au(),o=c.createOscillator(),g=c.createGain(),T=c.currentTime+at;o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,T);g.gain.exponentialRampToValueAtTime(.001,T+d);o.connect(g);g.connect(c.destination);o.start(T);o.stop(T+d)}catch(e){}}
+const sndTick=()=>tone(900,.09,'square',.12),sndSold=()=>{tone(130,.18,'triangle',.6);tone(80,.25,'sine',.6,.14);tone(2300,.35,'sine',.15,.4);tone(2600,.5,'sine',.15,.7)};
+document.addEventListener('click',()=>{try{au()}catch(e){}});
+// ---- game logic (host)
+const newM=(pid,n)=>({pid,n:String(n||'Игрок').slice(0,14),club:null,coach:null,coins:S.cfg.bud,sq:[],xi:[],fm:'4-3-3',st:[0,0,0,0,0,0]});
+const grp=p=>p=='G'?0:'CLR'.includes(p)?1:'MDA'.includes(p)?2:3;
+function eff(p,sl){let v=p.o+(p.mod||0);if(p.p!=sl)v-=(p.p!='G'&&sl!='G'&&grp(p.p)==grp(sl))?5:10;if(p.s=='W'&&sl=='G')v+=2;if(p.s=='M'&&grp(sl)==2)v+=1;return v}
+function autoXI(m,keep){const sl=slots(m.fm),used=new Set(),xi=[];sl.forEach((s,i)=>{if(keep&&m.xi[i]!=null&&!pl(m.xi[i]).out&&!used.has(m.xi[i])){used.add(m.xi[i]);xi[i]=m.xi[i]}});
+ sl.forEach((s,i)=>{if(xi[i]!=null)return;let b=null,bv=-99;m.sq.forEach(id=>{const p=pl(id);if(p.out||used.has(id))return;const v=eff(p,s);if(v>bv){bv=v;b=id}});if(b==null)b=m.sq.find(id=>!used.has(id));used.add(b);xi[i]=b});m.xi=xi}
+function addP(m,id){S.P[id]={...(DB[id]||S.P[id]),mod:0,out:0,gl:0,as:0,cs:0};m.sq.push(id)}
+function startAuc(){S.ph='auc';S.pool=shuf(DB.map(p=>p.id));S.lot=0;nextLot()}
+function nextLot(){if(S.ph!='auc')return;const act=S.M.filter(m=>m.sq.length<18&&m.coins>0).map(m=>m.pid);if(!act.length||!S.pool.length)return finishDraft();S.lot++;S.au={p:S.pool.shift(),bid:0,ld:null,act,pass:[],end:Date.now()+11000};bc()}
+function closeLot(){const a=S.au;if(!a||a.sold||S.ph!='auc')return;if(a.ld){const m=S.M[mi(a.ld)];m.coins-=a.bid;addP(m,a.p);a.sold=`${pl(a.p).n} → ${m.club} за ${a.bid} 💰`}else a.sold=`${pl(a.p).n} — не продан`;bc();setTimeout(nextLot,2800)}
+function finishDraft(){S.M.forEach(m=>{while(m.sq.length<18){const p=m.sq.filter(i=>pl(i).p=='G').length<2?'G':pick('CCLRMDAMWXSS'.split(''));const id=1000+(++S.fa);S.P[id]={id,n:'Св.агент '+S.fa,p,o:60+rnd(9),s:DS[p]||'E',mod:0,out:0,gl:0,as:0,cs:0};m.sq.push(id)}autoXI(m)});
+ const n=S.M.length;let t=[...Array(n).keys()];if(n%2)t.push(-1);const N=t.length,Rs=[];for(let r=0;r<N-1;r++){const f=[];for(let i=0;i<N/2;i++){const h=t[i],a=t[N-1-i];if(h>=0&&a>=0)f.push(r%2?[a,h]:[h,a])}Rs.push(f);t.splice(1,0,t.pop())}
+ S.fx=[];for(let c=0;c<S.cfg.circ;c++)Rs.forEach(f=>S.fx.push(c%2?f.map(([h,a])=>[a,h]):f));S.rd=0;S.last=[];S.au=null;S.ph='main';prep();bc()}
+function prep(){S.evs=[];S.M.forEach(m=>m.sq.forEach(id=>S.P[id].mod=0));S.M.forEach(m=>{if(Math.random()<.25){const p=S.P[pick(m.xi)],t=rnd(4);let s;if(t==0){p.mod=-5;s='загулял в клубе (-5 OVR на матч)'}if(t==1){p.out=1;s='проспал установку (дисквалификация на 1 игру)'}if(t==2){p.out=2;s='получил травму (пропуск 2 игр)'}if(t==3){p.mod=4;s='поймал кураж (+4 OVR)'}S.evs.push(`${m.club}: ${p.n} ${s}`)}});S.M.forEach(m=>autoXI(m,true))}
+function wp(a,w){let s=w.reduce((x,y)=>x+y,0)*Math.random();for(let i=0;i<a.length;i++){s-=w[i];if(s<=0)return a[i]}return a[a.length-1]}
+function mstr(m){const sl=slots(m.fm),xi=sl.map((s,i)=>({p:S.P[m.xi[i]],sl:s,v:eff(S.P[m.xi[i]],s)})),av=a=>a.length?a.reduce((s,x)=>s+x.v,0)/a.length:50,nat=xi.filter(x=>x.p.p==x.sl).length,ch=nat/11*2,co=CO.find(c=>c[0]==m.coach)||[],ct=co[2];
+ return{xi,A:av(xi.filter(x=>grp(x.sl)>=2))+ch+(ct=='atk'?3:ct=='chem'?2:0),D:av(xi.filter(x=>grp(x.sl)<2))+ch+(ct=='def'?3:ct=='chem'?2:0)}}
+function pois(l){const L=Math.exp(-l);let k=0,p=1;do{k++;p*=Math.random()}while(p>L);return Math.min(8,k-1)}
+function simM(a,b){const sa=mstr(a),sb=mstr(b),ev=[],lam=(x,y)=>1.3*Math.exp((x.A-y.D)/22)*(.8+Math.random()*.4),ga=pois(lam(sa,sb)),gb=pois(lam(sb,sa));
+ const goals=(g,s,side)=>{for(let i=0;i<g;i++){const at=s.xi.filter(x=>grp(x.sl)>=2||(x.sl!='G'&&Math.random()<.1)),sc=wp(at,at.map(x=>Math.pow(x.v/60,6)*(x.p.s=='K'?1.5:1)*(grp(x.sl)==3?2:1))).p,oth=s.xi.filter(x=>x.p!=sc&&x.sl!='G'),as=Math.random()<.7?pick(oth).p:null;sc.gl++;if(as)as.as++;ev.push([1+rnd(90),`⚽ ГОЛ ${side?'гостей':'хозяев'}! ${sc.n}${as?' (асс. '+as.n+')':''}`])}};
+ goals(ga,sa,0);goals(gb,sb,1);for(let i=0;i<2+rnd(3);i++){const x=pick(pick([sa,sb]).xi).p;ev.push([1+rnd(90),pick(['🟨 Жёлтая: '+x.n,'💥 Штанга! '+x.n,'🧤 Сейв вратаря после удара '+x.n,'🟥 Удаление: '+x.n])])}
+ ev.sort((p,q)=>p[0]-q[0]);if(!gb)sa.xi[0].p.cs++;if(!ga)sb.xi[0].p.cs++;return{ga,gb,ev:ev.map(e=>e[0]+"' "+e[1])}}
+function simRound(){if(S.ph!='main')return;S.last=S.fx[S.rd].map(([h,a])=>{const A=S.M[h],B=S.M[a],r=simM(A,B),cn=m=>m.coach&&CO.find(c=>c[0]==m.coach)[2]=='coin';A.st[0]++;B.st[0]++;A.st[4]+=r.ga;A.st[5]+=r.gb;B.st[4]+=r.gb;B.st[5]+=r.ga;
+  if(r.ga>r.gb){A.st[1]++;B.st[3]++;if(cn(A))A.coins++}else if(r.ga<r.gb){B.st[1]++;A.st[3]++;if(cn(B))B.coins++}else{A.st[2]++;B.st[2]++}return{h,a,...r}});
+ S.M.forEach(m=>m.sq.forEach(id=>{if(S.P[id].out>0)S.P[id].out--}));S.rd++;if(S.rd>=S.fx.length){S.ph='end'}else prep()}
+function trade(o){const A=S.M[mi(o.from)],B=S.M[mi(o.to)];if(!A||!B||!A.sq.includes(o.g)||!B.sq.includes(o.r)||A.coins<o.c)return;A.sq=A.sq.filter(x=>x!=o.g).concat(o.r);B.sq=B.sq.filter(x=>x!=o.r).concat(o.g);A.xi=A.xi.map(x=>x==o.g?o.r:x);B.xi=B.xi.map(x=>x==o.r?o.g:x);A.coins-=o.c;B.coins+=o.c}
+function handle(a,pid){const i=mi(pid),m=S.M[i],H=S.M[0].pid==pid;
+ switch(a.a){
+ case'join':if(S.ph=='lobby'&&!m&&S.M.length<20)S.M.push(newM(pid,a.n));break;
+ case'club':if(m&&S.ph=='lobby'&&cl(a.c)&&!S.M.some(x=>x.club==a.c))m.club=a.c;break;
+ case'tocoach':if(H&&S.ph=='lobby'&&S.M.length>=2&&S.M.every(x=>x.club))S.ph='coach';break;
+ case'coach':if(m&&S.ph=='coach'&&!m.coach&&CO.some(c=>c[0]==a.c)&&!S.M.some(x=>x.coach==a.c))m.coach=a.c;break;
+ case'toauc':if(H&&S.ph=='coach'&&S.M.every(x=>x.coach))startAuc();break;
+ case'bid':{const u=S.au;if(m&&S.ph=='auc'&&u&&!u.sold&&u.act.includes(pid)&&!u.pass.includes(pid)&&u.ld!=pid&&Number.isInteger(a.x)&&a.x>u.bid&&a.x<=m.coins){u.bid=a.x;u.ld=pid;u.end=Date.now()+5000}break}
+ case'pass':{const u=S.au;if(m&&S.ph=='auc'&&u&&!u.sold&&u.act.includes(pid)&&u.ld!=pid&&!u.pass.includes(pid)){u.pass.push(pid);if(!u.act.filter(p=>!u.pass.includes(p)&&p!=u.ld).length)closeLot()}break}
+ case'endauc':if(H&&S.ph=='auc'){S.au&&(S.au.sold=S.au.sold||'Драфт завершён');finishDraft()}break;
+ case'fm':if(m&&S.ph=='main'&&FM[a.f]){m.fm=a.f;autoXI(m)}break;
+ case'xi':if(m&&S.ph=='main'&&Array.isArray(a.xi)&&a.xi.length==11&&new Set(a.xi).size==11&&a.xi.every(x=>m.sq.includes(x)&&!S.P[x].out))m.xi=a.xi;break;
+ case'offer':if(m&&S.ph=='main'&&mi(a.to)>=0&&a.to!=pid&&m.sq.includes(a.g)&&S.M[mi(a.to)].sq.includes(a.r)&&a.c>=0&&a.c<=m.coins){S.offers.push({id:Date.now()+''+rnd(99),from:pid,to:a.to,g:a.g,r:a.r,c:a.c|0})}break;
+ case'resp':{const k=S.offers.findIndex(o=>o.id==a.id&&o.to==pid);if(k>=0){const o=S.offers.splice(k,1)[0];if(a.ok)trade(o)}break}
+ case'sim':if(m)simRound();break}
+ bc()}
+// ---- mini MQTT 3.1.1 client over WebSocket (relay through a public broker; no WebRTC needed)
+function MQ(url){const te=new TextEncoder(),td=new TextDecoder(),cid='fd'+Math.random().toString(36).slice(2,12);
+ const o={up:false,subs:[],onMsg:null,onUp:null,onDown:null};let ws=null,buf=new Uint8Array(0),pk=1,ping=null,closed=false,retry=0,rt=null;
+ const cat=(...a)=>{let n=0;a.forEach(x=>n+=x.length);const u=new Uint8Array(n);let i=0;a.forEach(x=>{u.set(x,i);i+=x.length});return u};
+ const s2b=s=>{const b=te.encode(s);return cat(Uint8Array.of(b.length>>8,b.length&255),b)};
+ const vl=n=>{const r=[];do{let d=n%128;n=Math.floor(n/128);if(n>0)d|=128;r.push(d)}while(n>0);return Uint8Array.from(r)};
+ const pkt=(h,b)=>cat(Uint8Array.of(h),vl(b.length),b);
+ const raw=u=>{try{if(ws&&ws.readyState==1){ws.send(u);return true}}catch(e){}return false};
+ const subPk=t=>{pk=pk%65535+1;return pkt(0x82,cat(Uint8Array.of(pk>>8,pk&255),s2b(t),Uint8Array.of(0)))};
+ function onData(d){buf=cat(buf,new Uint8Array(d));
+  for(;;){if(buf.length<2)return;let i=1,m=1,v=0,b;do{if(i>=buf.length)return;b=buf[i++];v+=(b&127)*m;m*=128}while(b&128);if(buf.length<i+v)return;
+   const h=buf[0],p=buf.slice(i,i+v);buf=buf.slice(i+v);const ty=h>>4;
+   if(ty==2){if(p[1]===0){o.up=true;retry=0;o.subs.forEach(t=>raw(subPk(t)));clearInterval(ping);ping=setInterval(()=>raw(Uint8Array.of(0xC0,0)),20000);o.onUp&&o.onUp()}else{try{ws.close()}catch(e){}}}
+   else if(ty==3){const q=(h>>1)&3,tl=(p[0]<<8)|p[1],t=td.decode(p.subarray(2,2+tl));let off=2+tl;if(q){const id=(p[off]<<8)|p[off+1];off+=2;if(q==1)raw(Uint8Array.of(0x40,2,id>>8,id&255))}o.onMsg&&o.onMsg(t,td.decode(p.subarray(off)))}}}
+ function sched(){clearTimeout(rt);if(!closed)rt=setTimeout(o.connect,Math.min(8000,500*Math.pow(2,retry++)))}
+ o.connect=()=>{closed=false;clearTimeout(rt);if(ws&&ws.readyState<2)return;buf=new Uint8Array(0);
+  try{ws=new WebSocket(url,['mqtt'])}catch(e){return sched()}
+  ws.binaryType='arraybuffer';
+  ws.onopen=()=>raw(pkt(0x10,cat(s2b('MQTT'),Uint8Array.of(4,2,0,45),s2b(cid))));
+  ws.onmessage=e=>{if(e.data instanceof ArrayBuffer)onData(e.data);else if(e.data&&e.data.arrayBuffer)e.data.arrayBuffer().then(onData)};
+  ws.onclose=()=>{const was=o.up;o.up=false;clearInterval(ping);if(was&&o.onDown)o.onDown();sched()};
+  ws.onerror=()=>{}};
+ o.sub=t=>{if(!o.subs.includes(t))o.subs.push(t);if(o.up)raw(subPk(t))};
+ o.pub=(t,s,ret)=>o.up&&raw(pkt(0x30|(ret?1:0),cat(s2b(t),te.encode(s))));
+ o.close=()=>{closed=true;clearTimeout(rt);clearInterval(ping);o.up=false;try{ws&&ws.close()}catch(e){}};
+ o.wake=()=>{if(!closed&&(!ws||ws.readyState>1)){retry=0;o.connect()}};
+ return o}
+const T=k=>PFX+CODE+'/'+k,rid=()=>Math.random().toString(36).slice(2,10);
+const genCode=()=>Array.from({length:4},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[rnd(32)]).join('');
+const normCode=s=>String(s||'').toUpperCase().replace(/[АВЕКМНОРСТУХ]/g,c=>'ABEKMHOPCTYX'['АВЕКМНОРСТУХ'.indexOf(c)]).replace(/[^A-Z0-9]/g,'').slice(0,6);
+function toast(m){TOAST=m;R();clearTimeout(toast.t);toast.t=setTimeout(()=>{TOAST='';R()},2600)}
+// connect to the first broker in `order` that answers
+function tryBrokers(order,i,ok,fail){if(i>=order.length)return fail();const mq=MQ(BROKERS[order[i]]);let done=false;
+ const to=setTimeout(()=>{if(done)return;done=true;mq.close();tryBrokers(order,i+1,ok,fail)},7000);
+ mq.onUp=()=>{if(done)return;done=true;clearTimeout(to);ok(mq,order[i])};mq.connect()}
+// ---- host
+let bcT=0,hostTimers=false;
+function bc(){if(!isHost)return;onS();if(bcT)return;bcT=setTimeout(()=>{bcT=0;pubState()},60)}
+function pubState(){if(!S)return;if(S.au&&!S.au.sold)S.au.left=Math.max(0,S.au.end-Date.now());S.t=Date.now();if(NET)NET.pub(T('s'),JSON.stringify(S),true);ls.set('fdt_host',{code:CODE,me:ME,b:NB,S})}
+function tick(){if(S&&S.ph=='auc'&&S.au&&!S.au.sold&&Date.now()>=S.au.end)closeLot()}
+function hostUp(mq,b){NET=mq;NB=b;isHost=true;BUSY=false;ERR='';
+ mq.onMsg=(t,p)=>{if(t!=T('a'))return;let d;try{d=JSON.parse(p)}catch(e){return}if(d&&typeof d.p=='string'&&d.p.length<40&&S)handle(d,d.p)};
+ mq.onUp=()=>{pubState();R()};mq.onDown=()=>R();mq.sub(T('a'));
+ if(!hostTimers){hostTimers=true;setInterval(tick,250);setInterval(()=>{NET&&NET.pub(T('h'),String(Date.now()))},5000)}
+ if(S.ph=='auc'&&S.au&&S.au.sold)setTimeout(nextLot,1500);pubState();R()}
+function nick(){return((($('nk')||{}).value||NK||'').trim()).slice(0,14)||'Игрок'}
+function create(){if(BUSY)return;const nk=nick(),cr=Math.max(1,Math.min(4,CR||1)),bd=Math.max(1,Math.min(999,BD||20));NK=nk;try{localStorage.setItem('fdt_nk',nk)}catch(e){}
+ BUSY=true;ERR='Создаём комнату…';R();CODE=genCode();ME='h'+rid();
+ tryBrokers([0,1,2],0,(mq,b)=>{S={code:CODE,ph:'lobby',cfg:{circ:cr,bud:bd},M:[],P:{},offers:[],fa:0,evs:[],last:[]};S.M.push(newM(ME,nk));hostUp(mq,b)},
+  ()=>{BUSY=false;ERR='Не удалось подключиться к серверу игры. Проверьте интернет и попробуйте ещё раз.';R()})}
+function resumeHost(){const h=ls.get('fdt_host');if(!h||BUSY)return;BUSY=true;ERR='Восстанавливаем комнату…';R();CODE=h.code;ME=h.me;
+ tryBrokers([h.b,...[0,1,2].filter(x=>x!=h.b)],0,(mq,b)=>{S=h.S;if(S.au&&!S.au.sold)S.au.end=Date.now()+Math.max(4000,S.au.left||0);hostUp(mq,b)},
+  ()=>{BUSY=false;ERR='Нет связи с сервером игры. Попробуйте ещё раз.';R()})}
+// ---- player
+function join(code,b){if(BUSY)return;const nk=nick();code=normCode(code||($('rc')||{}).value||RC);
+ if(code.length<4){ERR='Введите код комнаты — 4 символа, например A3F9';R();return}
+ NK=nk;RC=code;CODE=code;try{localStorage.setItem('fdt_nk',nk)}catch(e){}
+ const ids=ls.get('fdt_ids')||{};ME=ids[code]||('u'+rid());ids[code]=ME;ls.set('fdt_ids',ids);
+ BUSY=true;ERR='Ищем комнату '+code+'…';R();b=+b;joinTry(b>=0&&b<3?[b,...[0,1,2].filter(x=>x!=b)]:[0,1,2],0)}
+function joinTry(order,i){if(i>=order.length){BUSY=false;ERR='Комната '+CODE+' не найдена. Проверьте код и что хост держит игру открытой.';R();return}
+ const mq=MQ(BROKERS[order[i]]);let got=false;const kill=setTimeout(()=>{if(!got){mq.close();joinTry(order,i+1)}},9000);
+ mq.onMsg=(t,p)=>{if(t==T('h')){lastHB=Date.now();return}if(t!=T('s'))return;let d;try{d=JSON.parse(p)}catch(e){return}if(!d||!d.M)return;
+  if(!got){got=true;clearTimeout(kill);NET=mq;NB=order[i];BUSY=false;ERR='';lastHB=Date.now();ls.set('fdt_last',{code:CODE,b:NB});mq.onUp=()=>R();mq.onDown=()=>R()}
+  S=d;onS();ensureJoined()};
+ mq.sub(T('s'));mq.sub(T('h'));mq.connect()}
+let jT=0;function ensureJoined(){if(!S||me()||S.ph!='lobby'||jT)return;send({a:'join',n:NK||'Игрок'});jT=setTimeout(()=>{jT=0;ensureJoined()},2500)}
+function send(a){if(isHost)return handle(a,ME);if(!NET||!NET.pub(T('a'),JSON.stringify({...a,p:ME})))toast('Нет связи — переподключаемся, повторите через пару секунд')}
+function onS(){if(S.au&&S.au.sold&&LS!=S.lot){LS=S.lot;sndSold()}if(S.au&&S.au.left!=null&&!isHost)S.au.end=Date.now()+S.au.left;R()}
+function leave(){if(isHost&&!confirm('Выйти? Комната сохранится на этом телефоне, её можно будет продолжить.'))return;if(NET)NET.close();NET=null;S=null;isHost=false;BUSY=false;ERR='';TAB='sq';R()}
+function shareLink(btn){const u=link(),txt='Заходи в мою футбольную лигу! Код комнаты: '+CODE;
+ if(navigator.share){navigator.share({title:'FC Draft Online',text:txt,url:u}).catch(()=>{});return}
+ try{navigator.clipboard.writeText(u).then(()=>{btn.textContent='Ссылка скопирована ✓'},()=>prompt('Скопируйте ссылку',u))}catch(e){prompt('Скопируйте ссылку',u)}}
+const hostAway=()=>!isHost&&lastHB&&Date.now()-lastHB>16000;
+['visibilitychange','online','pageshow','focus'].forEach(ev=>window.addEventListener(ev,()=>{if(document.visibilityState!='hidden'&&NET)NET.wake()}));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState!='hidden'&&NET)NET.wake()});
+// ---- views
+const btn=(t,f,c='',d='')=>`<button class="b ${c}" ${d?'disabled':''} onclick="${f}">${t}</button>`;
+const link=()=>(ONSITE?location.origin+location.pathname:SITE)+'?r='+CODE+'&b='+NB;
+function card(id,x=''){const p=pl(id);return`<div class="c flex items-center gap-3" style="border-color:${rc(p.o)}"><div class="rounded-lg px-2 py-1 font-black text-xl" style="background:${rc(p.o)};color:#111">${p.o}</div><div class="flex-1"><b>${esc(p.n)}</b><div class="text-xs opacity-70">${POS[p.p]} · ${STY[p.s]}</div></div>${x}</div>`}
+const gc=id=>{const p=pl(id);return`<div class="pc ${p.out?'opacity-40':''}" style="--c:${rc(p.o)}"><b>${p.o+(p.mod||0)}</b><i>${POS[p.p]}</i><span>${esc(p.n.slice(0,9))}${p.out?' 🩹':''}</span></div>`};
+function homeV(){const qs=new URLSearchParams(location.search),q=normCode(qs.get('r')||''),qb=qs.get('b');if(q&&!RC)RC=q;if(!HT)HT=q?'join':'create';const dis=BUSY||!window.WebSocket,lb='class="text-sm block" style="opacity:.7;margin-top:10px"',hs=ls.get('fdt_host'),lr=ls.get('fdt_last');
+return`<div class="hero text-center"><div class="text-5xl">⚽</div><div class="logo mt-2">FC DRAFT<br><em>ONLINE</em></div><p class="text-sm mt-3" style="opacity:.85">Аукцион, состав и турнир с друзьями — каждый со своего телефона</p><div class="flex justify-center gap-2 mt-3 flex-wrap"><span class="chip">🔨 Live-аукцион</span><span class="chip">📋 Тактика</span><span class="chip">🏆 Турнир</span></div><div class="text-xs mt-3" style="opacity:.6">2–20 менеджеров · 130+ звёзд · 20 клубов</div></div>
+${ONSITE?'':`<div class="c" style="border-color:#eab308"><b class="text-yellow-400">Играйте по прямой ссылке</b><p class="text-sm mt-1" style="opacity:.8">Внутри приложений игра может не подключиться. Откройте её в Safari или Chrome:</p><a class="b" href="${SITE}" target="_blank" rel="noopener">Открыть игру ↗</a><div class="text-xs mt-2 break-all" style="opacity:.6">${SITE}</div></div>`}
+${hs&&hs.S&&hs.S.ph!='end'?`<div class="c" style="border-color:#10b981"><b>Ваша комната ${esc(hs.code)}</b><div class="text-xs" style="opacity:.7">${hs.S.M.length} менеджер(ов) · вы хост</div>${btn('Продолжить как хост','resumeHost()','v',dis)}<button class="text-xs mt-2" style="opacity:.6" onclick="if(confirm('Удалить сохранённую комнату?')){ls.del('fdt_host');R()}">Удалить комнату</button></div>`:''}
+${lr&&!q&&(!hs||hs.code!=lr.code)?`<div class="c"><b>Последняя комната ${esc(lr.code)}</b>${btn('Вернуться в комнату',`join('${esc(lr.code)}',${+lr.b||0})`,'g',dis)}</div>`:''}
+<div class="c"><label class="text-sm block" style="opacity:.7">Ваш никнейм</label><input id="nk" maxlength="14" placeholder="Например, Юда" value="${esc(NK)}" oninput="NK=this.value">
+<div class="seg" style="margin-top:14px"><button class="${HT=='create'?'on':''}" onclick="HT='create';R()">Создать лигу</button><button class="${HT=='join'?'on':''}" onclick="HT='join';R()">Войти по коду</button></div>
+${ERR?`<div class="text-yellow-400 text-sm mt-3">${esc(ERR)}</div>`:''}
+${HT=='create'?`<div class="grid grid-cols-2 gap-2"><div><label ${lb}>Кругов</label><select onchange="CR=+this.value">${[1,2,3,4].map(n=>`<option ${n==CR?'selected':''}>${n}</option>`).join('')}</select></div><div><label ${lb}>Бюджет, монет</label><input type="number" inputmode="numeric" value="${BD}" oninput="BD=+this.value"></div></div>${btn('Создать лигу','create()','',dis)}<p class="text-xs mt-2" style="opacity:.6">Вы станете хостом: получите код и ссылку для друзей. Не закрывайте вкладку, пока идёт игра.</p>`:`<label ${lb}>Код комнаты</label><input id="rc" placeholder="Например, A3F9" value="${esc(RC)}" oninput="RC=this.value" autocapitalize="characters" autocomplete="off" style="text-transform:uppercase;letter-spacing:.2em;text-align:center;font-weight:900">${btn('Присоединиться',`join(null,${qb==null?-1:+qb||0})`,'v',dis)}<p class="text-xs mt-2" style="opacity:.6">Код — 4 символа, его показывает хост в лобби. Проще всего открыть ссылку-приглашение от хоста.</p>`}</div>
+<div class="c"><b>Как играть</b>${[['Создайте лигу','Хост выбирает число кругов и бюджет и отправляет друзьям ссылку.'],['Клуб и тренер','Каждый выбирает клуб и тренера с бонусом.'],['Live-аукцион','Торгуйтесь за звёзд: +1, +2, +5 или своя ставка. Таймер 11 секунд.'],['Состав и турнир','Расставьте игроков на поле, меняйтесь друг с другом и жмите «Симулировать тур».']].map((s,i)=>`<div class="step"><i>${i+1}</i><div><b class="text-sm">${s[0]}</b><div class="text-xs" style="opacity:.7">${s[1]}</div></div></div>`).join('')}</div>`}
+function lobbyV(){const m=me(),free=CL.filter(c=>!S.M.some(x=>x.club==c[0]));return`<h2>Лобби</h2><div class="c text-center"><div class="text-xs" style="opacity:.6">КОД КОМНАТЫ</div><div class="text-4xl font-black text-yellow-400" style="letter-spacing:.25em">${esc(CODE)}</div><button class="b" onclick="shareLink(this)">📨 Пригласить друзей</button><div class="text-xs mt-2 break-all" style="opacity:.5">${esc(link())}</div></div>
+ ${isHost?'<div class="text-xs mt-2" style="opacity:.6">Вы хост: держите эту вкладку открытой во время игры. Если она закроется — откройте игру снова и нажмите «Продолжить как хост».</div>':''}
+ <div class="c"><b>Менеджеры (${S.M.length}/20) · ${S.cfg.circ} кр. · бюджет ${S.cfg.bud}</b>${S.M.map(x=>`<div class="flex items-center gap-2 mt-1">${crest(x.club)} ${esc(x.n)} <span class="opacity-60 text-sm">${esc(x.club||'выбирает клуб…')}</span></div>`).join('')}</div>
+ ${m&&!m.club?`<h2>Выберите клуб</h2><div class="grid grid-cols-2 gap-2">${free.map(c=>`<button class="c flex items-center gap-2 text-left" onclick="send({a:'club',c:'${c[0]}'})">${crest(c[0])} <span class="text-sm">${c[0]}</span></button>`).join('')}</div>`:''}
+ ${isHost?btn('Выбрать тренеров →',"send({a:'tocoach'})",'v',S.M.length<2||!S.M.every(x=>x.club)):'<div class="c text-center opacity-70">Ждём, пока хост начнёт…</div>'}`}
+function coachV(){const m=me();return`<h2>Выбор тренера</h2>${CO.map(c=>{const t=S.M.find(x=>x.coach==c[0]);return`<button class="c w-full flex items-center gap-3 text-left ${t||m.coach?'opacity-50':''}" ${t||m.coach?'disabled':''} onclick="send({a:'coach',c:'${c[0]}'})"><span class="text-3xl">${c[1]}</span><span class="flex-1"><b>${c[0]}</b><br><span class="text-xs text-emerald-400">${c[3]}</span></span>${t?`<span class="text-xs">${esc(t.n)}</span>`:''}</button>`}).join('')}${isHost?btn('Начать драфт →',"send({a:'toauc'})",'v',!S.M.every(x=>x.coach)):`<div class="c text-center opacity-70">${m.coach?'Ждём остальных…':''}</div>`}`}
+function aucV(){const u=S.au,m=me();if(!u)return'<div class="c text-center">Готовим лот…</div>';const ld=u.ld?S.M[mi(u.ld)]:null,el=u.act.includes(ME)&&!u.pass.includes(ME)&&!u.sold,can=el&&u.ld!=ME,mine=ld&&ld.pid==ME;
+ return`<div class="flex justify-between text-sm"><span>Лот #${S.lot} · в пуле ${S.pool.length}</span><span>💰 <b>${m.coins}</b> · ${m.sq.length}/18</span></div>${card(u.p)}<div class="c text-center"><div class="text-xs opacity-60">ТЕКУЩАЯ СТАВКА</div><div class="text-4xl font-black text-yellow-400">${u.bid}</div><div>${ld?(mine?'✅ Вы лидируете':'Лидер: '+esc(ld.n)+' '+esc(ld.club)):'Ставок пока нет'}</div><div id="tm" class="text-3xl font-black mt-1">--</div><div style="height:6px;background:#222;border-radius:3px"><div id="bar" style="height:6px;background:#10b981;border-radius:3px;width:100%"></div></div></div>
+ ${u.sold?`<div class="c text-center text-lg text-yellow-400">🔨 ${esc(u.sold)}</div>`:el?`<div class="grid grid-cols-3 gap-2">${[1,2,5].map(x=>`<button class="b" style="margin:0" ${!can||u.bid+x>m.coins?'disabled':''} onclick="send({a:'bid',x:${u.bid+x}})">+${x}</button>`).join('')}</div><div class="flex gap-2 mt-2"><input id="bx" type="number" inputmode="numeric" placeholder="Своя ставка" style="margin:0"><button class="b v" style="margin:0;width:auto;padding:0 20px" ${!can?'disabled':''} onclick="const v=+$('bx').value;if(v)send({a:'bid',x:v})">OK</button></div>${btn('Пас',"send({a:'pass'})",'g',!can)}`:'<div class="c text-center opacity-70">Вы не участвуете в этом лоте</div>'}
+ ${isHost?btn('Завершить драфт досрочно',"if(confirm('Остальные слоты заполнят свободные агенты'))send({a:'endauc'})",'g'):''}`}
+const ovr=m=>{const xi=slots(m.fm).map((s,i)=>eff(S.P[m.xi[i]],s));return Math.round(xi.reduce((a,b)=>a+b,0)/11)};
+function sqV(){const m=me(),F=FM[m.fm];let k=0;const nat=slots(m.fm).filter((s,i)=>S.P[m.xi[i]].p==s).length,dm=Math.round(nat/11*5),o=ovr(m),st=Math.max(1,Math.min(5,Math.round((o-60)/6))),co=CO.find(c=>c[0]==m.coach)||['—','','',''];
+ const sl=F.map((r,i)=>r.map((_,j)=>{const idx=k++,x=(j+1)*100/(r.length+1),y=8+i*(80/(F.length-1));return`<div class="sl ${SEL&&SEL.t=='x'&&SEL.i==idx?'sel':''}" style="left:${x}%;bottom:${y}%" onclick="pickX(${idx})">${gc(m.xi[idx])}</div>`}).join('')).join('');
+ const bench=m.sq.filter(id=>!m.xi.includes(id));
+ return`<div class="flex justify-between items-center text-sm"><button class="px-3 py-2 rounded-lg bg-zinc-800 font-bold" onclick="FMO=true;R()">${m.fm} ▾</button><div class="text-center"><div class="text-yellow-400">${'★'.repeat(st)}${'☆'.repeat(5-st)}</div><b>OVR ${o}</b></div><div class="text-emerald-400">${'◆'.repeat(dm)}${'◇'.repeat(5-dm)}</div><div>💰 <b>${m.coins}</b></div></div>
+ <div class="pitch mt-2">${sl}<div class="c" style="position:absolute;left:6px;top:4px;z-index:3;width:76px;margin:0;padding:4px;text-align:center;background:#000a"><div class="text-2xl">${co[1]}</div><b class="text-xs">${co[0]}</b><div class="text-[9px] text-emerald-300">${co[3]||''}</div><div class="flex justify-center mt-1">${crest(m.club)}</div></div></div>
+ <div class="text-sm mt-3 font-bold">Скамейка (${bench.length})</div><div class="flex gap-2 overflow-x-auto py-2">${bench.map(id=>`<div class="${SEL&&SEL.t=='b'&&SEL.id==id?'sel':''}" onclick="pickB(${id})" style="flex:none">${gc(id)}</div>`).join('')}</div><div class="text-xs opacity-60">Нажмите игрока основы, затем запасного (или другого игрока основы) — они поменяются местами.</div>`}
+function pickX(i){const m=me();if(!SEL)SEL={t:'x',i};else if(SEL.t=='x'){const x=m.xi.slice();[x[i],x[SEL.i]]=[x[SEL.i],x[i]];SEL=null;send({a:'xi',xi:x})}else{const x=m.xi.slice();x[i]=SEL.id;SEL=null;send({a:'xi',xi:x})}R()}
+function pickB(id){const m=me();if(SEL&&SEL.t=='x'){const x=m.xi.slice();x[SEL.i]=id;SEL=null;send({a:'xi',xi:x})}else SEL={t:'b',id};R()}
+function fmV(){return`<div class="ov"><h2>Выбор схемы</h2><div class="grid grid-cols-3 gap-2">${Object.keys(FM).map(f=>`<button class="c" onclick="FMO=false;send({a:'fm',f:'${f}'})"><div class="mini">${dots(f).map(d=>`<i style="left:${d[0]}%;bottom:${d[1]}%"></i>`).join('')}</div><b class="text-sm">${f}</b></button>`).join('')}</div>${btn('Закрыть',"FMO=false;R()",'g')}</div>`}
+const table=()=>S.M.map((m,i)=>({m,i,p:m.st[1]*3+m.st[2]})).sort((a,b)=>b.p-a.p||(b.m.st[4]-b.m.st[5])-(a.m.st[4]-a.m.st[5])||b.m.st[4]-a.m.st[4]);
+function tabV(){return`<h2>Турнирная таблица</h2><div class="c text-xs overflow-x-auto"><table class="w-full" style="min-width:330px"><tr class="opacity-60"><td>#</td><td></td><td>Клуб</td><td>И</td><td>В</td><td>Н</td><td>П</td><td>З</td><td>П</td><td>РМ</td><td>О</td></tr>${table().map((x,k)=>{const s=x.m.st;return`<tr class="${x.m.pid==ME?'text-yellow-300':''}"><td>${k+1}</td><td>${crest(x.m.club)}</td><td>${esc(x.m.club)}</td><td>${s[0]}</td><td>${s[1]}</td><td>${s[2]}</td><td>${s[3]}</td><td>${s[4]}</td><td>${s[5]}</td><td>${s[4]-s[5]}</td><td><b>${x.p}</b></td></tr>`}).join('')}</table></div>
+ ${(()=>{const P=S.M.flatMap(m=>m.sq.map(id=>({p:S.P[id],c:m.club}))),top=(k,f)=>P.filter(x=>x.p[k]>0&&(!f||x.p.p=='G')).sort((a,b)=>b.p[k]-a.p[k]).slice(0,5).map(x=>`<div class="flex justify-between"><span>${esc(x.p.n)} <span class="opacity-60">${esc(x.c)}</span></span><b>${x.p[k]}</b></div>`).join('')||'—';return`<div class="c"><b>👟 Золотая бутса</b>${top('gl')}</div><div class="c"><b>🎯 Ассистенты</b>${top('as')}</div><div class="c"><b>🧤 Лучшие вратари (сухие матчи)</b>${top('cs',1)}</div>`})()}`}
+function rdV(){const fin=S.ph=='end',ch=table()[0];return`${fin?`<div class="c text-center"><div class="text-6xl">🏆</div><h2>Чемпион: ${esc(ch.m.club)}</h2><b>${esc(ch.m.n)}</b></div>`:`<h2>Тур ${S.rd+1} из ${S.fx.length}</h2>${S.fx[S.rd].map(([h,a])=>`<div class="c flex items-center justify-between text-sm"><span>${crest(S.M[h].club)} ${esc(S.M[h].club)}</span><b>vs</b><span>${esc(S.M[a].club)} ${crest(S.M[a].club)}</span></div>`).join('')}${S.evs.length?`<h2>События перед туром</h2>${S.evs.map(e=>`<div class="c text-sm">${esc(e)}</div>`).join('')}`:''}${btn('⚽ СИМУЛИРОВАТЬ ТУР',"send({a:'sim'})")}`}
+ ${S.last.length?`<h2>Итоги ${fin?'последнего ':'прошлого '}тура</h2>${S.last.map(r=>`<details class="c"><summary class="flex justify-between"><span>${esc(S.M[r.h].club)}</span><b class="text-yellow-400">${r.ga}:${r.gb}</b><span>${esc(S.M[r.a].club)}</span></summary><div class="text-xs mt-2">${r.ev.map(e=>`<div>${esc(e)}</div>`).join('')}</div></details>`).join('')}`:''}`}
+function trV(){const m=me(),o=S.M.filter(x=>x.pid!=ME);if(!o.length)return'';TR.f=Math.min(TR.f,o.length-1);const f=o[TR.f],opt=(a,v)=>a.map(id=>`<option value="${id}" ${id==v?'selected':''}>${esc(pl(id).n)} (${pl(id).o} ${POS[pl(id).p]})</option>`).join('');if(!m.sq.includes(+TR.g))TR.g=m.sq[0];if(!f.sq.includes(+TR.r))TR.r=f.sq[0];
+ return`<h2>Обмен с друзьями</h2><div class="c">Клуб<select onchange="TR.f=+this.value;R()">${o.map((x,i)=>`<option value="${i}" ${i==TR.f?'selected':''}>${esc(x.club)} · ${esc(x.n)}</option>`).join('')}</select>Отдаю<select onchange="TR.g=+this.value">${opt(m.sq,+TR.g)}</select>Получаю<select onchange="TR.r=+this.value">${opt(f.sq,+TR.r)}</select>Моя доплата, монет<input type="number" min="0" value="${TR.c}" oninput="TR.c=+this.value||0">${btn('Отправить предложение',"send({a:'offer',to:'"+f.pid+"',g:+TR.g,r:+TR.r,c:TR.c})")}</div>${S.offers.filter(x=>x.from==ME).map(x=>`<div class="c text-sm">⏳ Ждёт ответа: ${esc(pl(x.g).n)}${x.c?' + '+x.c+'💰':''} за ${esc(pl(x.r).n)}</div>`).join('')}`}
+function offerV(){const x=S.offers.find(o=>o.to==ME);if(!x)return'';const A=S.M[mi(x.from)];return`<div class="ov"><h2>Предложение обмена</h2><div class="c"><b>${esc(A.n)}</b> (${esc(A.club)}) отдаёт:${card(x.g)}${x.c?`<div class="text-center">+ ${x.c} 💰</div>`:''}за вашего:${card(x.r)}</div>${btn('Принять',`send({a:'resp',id:'${x.id}',ok:1})`,'v')}${btn('Отклонить',`send({a:'resp',id:'${x.id}',ok:0})`,'g')}</div>`}
+function topV(){const on=isHost?(NET&&NET.up):(NET&&NET.up);return`<div class="top"><span class="dot" style="background:${on?'#10b981':'#ef4444'}"></span><span>Комната <b>${esc(CODE)}</b>${isHost?' · вы хост':''} · ${on?'онлайн':'нет связи…'}</span><button onclick="leave()">Выйти</button></div>${hostAway()?'<div class="warn">Хост не в сети — игра продолжится, когда он вернётся во вкладку с игрой.</div>':''}`}
+function R(){const a=$('app'),n=$('nav'),ae=document.activeElement,fid=ae&&ae.id&&(ae.tagName=='INPUT'||ae.tagName=='SELECT')?ae.id:null,fv=fid?ae.value:null;
+ const tz=TOAST?`<div class="toast">${esc(TOAST)}</div>`:'';
+ if(!S){n.innerHTML='';a.innerHTML=homeV()+tz}
+ else{let h='';const main=S.ph=='main'||S.ph=='end';
+ if(!me()){n.innerHTML='';a.innerHTML=topV()+(S.ph=='lobby'?'<div class="c text-center mt-4">Входим в лобби…</div>':`<div class="c text-center mt-4">Игра в комнате ${esc(CODE)} уже началась без вас.${btn('На главную','leave()','g')}</div>`)+tz}
+ else{if(S.ph=='lobby')h=lobbyV();else if(S.ph=='coach')h=coachV();else if(S.ph=='auc')h=aucV();else h={sq:sqV,rd:rdV,tab:tabV,tr:trV}[TAB]();
+ a.innerHTML=topV()+h+(FMO&&main?fmV():'')+(main?offerV():'')+tz;
+ n.innerHTML=main?`<div class="nav">${[['sq','📋','Состав'],['rd','⚽','Тур'],['tab','📊','Таблица'],['tr','🔁','Обмен']].map(t=>`<button class="${TAB==t[0]?'on':''}" onclick="TAB='${t[0]}';SEL=null;R()"><div class="text-lg">${t[1]}</div>${t[2]}</button>`).join('')}</div>`:''}}
+ if(fid){const el=$(fid);if(el&&el!==document.activeElement){if(fv!=null&&el.tagName=='INPUT')el.value=fv;try{el.focus({preventScroll:true})}catch(e){}}}}
+setInterval(()=>{if(S&&!isHost){const w=!!hostAway();if(w!=HBW){HBW=w;R()}}},1000);
+setInterval(()=>{if(!S||S.ph!='auc'||!S.au||S.au.sold||!$('tm'))return;const l=Math.max(0,S.au.end-Date.now()),s=Math.ceil(l/1000);$('tm').textContent=s+' c';$('tm').style.color=s<=3?'#ef4444':'#fff';$('bar').style.width=Math.min(100,l/110)+'%';if(s<=3&&s>0&&s!=LT)sndTick();LT=s},150);
+R();
+</script></body></html>
