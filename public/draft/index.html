@@ -160,7 +160,7 @@ const SIT=[
 {t:'Навес на дальнюю штангу',b:28,gk:0,a:['Сброс вдоль ворот','Удар головой в створ','Удар с лёта'],d:['Выиграть верх и вынести','Вратарь выходит на перехват','Выставить ногу под удар'],L:{A:[[2,1],[64,8],[54,13]],D:[[50,3],[62,6],[48,10]],ball:[3,1],to:[63,7],ai:1,di:1}},
 {t:'Финальный штурм на 90+ минуте',b:18,gk:0,a:['Дальний удар на удачу','Пас в штрафную','Навес в толпу'],d:['Блок удара телом','Офсайдная ловушка','Вратарь выходит на навес'],L:{A:[[50,40],[40,14],[58,12],[50,17]],D:[[50,3],[42,10],[55,10],[48,22],[60,24]],ball:[50,38],to:[50,24],ai:0,di:3}}];
 const SEC={G:'',C:'R',L:'Y',R:'Z',D:'M',M:'D',A:'M',Y:'W',Z:'X',W:'Y',X:'Z',S:'A'},FAN=['FR','ES','BR','AR','DE','IT','PT','NL','EN','BE','HR','UY'];
-const DEVS='Юдицкий Никита Петрович, Спасов Артемий Васильевич',PRIZE=[15,10,6],CUPW=10,CUPF=4,BOOT=3,DUEL=12000,REVEAL=5500,TFIRST=7000,TNEXT=5000,XFER=120000;
+const DEVS='Юдицкий Никита Петрович, Спасов Артемий Васильевич',QA='Кронда Алексей',PRIZE=[15,10,6],CUPW=10,CUPF=4,BOOT=3,DUEL=12000,REVEAL=5500,TFIRST=7000,TNEXT=5000,XFER=120000;
 let MCMS=100;   // match centre: real ms per match minute (90+ minutes ~ 9-10 s)
 const mm=x=>x>90?'90+'+(x-90):String(x);
 // off-season gacha: rating tiers and their chance per lot
@@ -251,7 +251,7 @@ function fillUp(m){while(m.sq.length<S.cfg.sq){const c=cover(m),miss=slots(m.fm)
 const need=m=>S.cfg.sq-m.sq.length,nextAfter=p=>S.ord[(S.ord.indexOf(p)+1)%S.ord.length];
 function rot(list,from){const n=S.ord.length,i0=Math.max(0,S.ord.indexOf(from)),r=[];for(let k=0;k<n;k++){const p=S.ord[(i0+k)%n];if(list.includes(p))r.push(p)}return r}
 const hasTI=m=>m.sq.some(id=>tiVal(pl(id).o)>0&&!pl(id).esc);
-function eligible(k,st,size){return S.ord.filter(pid=>{const m=S.M[mi(pid)];if(!m||m.coins<st)return false;if(k=='c')return m.coach==null;if(k=='s')return m.stad==null;if(S.ph=='auc'&&S.ap==1)return m.sq.length<11;return need(m)>=(size||1)||((size||1)==1&&hasTI(m))})}
+function eligible(k,st,size){return S.ord.filter(pid=>{const m=S.M[mi(pid)];if(!m||m.coins<st)return false;if(m.finishedAuction&&(S.ph=='auc'||S.ph=='oauc'))return false;if(k=='c')return m.coach==null;if(k=='s')return m.stad==null;if(S.ph=='auc'&&S.ap==1)return m.sq.length<11;return need(m)>=(size||1)||((size||1)==1&&hasTI(m))})}
 function startCoachAuc(){S.ord=shuf(S.M.map(m=>m.pid));S.ns=S.ord[0];S.ph='cauc';S.cpool=shuf(CO.map(c=>c.i));S.cleft=[];S.lot=0;S.au=null;nextLot()}
 function setTurn(u,pid){u.turn=pid;u.end=Date.now()+(u.bid?TNEXT:TFIRST)}   // 7 s on a fresh lot, 5 s once there is a bid
 // trade-in escrow: the offered player stays in the squad (locked) until the lot is won; outbid -> unlocked
@@ -268,7 +268,7 @@ function nextLot(){if(S.au&&!S.au.sold)return;
  if(S.ph=='oauc'){for(;;){if(!S.pool.length||S.oaLeft<=0)return endOA();const id=S.pool.shift();S.oaLeft--;const st=startPrice(pl(id).o),el=eligible('p',st);if(el.length)return openLot('p',id,st,el)}}
  if(S.ph=='sauc'){const el=eligible('s',1);if(!el.length||!S.spool.length){S.au=null;return setupSeason()}return openLot('s',S.spool.shift(),1,el)}
  if(S.ph!='auc')return;
- for(;;){const needers=S.M.filter(m=>need(m)>0&&m.coins>0);
+ for(;;){const needers=S.M.filter(m=>need(m)>0&&m.coins>0&&!m.finishedAuction);
   if(Date.now()>=S.aucEnd||!needers.length)return finishDraft();   // league-wide timer over or nobody can buy: free agents fill the rest
   if(S.ap==1){if(!S.pool.length||!S.M.some(m=>m.sq.length<11&&m.coins>0)){S.bench.push(...S.pool);S.pool=[];S.ap=2;continue}
    const id=S.pool.shift(),st=startPrice(pl(id).o),el=eligible('p',st);if(el.length)return openLot('p',id,st,el);continue}
@@ -280,12 +280,12 @@ function nextLot(){if(S.au&&!S.au.sold)return;
 function advance(){const u=S.au,o=u.order,n=o.length,i=o.indexOf(u.turn);for(let k=1;k<=n;k++){const p=o[(i+k)%n];if(u.pass.includes(p))continue;if(p==u.ld)return closeLot();setTurn(u,p);return bc()}closeLot()}
 const lotName=u=>u.k=='s'?STAD[u.id].n:u.k=='c'?CO[u.id].n:u.k=='k'?u.nm:pl(u.id).n;
 function closeLot(){const u=S.au;if(!u||u.sold)return;
- if(u.ld){const m=S.M[mi(u.ld)];if(u.esc&&u.esc.pid==u.ld){const p=pl(u.esc.id);u.log.push(`🔁 ${p.n} списан из состава ${m.club} (Trade-in)`);tradeIn(m,u.esc.id);u.esc=null}m.coins-=(u.ldc!=null?u.ldc:u.bid);if(u.k=='s')m.stad=u.id;else if(u.k=='c')m.coach=u.id;else(u.ids||[u.id]).forEach(id=>addP(m,id));u.sold=`${lotName(u)} → ${m.club} за ${u.bid} 💰`;u.win=u.ld;S.ns=nextAfter(u.ld)}
+ if(u.ld){const m=S.M[mi(u.ld)];if(u.esc&&u.esc.pid==u.ld){const p=pl(u.esc.id);u.log.push(`🔁 ${p.n} списан из состава ${m.club} (Trade-in)`);tradeIn(m,u.esc.id);u.esc=null}m.coins-=(u.ldc!=null?u.ldc:u.bid);if(u.k=='s')m.stad=u.id;else if(u.k=='c')m.coach=u.id;else{(u.ids||[u.id]).forEach(id=>addP(m,id));if(m.finishedAuction){while(m.sq.length>S.cfg.sq){const fa=m.sq.filter(i=>i>=1000).sort((a,b)=>pl(a).o-pl(b).o)[0];if(fa==null)break;release(m,fa)}autoXI(m,true)}}u.sold=`${lotName(u)} → ${m.club} за ${u.bid} 💰`;u.win=u.ld;S.ns=nextAfter(u.ld)}
  else{u.sold=`${lotName(u)} — лот сгорел`;u.burn=1;if(u.k=='c')S.cleft.push(u.id);S.ns=nextAfter(u.first)}
  u.turn=null;bc();setTimeout(nextLot,1800)}
 function endCoachAuc(){const free=shuf([...S.cleft,...S.cpool]);S.M.forEach(m=>{if(m.coach==null)m.coach=free.length?free.shift():CO.find(c=>!S.M.some(x=>x.coach===c.i)).i});
  S.ph='auc';buildPool();S.aucEnd=Date.now()+(S.cfg.at||15)*60000;S.au=null;S.ord=shuf(S.ord);S.ns=S.ord[0];nextLot()}
-function finishDraft(){releaseEsc(S.au);S.au=null;S.fill=false;S.aucEnd=0;S.M.forEach(m=>{fillUp(m);autoXI(m)});preSeason()}
+function finishDraft(){releaseEsc(S.au);S.M.forEach(m=>delete m.finishedAuction);S.au=null;S.fill=false;S.aucEnd=0;S.M.forEach(m=>{fillUp(m);autoXI(m)});preSeason()}
 // stadium auction (start price 1) before the league starts, for stadiums nobody owns yet
 function preSeason(){const free=STAD.filter(s=>!S.M.some(m=>m.stad===s.i)).map(s=>s.i);if(free.length&&S.M.some(m=>m.stad==null&&m.coins>=1)){S.ph='sauc';S.spool=shuf(free);S.ord=shuf(S.ord);S.ns=S.ord[0];S.au=null;S.lot=0;nextLot()}else setupSeason()}
 // league (round robin) + League Cup (knock-out) interleaved into one schedule
@@ -323,7 +323,7 @@ function shootout(h,a){const A=S.M[h],B=S.M[a],kick=(m,o)=>{const sh=pick(m.xi.m
 function startTour(){if(!curFx().length){applyResults([]);return bc()}if(S.cfg.mode=='q')simRound();else startLive();bc()}
 // quick tour: results are computed at once but revealed minute by minute on every phone; the table changes at the final whistle
 function simRound(){if(S.ph!='main'||S.mc)return;const it=curIt(),res=curFx().map(([h,a])=>{const r={h,a,...simM(S.M[h],S.M[a])};if(it.t=='C'&&r.ga==r.gb){r.pen=shootout(h,a);r.ev.push(`🥅 Ничья — серия пенальти ${r.pen[0]}:${r.pen[1]}`)}return r});
- const mx=Math.max(90,...res.map(r=>90+r.add)),dur=(mx+25)*MCMS;S.prepEnd=0;S.mc={res,ms:MCMS,dur,end:Date.now()+dur,sk:[],nm:it.t=='C'?'🏆 Кубок Лиги · '+S.cupName:'Лига · тур '+(it.i+1)}}
+ const mx=Math.max(90,...res.map(r=>90+r.add)),dur=(mx+25)*MCMS;S.prepEnd=0;S.mc={res,ms:MCMS,dur,end:Date.now()+dur,nm:it.t=='C'?'🏆 Кубок Лиги · '+S.cupName:'Лига · тур '+(it.i+1)}}
 function endMC(){const r=S.mc.res;S.mc=null;applyResults(r)}
 function applyResults(res){const it=curIt(),w=m=>((coachOf(m)||{e:{}}).e.w||0);
  res.forEach(r=>{const A=S.M[r.h],B=S.M[r.a];
@@ -373,9 +373,9 @@ function gachaPool(k){const free=DB.map(p=>p.id).filter(id=>!S.M.some(m=>m.sq.in
  const lo=Math.round(k*.15);for(let g=0;cnt[1]<lo&&by[1].length&&g<k;g++){const z=out.findIndex(x=>x[1]>=2);if(z<0)break;cnt[out[z][1]]--;by[out[z][1]].push(out[z][0]);out[z]=[by[1].pop(),1];cnt[1]++}
  if(out.length<k){const rest=free.filter(id=>!out.some(x=>x[0]==id)&&pl(id).o>=60).sort((a,b)=>pl(b).o-pl(a).o).slice(0,k-out.length);rest.forEach(id=>{const o=pl(id).o;out.push([id,TIERS.findIndex(t=>o>=t[0])<0?3:TIERS.findIndex(t=>o>=t[0])])})}
  return out}
-function startOA(){const k=Math.min(15,9+S.M.length),g=gachaPool(k);S.oaMix=[0,1,2,3].map(j=>g.filter(x=>x[1]==j).length);
+function startOA(){S.M.forEach(m=>delete m.finishedAuction);const k=Math.min(15,9+S.M.length),g=gachaPool(k);S.oaMix=[0,1,2,3].map(j=>g.filter(x=>x[1]==j).length);
  S.ph='oauc';S.pool=shuf(g.map(x=>x[0]));S.oaLeft=S.pool.length;S.ord=shuf(S.ord);S.ns=S.ord[0];S.au=null;S.lot=0;nextLot()}
-function endOA(){S.oaDone=true;S.au=null;startNewSeason();bc()}
+function endOA(){S.oaDone=true;S.M.forEach(m=>delete m.finishedAuction);S.au=null;startNewSeason();bc()}
 function startNewSeason(){S.offEnd=0;S.season++;S.prog=null;S.sum=null;S.M.forEach(m=>{fillUp(m);autoXI(m)});preSeason()}
 // ---- transfer market between managers: list with a price, buy now, withdraw
 const mkOpen=()=>!!S&&((S.ph=='main'&&!S.live&&!S.mc)||S.ph=='off'),mkCap=()=>S.cfg.sq+3;   // 3 extra reserve places over the draft squad size
@@ -396,6 +396,11 @@ function handle(a,pid){if(!S)return;const m=S.M[mi(pid)],H=S.M[0].pid==pid,u=S.a
  case'bid':if(m&&u&&!u.sold&&u.turn==pid&&Number.isInteger(a.x)&&a.x>=0&&a.x<=m.coins){let tv=0;if(a.ti!=null){if(u.k=='c'||u.k=='s'||!m.sq.includes(a.ti)||pl(a.ti).esc)break;tv=tiVal(pl(a.ti).o);if(!tv)break}else if(u.k!='c'&&u.k!='s'&&need(m)<(u.ids?u.ids.length:1))break;
   const tot=a.x+tv;if(tot<(u.bid?u.bid+1:u.st))break;releaseEsc(u);if(tv){S.P[a.ti].esc=1;u.esc={pid,id:a.ti,tv};u.log.push(`🔒 ${m.n}: ${pl(a.ti).n} в залоге (+${tv})`)}u.bid=tot;u.ldc=a.x;u.ld=pid;advance()}break;
  case'pass':if(m&&u&&!u.sold&&u.turn==pid){u.pass.push(pid);advance()}break;
+ // a manager leaves the auction for good: passes every lot, empty places -> free agents, the coins stay in the club
+ case'done':if(m&&!m.finishedAuction&&(S.ph=='auc'||S.ph=='oauc')){m.finishedAuction=true;const f=Math.max(0,need(m));fillUp(m);autoXI(m,true);
+  if(u&&!u.sold){if(u.esc&&u.esc.pid==pid&&u.ld!=pid)releaseEsc(u);if(u.order.includes(pid)&&!u.pass.includes(pid)&&u.ld!=pid){u.pass.push(pid);u.log=[...(u.log||[]),`🏁 ${m.n} завершил аукцион${f?' (+'+f+' св. агентов)':''}`];if(u.turn==pid)advance()}}
+  const act=S.M.filter(x=>!x.finishedAuction&&x.coins>0&&(S.ph=='oauc'||need(x)>0));
+  if(!act.length&&(!u||u.sold||!u.order.some(p=>!u.pass.includes(p)&&p!=u.ld))){if(u&&!u.sold){u.sold='Все менеджеры завершили аукцион';u.turn=null}if(S.ph=='auc')finishDraft();else endOA()}}break;
  case'endauc':if(H&&['cauc','auc','oauc','sauc'].includes(S.ph)){if(u&&!u.sold){releaseEsc(u);u.sold='Этап завершён хостом'}if(S.ph=='cauc')endCoachAuc();else if(S.ph=='oauc')endOA();else if(S.ph=='sauc'){S.au=null;setupSeason()}else finishDraft()}break;
  case'fill':if(m&&S.ph=='auc'&&S.fill){fillUp(m);if(S.M.every(x=>need(x)<=0))finishDraft()}break;
  case'fillall':if(H&&S.ph=='auc'){if(u&&!u.sold)u.sold='Драфт завершён';finishDraft()}break;
@@ -409,7 +414,7 @@ function handle(a,pid){if(!S)return;const m=S.M[mi(pid)],H=S.M[0].pid==pid,u=S.a
  case'var':if(m&&S.live&&L.rev){const x=L.m.find(y=>S.M[y.cur.side?y.h:y.a].pid==pid);if(x&&x.cur.res=='goal'&&!x.cur.var&&!(x.varU||[]).includes(pid)){x.varU=[...(x.varU||[]),pid];const c=x.cur;
   if(Math.random()<.5){c.var='cancel';if(c.side)x.gb--;else x.ga--;S.P[c.ap].gl--;if(c.as!=null&&S.P[c.as])S.P[c.as].as--;x.ev.push('📺 VAR: гол отменён — офсайд в начале атаки!')}else{c.var='stand';x.ev.push('📺 VAR: гол засчитан')}L.revEnd=Math.max(L.revEnd,Date.now()+3500)}}break;
  case'mode':if(H&&['i','q'].includes(a.v))S.cfg.mode=a.v;break;
- case'skip':if(m&&S.mc&&!S.mc.sk.includes(pid))S.mc.sk.push(pid);break;
+ case'skip':if(H&&S.mc)endMC();break;   // only the host can cut the live match short - for everybody
  case'list':{const id=+a.id,pr=+a.pr;if(m&&mkOpen()&&Number.isInteger(id)&&m.sq.includes(id)&&!pl(id).esc&&Number.isInteger(pr)&&pr>=1&&pr<=99&&m.sq.length>11&&!S.mk.some(x=>x.id===id))S.mk.push({id,pid,pr,t:Date.now()});break}
  case'unlist':S.mk=S.mk.filter(x=>!(x.id===+a.id&&x.pid==pid));break;
  case'buy':if(m){const e=buyMk(m,pid,+a.id,a.rel==null?null:+a.rel);if(e)S.mkErr={pid,e,t:Date.now()}}break;
@@ -457,7 +462,7 @@ function pubState(){if(!S)return;const n=Date.now(),L=S.live;if(S.au&&!S.au.sold
 function tick(){if(!S)return;const n=Date.now(),u=S.au,L=S.live;
  if(['auc','cauc','oauc','sauc'].includes(S.ph)&&u&&!u.sold&&u.turn&&n>=u.end){u.pass.push(u.turn);advance()}
  if(S.ph=='off'&&S.offEnd&&(n>=S.offEnd||S.M.every(m=>S.ready.includes(m.pid)))){S.offEnd=0;if(!S.oaDone)startOA();else startNewSeason();bc()}
- if(S.ph=='main'){if(S.mc){if(n>=S.mc.end||S.M.every(m=>S.mc.sk.includes(m.pid))){endMC();bc()}}else if(L){if(!L.rev&&n>=L.end)resolveMoments();else if(L.rev&&n>=L.revEnd){if(L.step<L.n)nextMoment();else{finishLive();bc()}}}
+ if(S.ph=='main'){if(S.mc){if(n>=S.mc.end){endMC();bc()}}else if(L){if(!L.rev&&n>=L.end)resolveMoments();else if(L.rev&&n>=L.revEnd){if(L.step<L.n)nextMoment();else{finishLive();bc()}}}
   else if(S.prepEnd&&(n>=S.prepEnd||S.M.every(m=>S.ready.includes(m.pid))))startTour()}}
 function hostUp(mq,b){NET=mq;NB=b;isHost=true;BUSY=false;ERR='';SIMG=Object.assign(ls.get('fdt6_simg')||{},SIMG);
  mq.onMsg=(t,p)=>{if(t!=T('a'))return;let d;try{d=JSON.parse(p)}catch(e){return}if(d&&typeof d.p=='string'&&d.p.length<40&&S)handle(d,d.p)};
@@ -510,7 +515,7 @@ function utCard(id,sl,sm){const p=pl(id),v=eff(p,sl),b=bdgC(p.c);return`<div cla
 function coachCard(i,x=''){const c=CO[i],u=phC(i);return`<div class="c flex items-center gap-3" style="border-color:#d4a72c">${u?im(u,'av','style="width:64px;height:64px"'):`<div class="text-4xl">${flag(c.nat)}</div>`}<div class="flex-1"><div class="text-xs" style="opacity:.6">ГЛАВНЫЙ ТРЕНЕР</div><b class="text-lg">${flag(c.nat)} ${esc(c.n)}</b><div class="text-xs" style="opacity:.75">${esc(c.club)}${c.lg?' · '+LG[c.lg]:''}</div><div class="text-xs text-emerald-400 mt-1">⚡ ${esc(c.perk)}: ${perkTxt(c.e)}</div><div class="text-[11px]" style="opacity:.6">+1 ◆ игрокам ${c.lg?'его нации и лиги':'его нации'}</div></div>${x}</div>`}
 const gc=(id,sl,ch)=>{if(id==null)return`<div class="pc" style="--c:#555"><b class="o">—</b><i class="p">${sl?PN[sl]:''}</i><span class="nm">пусто</span></div>`;const p=pl(id),v=eff(p,sl),bad=sl&&v<p.o+(p.mod||0)-4,mid=sl&&!bad&&p.p!=sl,b=bdgC(p.c);
  return`<div class="pc ${p.out?'opacity-40':''}" style="--c:${rc(p.o)}"><b class="o" style="${bad?'color:#b91c1c':mid?'color:#92400e':''}">${v}</b><i class="p">${sl?PN[sl]:PN[p.p]}</i>${im(phP(id),'ph')}<span class="nm">${esc(short(p.n))}</span><div class="ft">${flag(p.nat)}${b?`<img src="${esc(b)}" alt="" onerror="this.remove()">`:''}</div>${ch!=null?`<em>${'◆'.repeat(ch)}${'◇'.repeat(3-ch)}</em>`:`<em style="color:#1a1400">${sl?'':PN[p.p]+(p.s?'/'+PN[p.s]:'')}</em>`}${p.out?'<u>🚑</u>':''}</div>`};
-const credits=()=>`<div class="credits">⚽ FC Draft Online<b>Разработчики игры:</b>${esc(DEVS)}</div>`;
+const credits=()=>`<div class="credits">⚽ FC Draft Online<b>Разработчики игры:</b>${esc(DEVS)}<b>Тестировщик:</b>${esc(QA)}</div>`;
 function homeV(){const qs=new URLSearchParams(location.search),q=normCode(qs.get('r')||''),qb=qs.get('b');if(q&&!RC)RC=q;if(!HT)HT=q?'join':'create';const dis=BUSY||!window.WebSocket,lb='class="text-sm block" style="opacity:.7;margin-top:10px"',hs=ls.get('fdt6_host'),lr=ls.get('fdt6_last');
  const opt=(arr,v,f,lab)=>`<select onchange="${f}=${typeof v=='number'?'+':''}this.value">${arr.map((n,i)=>`<option value="${n}" ${n==v?'selected':''}>${lab?lab[i]:n}</option>`).join('')}</select>`;
 return`<div class="hero text-center"><div class="text-5xl">⚽</div><div class="logo mt-2">FC DRAFT<br><em>ONLINE</em></div><p class="text-sm mt-3" style="opacity:.85">Турбо-аукцион, лига и кубок, PvP-дуэли и карьера на много сезонов — с друзьями, каждый со своего телефона</p><div class="flex justify-center gap-2 mt-3 flex-wrap"><span class="chip">⚡ Турбо-аукцион</span><span class="chip">⚔️ Дуэли</span><span class="chip">🏆 Лига + Кубок</span><span class="chip">📅 Сезоны</span></div><div class="text-xs mt-3" style="opacity:.6">2–20 менеджеров · ${DB.length} игроков · ${CO.length} тренеров · ${SIT.length} игровых ситуаций</div></div>
@@ -537,21 +542,23 @@ function tiPanel(u,m,minB){if(u.k=='c'||u.k=='s')return'';const L=m.sq.filter(id
  return`<div class="c" style="border-color:#d4a72c"><b>🔁 Trade-in</b><div class="text-xs" style="opacity:.7">Выберите игрока: его номинал добавится к ставке (70–79 → +1, 80–85 → +2, 86+ → +4). Игрок уходит в залог 🔒: перебьют — он вернётся в состав, выиграете лот — уйдёт в банк и освободит слот.</div><div class="mt-1">${L.map(id=>`<button class="tag ${id==s?'on':''}" onclick="TIS=${id};R()">${esc(short(pl(id).n))} ${pl(id).o} → +${tiVal(pl(id).o)}</button>`).join('')}</div>
  ${s!=null?`<div class="grid grid-cols-2 gap-2">${[0,1,3].map(d=>Math.max(0,minB-v)+d).filter((c,i,a)=>c<=m.coins&&a.indexOf(c)==i).map(c=>`<button class="b" style="margin:0" onclick="send({a:'bid',x:${c},ti:${s}});TIO=false;TIS=null">${c} 💰 + ${esc(short(pl(s).n))} = ${c+v}</button>`).join('')}</div>`:''}<button class="text-xs mt-2" style="opacity:.6" onclick="TIO=false;TIS=null;R()">Отмена</button></div>`}
 function stadCard(i,extra=''){const s=STAD[i],u=img('s'+i);return`<div class="c" style="padding:0;overflow:hidden;border-color:#d4a72c">${u?`<div style="height:120px;background:linear-gradient(#0000,#000c),url('${esc(u)}') center/cover"></div>`:'<div style="height:56px;background:linear-gradient(135deg,#14532d,#0b3d24);display:flex;align-items:center;justify-content:center;font-size:30px">🏟</div>'}<div style="padding:10px"><b class="text-lg">🏟 ${esc(s.n)}</b><div class="text-xs" style="opacity:.7">${esc(s.cl)}</div><div class="text-sm text-emerald-400 mt-1">⚡ ${esc(s.d)}</div>${extra}</div></div>`}
+function finMsg(m){const f=Math.max(0,need(m));return`Завершить аукцион? Вы пасуете на всех следующих лотах${S.au&&!S.au.sold&&S.au.ld==m.pid?' (текущая лидирующая ставка остаётся в силе)':''}. ${f?f+' пустых мест займут бесплатные свободные агенты (OVR 64–70). ':''}${m.coins} 💰 останутся в казне клуба.`}
 function aucV(){const u=S.au,m=me(),ph=S.ph,hd=ph=='sauc'?'🏟 Аукцион домашних стадионов':ph=='cauc'?'🧑‍💼 Аукцион тренеров':ph=='oauc'?'💎 Мини-аукцион межсезонья':S.ap==1?'⚔️ Битва за основу':'📦 Пак-аукцион скамейки';
  const sub=ph=='auc'?(S.ap==1?`В основу: ${S.pool.length} игроков в пуле · одиночные лоты`:`Скамейка: ${S.bench.length} игроков · паки по 2–3`):ph=='oauc'?`Осталось лотов: ${S.oaLeft+(u&&!u.sold?1:0)}${S.oaMix?' · пул: '+S.oaMix.map((n,j)=>n?TIERS[j][3].split(' ')[0]+'×'+n:'').filter(Boolean).join(' '):''}`:ph=='sauc'?`Старт 1 монета · ещё стадионов: ${S.spool.length} · бонус действует в домашних матчах`:'';
  if(ph=='auc'&&S.fill){const nd=need(m);return`<h2>🏁 Аукцион завершён · Сезон ${S.season}</h2><div class="c text-sm">Торговаться больше не с кем — оставшиеся места заполняются свободными агентами (OVR 64–70).</div>${nd>0?btn(`⚡ Заполнить состав (${nd} ${nd==1?'игрок':'игроков'})`,"send({a:'fill'})",'v'):'<div class="c text-center">✅ Ваш состав укомплектован</div>'}<div class="c text-sm">${S.M.map(x=>`<span class="tag ${need(x)<=0?'ld':''}">${need(x)<=0?'✅':'⏳'} ${esc(x.n)} ${x.sq.length}/${S.cfg.sq}</span>`).join('')}</div>${isHost?btn('Заполнить всех и начать сезон →',"send({a:'fillall'})",'g'):''}${miniSquad(m)}`}
  if(!u)return`<h2>${hd}</h2><div class="c text-center">Готовим лот…</div>${miniSquad(m)}`;
  const ld=u.ld?S.M[mi(u.ld)]:null,my=u.turn==ME&&!u.sold,inLot=u.order.includes(ME),minB=u.bid?u.bid+1:u.st;
-const gt=ph=='auc'&&S.aucEnd?`<div class="c text-center" style="padding:6px"><span class="text-xs" style="opacity:.6">⏳ ОБЩИЙ ТАЙМЕР АУКЦИОНА</span> <b id="gt" class="text-xl">--</b></div>`:'';
+const fin=(ph=='auc'||ph=='oauc')?(m.finishedAuction?`<div class="c text-center text-sm" style="border-color:#10b981">🏁 Вы завершили аукцион: бюджет <b>${m.coins} 💰</b> сохранён, состав ${m.sq.length}/${S.cfg.sq}. Дальше только наблюдаете за торгами.</div>`:btn('🏁 Завершить аукцион (Сохранить бюджет)',`if(confirm(${esc(JSON.stringify(finMsg(m)))}))send({a:'done'})`,'g')):'';
+ const gt=ph=='auc'&&S.aucEnd?`<div class="c text-center" style="padding:6px"><span class="text-xs" style="opacity:.6">⏳ ОБЩИЙ ТАЙМЕР АУКЦИОНА</span> <b id="gt" class="text-xl">--</b></div>`:'';
  const whyOut=ph=='sauc'?(m.stad!=null?'у вас уже есть стадион':'не хватает монет'):ph=='cauc'?(m.coach!=null?'у вас уже есть тренер':'не хватает монет'):(ph=='auc'&&S.ap==1&&m.sq.length>=11)?'основа уже набрана':need(m)<(u.ids?u.ids.length:1)?'нет мест в составе':'не хватает монет на стартовую цену';
  const lot=u.k=='s'?stadCard(u.id):u.k=='c'?coachCard(u.id):u.k=='k'?`<div class="c"><b class="text-yellow-400">📦 ${esc(u.nm)}</b><div class="flex gap-2 mt-2 overflow-x-auto">${u.ids.map(id=>utCard(id,null,1)).join('')}</div></div>`:`<div class="flex gap-3 items-center mt-2">${utCard(u.id)}<div class="flex-1 text-sm">${card(u.id)}</div></div>`;
  return`<div class="flex justify-between text-sm"><b class="text-yellow-400">${hd}</b><span style="opacity:.7">Лот #${S.lot}</span></div><div class="text-xs" style="opacity:.6">Сезон ${S.season} · ${sub}</div>${gt}
  ${lot}
  <div class="c text-center"><div class="flex justify-between text-xs" style="opacity:.7"><span>Старт: ${u.st} 💰</span><span>ТЕКУЩАЯ СТАВКА</span><span>Ваши: ${m.coins} 💰</span></div><div class="text-4xl font-black text-yellow-400">${u.bid||'—'}</div><div>${ld?(ld.pid==ME?'✅ Вы лидируете':'Лидер: <b>'+esc(ld.n)+'</b> · '+esc(ld.club)):'Ставок пока нет'}</div>
  ${u.sold?'':`<div class="mt-1 text-sm">${my?'<b class="text-emerald-400">🎯 Ваш ход!</b>':'Ходит: <b>'+esc((S.M[mi(u.turn)]||{}).n)+'</b>'} · ⏱ <span id="tm" class="font-black">--</span></div><div class="bar mt-1"><div id="bar" style="width:100%"></div></div>`}${u.log&&u.log.length?`<div class="text-xs mt-1 text-yellow-400">${u.log.map(esc).join('<br>')}</div>`:''}</div>
- <div class="mt-1">${u.order.map(p=>{const x=S.M[mi(p)];return`<span class="tag ${p==u.turn&&!u.sold?'on':p==u.ld?'ld':u.pass.includes(p)?'off':''}">${p==ME?'★ ':''}${esc(x?x.n:'?')}</span>`}).join('')}</div>
+ <div class="mt-1">${u.order.map(p=>{const x=S.M[mi(p)];return`<span class="tag ${p==u.turn&&!u.sold?'on':p==u.ld?'ld':u.pass.includes(p)?'off':''}">${p==ME?'★ ':''}${x&&x.finishedAuction?'🏁 ':''}${esc(x?x.n:'?')}</span>`}).join('')}</div>
  ${u.sold?`<div class="c text-center text-lg ${u.burn?'':'text-yellow-400'}">${u.burn?'🔥':'🔨'} ${esc(u.sold)}</div>`:my?`<div class="grid grid-cols-3 gap-2">${(u.bid?[1,2,5].map(x=>[u.bid+x,'+'+x]):[[u.st,'Старт '+u.st],[u.st+1,u.st+1+''],[u.st+3,u.st+3+'']]).map(([v,t])=>`<button class="b" style="margin:0" ${v>m.coins?'disabled':''} onclick="send({a:'bid',x:${v}})">${t}</button>`).join('')}</div><div class="flex gap-2 mt-2"><input id="bx" type="number" inputmode="numeric" placeholder="Своя ставка (от ${minB})" style="margin:0"><button class="b v" style="margin:0;width:auto;padding:0 20px" onclick="const v=+$('bx').value;if(v>=${minB}&&v<=${m.coins})send({a:'bid',x:v});else toast('Ставка от ${minB} до ${m.coins}')">OK</button></div>${need(m)<(u.ids?u.ids.length:1)&&u.k!='c'&&u.k!='s'?'<div class="warn">Состав полон — ставить можно только через Trade-in (игрок уходит в залог).</div>':''}${tiPanel(u,m,minB)}${btn('Пас',"send({a:'pass'})",'g')}`:inLot?'':`<div class="c text-center text-sm" style="opacity:.7">Вы не участвуете в этом лоте: ${whyOut}</div>`}
- ${miniSquad(m)}
+ ${fin}${miniSquad(m)}
  ${isHost?btn(ph=='cauc'?'Завершить аукцион тренеров (остальным — случайные)':ph=='oauc'?'Завершить мини-аукцион':'Завершить торги (добор свободными агентами)',`if(confirm('Завершить этап досрочно?'))send({a:'endauc'})`,'g'):''}`}
 const ovr=m=>{const v=slots(m.fm).map((s,i)=>m.xi[i]!=null?eff(pl(m.xi[i]),s):30);return Math.round(v.reduce((a,b)=>a+b,0)/v.length)};
 function sqV(){const m=me(),F=rows(m.fm),ch=chemOf(m),o=ovr(m),st=Math.max(1,Math.min(5,Math.round((o-60)/6))),co=coachOf(m);let k=0;
@@ -595,7 +602,7 @@ function miniPitch(c,atkM,defM){const L=SIT[c.k].L,A=pl(c.ap),D=pl(c.dp),av=eff(
  s+=`<line x1="${L.ball[0]}" y1="${L.ball[1]}" x2="${L.to[0]}" y2="${L.to[1]}" stroke="#fde047" stroke-width=".7" stroke-dasharray="1.5 1" marker-end="url(#ar)"/><circle cx="${L.ball[0]}" cy="${L.ball[1]}" r="1.2" fill="#fff" stroke="#000" stroke-width=".3"/>`;
  const a=L.A[L.ai],d=L.D[L.di],up=a[1]>d[1];s+=lab(a[0],up?a[1]+6:a[1]-3.2,short(A.n)+' '+av,'#bbf7d0')+lab(d[0],up&&d[1]>9?d[1]-3.2:d[1]+6,short(D.n)+' '+dv,'#fecaca');return s+'</svg>'}
 // ================= MATCH CENTRE (live score) =================
-function mcMin(){const c=S.mc;if(MCSK===S.si)return 999;return Math.floor((Date.now()-(c.end-c.dur))/c.ms)}
+function mcMin(){const c=S.mc;return Math.floor((Date.now()-(c.end-c.dur))/c.ms)}
 function mcState(r,cm){const T=90+r.add,cur=Math.min(cm,T),ev=r.tl.filter(e=>e[0]<=cur);let ga=0,gb=0;ev.forEach(e=>{if(e[1]=='g'){if(e[2])gb++;else ga++}});const lg=ev.filter(e=>e[1]=='g').pop();return{T,cur,ev,ga,gb,ft:cm>T,fl:lg&&cm<=T+2&&cur-lg[0]<9?lg:null}}
 const clk=(cm,T)=>cm<1?"0'":cm>T?'FT':cm>90?"90+"+(cm-90)+"'":cm+"'";
 function mcInner(){const c=S.mc,cm=mcMin(),mine=c.res.find(r=>S.M[r.h].pid==ME||S.M[r.a].pid==ME),feat=mine||c.res[0],mx=Math.max(...c.res.map(r=>90+r.add)),allFt=cm>mx;
@@ -606,7 +613,7 @@ function mcInner(){const c=S.mc,cm=mcMin(),mine=c.res.find(r=>S.M[r.h].pid==ME||
   <div class="mt-2">${s.ev.length?s.ev.slice().reverse().map((e,i)=>`<div class="tk ${e[1]=='g'?'g':e[1]=='r'?'r':''} ${i==0&&cm-e[0]<6&&!s.ft?'nw':''}"><b>${mm(e[0])}'</b><span>${esc(e[3])} <span style="opacity:.55">· ${esc(S.M[e[2]?feat.a:feat.h].club)}</span></span></div>`).join(''):'<div class="text-xs text-center" style="opacity:.6">Стартовый свисток! Пока без опасных моментов…</div>'}</div></div>`}
  const oth=c.res.filter(r=>r!==feat);if(oth.length)h+=`<h2>Другие матчи</h2>`+oth.map(r=>{const s=mcState(r,cm),le=s.ev[s.ev.length-1];return`<div class="c">${sb(r)}<div class="text-xs text-center mt-1" style="opacity:.75">${s.ft?'FT'+(r.pen?` · пен ${r.pen[0]}:${r.pen[1]}`:''):le?mm(le[0])+"' "+esc(le[3]):'…'}</div></div>`}).join('');
  return h}
-function mcV(){const c=S.mc,sk=MCSK===S.si;return`<div id="mcbox">${mcInner()}</div>${sk?`<div class="c text-center text-sm" style="opacity:.8">⏩ Вы перемотали к финалу. Ждём остальных: ${c.sk.length}/${S.M.length}</div>`:btn('⏩ Пропустить до конца (Skip to result)',"MCSK=S.si;send({a:'skip'},1);R()",'g')}`}
+function mcV(){return`<div id="mcbox">${mcInner()}</div>${isHost?btn('⏩ Пропустить до конца / Завершить симуляцию (Skip to result)',"send({a:'skip'})",'g')+'<div class="text-xs text-center" style="opacity:.6">Пропуск сразу покажет итоги тура всей комнате.</div>':'<div class="c text-center text-xs" style="opacity:.7">⏱ Матч идёт до финального свистка. Перемотать тур может только хост.</div>'}`}
 // ================= TRANSFER MARKET =================
 function listMk(id,pr){pr=Math.round(+pr);if(!(pr>=1&&pr<=99))return toast('Цена — от 1 до 99 монет');send({a:'list',id,pr});SEL=null;toast(`🏷 ${pl(id).n} выставлен за ${pr} 💰`)}
 function buyNow(id){const m=me(),x=S.mk.find(y=>y.id===id);if(!x)return;if(m.sq.length>=mkCap()){BUYO=id;R();return}if(confirm(`Купить ${pl(id).n} за ${x.pr} 💰?`))send({a:'buy',id})}
@@ -653,8 +660,8 @@ function menuV(){return`<div class="ov"><div><h2>Меню</h2><div class="c"><b>
  ${isHost?`<div class="c text-sm"><b>Режим матчей</b><div class="seg mt-2"><button class="${S.cfg.mode!='q'?'on':''}" onclick="send({a:'mode',v:'i'})">⚔️ Моменты</button><button class="${S.cfg.mode=='q'?'on':''}" onclick="send({a:'mode',v:'q'})">📺 Матч-центр</button></div></div>`:`<div class="c text-sm">Режим матчей: <b>${S.cfg.mode=='q'?'📺 матч-центр':'⚔️ интерактивные моменты'}</b></div>`}
  ${cabinet()}${hallV()}
  <div class="c text-sm"><b>Дуэли</b><div style="opacity:.8">3–5 ситуаций за матч, 12 секунд на выбор. Шанс гола = база ситуации (1 на 1 — 60%, удар с 22 м — 25%, пенальти — 78%…) + разница рейтингов × 1.5% − 30%, если защита угадала. Защищающийся может 1 раз за матч запросить VAR: 50% — гол отменят.</div></div>
- <div class="c text-sm"><b>Аукцион</b><div style="opacity:.8">Пул = менеджеры × состав. Общий таймер аукциона (10–30 мин, задаёт хост), 7 с на ход, 5 с после ставки. Пока идёт таймер, покупать может любой с монетами — даже в одиночку по стартовой цене. Trade-in: ставка + игрок в залог (OVR 70–79 → +1, 80–85 → +2, 86+ → +4): перебили — игрок вернётся, выиграли — уйдёт и освободит слот (так можно торговаться и с полным составом). Таймер кончился или все набраны — пустые места займут свободные агенты (64–70). Затем аукцион домашних стадионов (старт 1 монета).</div></div>
- <div class="c text-sm"><b>📺 Матч-центр</b><div style="opacity:.8">В режиме «Матч-центр» тур идёт вживую: часы 1'→90' и 3–5 минут добавленного времени (~0,1 с на минуту), голы с ассистентами, карточки, сейвы, штанги, травмы и замены. «Пропустить до конца» сразу показывает счёт; таблица обновляется по финальному свистку.</div></div>
+ <div class="c text-sm"><b>Аукцион</b><div style="opacity:.8">Пул = менеджеры × состав. Общий таймер аукциона (10–30 мин, задаёт хост), 7 с на ход, 5 с после ставки. Пока идёт таймер, покупать может любой с монетами — даже в одиночку по стартовой цене. Trade-in: ставка + игрок в залог (OVR 70–79 → +1, 80–85 → +2, 86+ → +4): перебили — игрок вернётся, выиграли — уйдёт и освободит слот (так можно торговаться и с полным составом). Таймер кончился или все набраны — пустые места займут свободные агенты (64–70). Кнопка «Завершить аукцион (Сохранить бюджет)» выводит вас из торгов: пустые места сразу займут свободные агенты, монеты останутся на трансферный рынок и следующий сезон; когда закончат все — драфт завершается досрочно. Затем аукцион домашних стадионов (старт 1 монета).</div></div>
+ <div class="c text-sm"><b>📺 Матч-центр</b><div style="opacity:.8">В режиме «Матч-центр» тур идёт вживую: часы 1'→90' и 3–5 минут добавленного времени (~0,1 с на минуту), голы с ассистентами, карточки, сейвы, штанги, травмы и замены. Хост может нажать «Пропустить до конца» — итоги тура сразу откроются у всех; таблица обновляется по финальному свистку.</div></div>
  <div class="c text-sm"><b>🏷 Трансферный рынок</b><div style="opacity:.8">Между турами и в межсезонье: выставьте игрока за свою цену (3, 5, 8… монет) — любой менеджер купит его в один клик, монеты сразу уходят продавцу. Снять с рынка можно в любой момент до покупки. Лимит состава — заявка + 3 запасных места.</div></div>
  <div class="c text-sm"><b>💎 Межсезонный мини-аукцион</b><div style="opacity:.8">Лоты выпадают как в гаче: 90+ ≈4% (не больше одной звезды), 84–89 ≈17%, 78–83 ≈42%, 70–77 ≈33%.</div></div>
  <div class="c text-sm"><b>Стадионы</b>${STAD.map(s=>`<div style="opacity:.85">🏟 <b>${esc(s.n)}</b> — ${esc(s.d)}${S.M.find(m=>m.stad===s.i)?' · <span class="text-yellow-400">'+esc(S.M.find(m=>m.stad===s.i).club)+'</span>':''}</div>`).join('')}</div>
@@ -678,8 +685,8 @@ setInterval(()=>{if(!S)return;const n=Date.now(),L=S.live;
  if(L&&$('lt')){const tot=L.rev?REVEAL:DUEL,l=Math.max(0,(L.rev?L.revEnd:L.end)-n),s=Math.ceil(l/1000);$('lt').textContent=L.rev?'дальше через '+s+' с':s+' с';$('lt').style.color=!L.rev&&s<=3?'#ef4444':'';$('lbar').style.width=Math.min(100,l/tot*100)+'%';if(!L.rev&&s<=3&&s>0&&s!=TKS&&myMatch())sndTick();TKS=s}},200);
 setInterval(()=>{if(!S||!S.mc||!$('mcbox'))return;const c=S.mc,cm=mcMin(),key=S.si+'/'+cm;if(key==LMC)return;LMC=key;$('mcbox').innerHTML=mcInner();
  const mx=Math.max(...c.res.map(r=>90+r.add)),k=S.si+'';if(MCG.k!=k){MCG={k,g:0,w:0,f:0};if(cm<3)tone(1800,.5,'sine',.15)}
- const mine=c.res.find(r=>S.M[r.h].pid==ME||S.M[r.a].pid==ME)||c.res[0];if(mine&&MCSK!==S.si){const s=mcState(mine,cm),g=s.ga+s.gb;if(g>MCG.g)sndGoal();MCG.g=g}
- if(cm>mx&&!MCG.f){MCG.f=1;if(MCSK!==S.si){tone(1800,.35,'sine',.15);tone(1800,.35,'sine',.15,.45);tone(1800,.9,'sine',.15,.9)}}},100);
+ const mine=c.res.find(r=>S.M[r.h].pid==ME||S.M[r.a].pid==ME)||c.res[0];if(mine){const s=mcState(mine,cm),g=s.ga+s.gb;if(g>MCG.g)sndGoal();MCG.g=g}
+ if(cm>mx&&!MCG.f){MCG.f=1;tone(1800,.35,'sine',.15);tone(1800,.35,'sine',.15,.45);tone(1800,.9,'sine',.15,.9)}},100);
 setInterval(()=>{if(S&&!isHost){const w=!!hostAway();if(w!=HBW){HBW=w;R()}}},1000);
 R();
 </script></body></html>
