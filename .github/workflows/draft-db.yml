@@ -1,0 +1,35 @@
+name: Draft player database
+
+# Builds the FC Draft Online 2026/27 database (11 leagues, real squads) from Wikipedia, Wikidata and the EA ratings list.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['scripts/draft-db.cjs', '.github/workflows/draft-db.yml']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: draft-db
+  cancel-in-progress: true
+
+jobs:
+  db:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build the database
+        run: node scripts/draft-db.cjs
+      - name: Save the result to the draft-data branch (reviewed before it goes into the game)
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          mkdir -p /tmp/out && cp public/draft/db-src.json public/draft/db-report.json /tmp/out/ 2>/dev/null || true
+          git checkout --orphan draft-data && git rm -rfq . && cp /tmp/out/* . 2>/dev/null || true
+          git add -A && git commit -qm "db build $(date -u +%FT%TZ)" && git push -fq origin HEAD:draft-data
