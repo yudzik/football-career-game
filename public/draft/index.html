@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>FC Draft Online</title><meta name="fcv" content="17">
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>FC Draft Online</title><meta name="fcv" content="18">
 <script src="https://cdn.tailwindcss.com/3.4.17"></script><script src="https://telegram.org/js/telegram-web-app.js" async onload="try{tgInit()}catch(e){}"></script>
 <style>/* offline fallback: the utility classes this page uses (same values as Tailwind), so the layout holds without the CDN */
 *,::before,::after{border-width:0;border-style:solid;border-color:#e5e7eb}html{line-height:1.5}h1,h2,h3,p{margin:0}h1,h2,h3{font-size:inherit;font-weight:inherit}button,input,select{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0}button{background:transparent;padding:0;cursor:pointer}a{color:inherit;text-decoration:inherit}img,svg{display:block;max-width:100%}table{border-collapse:collapse}
@@ -82,7 +82,8 @@ h2{font-size:1.2rem;font-weight:900;color:#d4a72c;margin-top:6px}
 .fire{display:inline-block;margin-left:3px;animation:fire .9s ease-in-out infinite alternate;filter:drop-shadow(0 0 4px #f97316)}@keyframes fire{0%{transform:scale(1) rotate(-6deg)}100%{transform:scale(1.25) rotate(6deg)}}
 .radar{width:100%;max-width:300px;display:block;margin:6px auto}.radar .rad{animation:radIn .8s cubic-bezier(.2,1.5,.4,1) both}@keyframes radIn{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
 .dos{background:linear-gradient(170deg,#1e272b,#11171a);border:2px solid var(--c);border-radius:18px;padding:12px;box-shadow:0 0 30px color-mix(in srgb,var(--c) 35%,transparent)}.dph{width:96px;height:110px;flex:none;border-radius:12px;overflow:hidden;background:radial-gradient(circle at 50% 30%,color-mix(in srgb,var(--c) 45%,#000),#0d1113)}.dph img{width:100%;height:100%;object-fit:contain;object-position:bottom}.dob{font-size:40px;font-weight:900;text-align:center;line-height:110px;color:var(--c)}
-.blindhd{border-color:#a78bfa;background:linear-gradient(135deg,#1e1335,#171d20)}
+.mbx{border-color:#a78bfa;background:linear-gradient(135deg,#1e1335,#171d20)}.mbi{font-size:58px;line-height:1.1;display:inline-block;animation:mbs 1.6s ease-in-out infinite}@keyframes mbs{0%,100%{transform:rotate(-7deg) scale(1)}50%{transform:rotate(7deg) scale(1.1)}}.mflip{animation:mfl 1s cubic-bezier(.3,1.3,.5,1) both}@keyframes mfl{0%{transform:perspective(600px) rotateY(100deg) scale(.5);opacity:0}100%{transform:none;opacity:1}}
+.pzi{font-size:66px;animation:pzp 1.4s ease-in-out infinite}@keyframes pzp{50%{opacity:.35;transform:scale(.9)}}.pdot{font-size:15px;letter-spacing:1px}.pkb{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pkb button{margin:0;padding:12px 0}.gol{display:block;height:64px;border:3px solid #e8eceb;border-bottom:none;border-radius:6px 6px 0 0;position:relative;margin:6px 10% 0;background:repeating-linear-gradient(90deg,#ffffff10 0 6px,transparent 6px 12px)}.gol i{position:absolute;bottom:4px;font-style:normal;font-size:24px;transition:left .5s}.gol .bl{animation:bln .7s cubic-bezier(.2,1.4,.5,1) both}@keyframes bln{0%{transform:translateY(60px) scale(1.6);opacity:0}100%{transform:none;opacity:1}}
 .flip{width:74px;height:96px;perspective:600px}.flip .in{position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:flip .7s cubic-bezier(.3,1.3,.5,1) both}.flip .fr,.flip .bk{position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}.flip .fr{background:linear-gradient(160deg,#4c1d95,#1e1335);font-size:30px;border:2px solid #a78bfa}.flip .bk{transform:rotateY(180deg);background:linear-gradient(160deg,#d4a72c,#fff8 45%,#8a6a12);color:#1a1400}.flip .bk b{font-size:26px;font-weight:900;line-height:1}.flip .bk i{font-style:normal;font-size:10px;font-weight:800}.flip.win .bk{box-shadow:0 0 18px #fde047,0 0 0 3px #fde047}@keyframes flip{0%{transform:rotateY(0)}100%{transform:rotateY(180deg)}}
 .rvl{animation:boom .6s 1.4s both}
 .fx{position:fixed;inset:0;z-index:90;pointer-events:none;display:flex;align-items:center;justify-content:center}
@@ -450,37 +451,34 @@ function buildPool(){const n=S.M.length,cmp=COMP[S.cfg.sq]||COMP[18],core=[],ben
  if(!core.includes(SCH_ID)&&!bench.includes(SCH_ID)){const i=bench.findIndex(id=>grp(DB[id].p)==1);if(i>=0)bench[i]=SCH_ID;else bench.push(SCH_ID)}
  S.pool=shuf(core);S.bench=shuf(bench);S.ap=1;S.fill=false;S.blc=0;S.blN=8+rnd(3)}
 const packName=ids=>'Пак '+GN[grp(pl(ids[0]).p)]+': '+ids.map(id=>PN[pl(id).p]).join(' + ');
-function nextLot(){if(S.au&&!S.au.sold)return;
+function nextLot(){if(PZ){setTimeout(nextLot,1000);return}if(S.au&&!S.au.sold)return;
  if(S.ph=='cauc'){const el=eligible('c',1);if(!el.length||!S.cpool.length)return endCoachAuc();return openLot('c',S.cpool.shift(),1,el)}
  if(S.ph=='oauc'){for(;;){if(!S.pool.length||S.oaLeft<=0)return endOA();const id=S.pool.shift();S.oaLeft--;const st=startPrice(pl(id).o),el=eligible('p',st);if(el.length)return openLot('p',id,st,el)}}
  if(S.ph=='sauc'){const el=eligible('s',1);if(!el.length||!S.spool.length){S.au=null;giveStad();return setupSeason()}return openLot('s',S.spool.shift(),1,el)}
  if(S.ph!='auc')return;
  for(;;){const needers=S.M.filter(m=>need(m)>0&&m.coins>0&&!m.finishedAuction);
   if(Date.now()>=S.aucEnd||!needers.length)return finishDraft();   // league-wide timer over or nobody can buy: free agents fill the rest
-  if((S.blc||0)>=(S.blN||9)){S.blc=0;const id=blindPick();if(id!=null){const el=eligible('p',0);if(el.length)return openBlind(id,el);S.bench.push(id)}}
+  if((S.blc||0)>=(S.blN||9)){S.blc=0;const id=mysPick();if(id!=null){const el=eligible('p',MYST);if(el.length)return openMys(id,el);S.bench.push(id)}}
   if(S.ap==1){if(!S.pool.length||!S.M.some(m=>m.sq.length<11&&m.coins>0)){S.bench.push(...S.pool);S.pool=[];S.ap=2;continue}
    const id=S.pool.shift(),st=startPrice(pl(id).o),el=eligible('p',st);if(el.length)return openLot('p',id,st,el);continue}
   if(!S.bench.length)return finishDraft();
   const mx=Math.max(...needers.map(need)),g=[0,1,2,3].map(g=>S.bench.filter(id=>grp(pl(id).p)==g)).sort((a,b)=>b.length-a.length)[0];
   const id=g[0];S.bench=S.bench.filter(x=>x!==id);   // strictly ONE player per lot, always
   const st=startPrice(pl(id).o),el=eligible('p',st);if(el.length)return openLot('p',id,st,el)}}
-// ---- «Торги вслепую»: one player, 10 s, everybody bids secretly, all bids are revealed at once (bids stay on the host until then)
-const BLT=[[90,99,5,'💎 Суперзвезда 90+'],[86,89,15,'🥇 Топ-основа 86–89'],[81,85,50,'⭐ Костяк 81–85'],[71,80,20,'🔁 Ротация 71–80'],[0,70,10,'🪙 Бюджетный боец до 70']];let BLB={};
-const blindTier=()=>wp([0,1,2,3,4],BLT.map(x=>x[2]));
-function blindPick(){const c=[...S.pool,...S.bench];if(!c.length)return null;const t=blindTier(),ord=[t,t+1,t-1,t+2,t-2,t+3,t-3,t+4,t-4].filter(x=>x>=0&&x<5);
- for(const j of ord){const L=c.filter(id=>{const o=pl(id).o;return o>=BLT[j][0]&&o<=BLT[j][1]});if(L.length){const id=pick(L);S.pool=S.pool.filter(x=>x!==id);S.bench=S.bench.filter(x=>x!==id);S.blT=j;return id}}return null}
-function openBlind(id,el){S.lot++;BLB={};S.au={k:'b',id,st:0,bid:0,ldc:0,ld:null,order:el,pass:[],cf:[],first:el[0],log:[],turn:null,tier:S.blT,end:Date.now()+(offline()?864e5:10000)};S.blN=8+rnd(3);bc()}
-const sqRat=m=>{const a=m.sq.map(id=>pl(id).o).sort((x,y)=>y-x).slice(0,11);return a.length?a.reduce((s,x)=>s+x,0)/a.length:0};
-function closeBlind(){const u=S.au;if(!u||u.sold||u.k!='b')return;const bids=u.order.map(pid=>{const m=S.M[mi(pid)];return{pid,x:Math.max(0,Math.min(BLB[pid]||0,m?m.coins:0)),c:u.cf.includes(pid)}});u.rv=bids;const mx=Math.max(0,...bids.map(b=>b.x));
- if(mx<=0){u.sold=`${pl(u.id).n} — ставок нет, лот сгорел`;u.burn=1;S.bench.push(u.id)}
- else{const top=bids.filter(b=>b.x==mx).sort((a,b)=>sqRat(S.M[mi(a.pid)])-sqRat(S.M[mi(b.pid)])),w=top[0].pid,m=S.M[mi(w)];m.coins-=mx;addP(m,u.id);u.bid=mx;u.ld=w;u.win=w;u.tie=top.length>1;u.sold=`${pl(u.id).n} → ${m.club} за ${mx} 💰 (вслепую)`}
- u.turn=null;BLB={};bc();setTimeout(nextLot,5200)}
+// ---- «Тайник» (mystery box): every 8–10 lots one player is auctioned with name and rating hidden — only his position is shown.
+// Normal open bidding (turns, trade-in), fixed start 2. The real player is known only to the host (MYS, never in the shared state) and is revealed at the hammer.
+const MBT=[[90,99,5,'💎 90+'],[86,89,15,'🥇 86–89'],[81,85,50,'⭐ 81–85'],[71,80,20,'🔁 71–80'],[0,70,10,'🪙 до 70']],MYST=2;let MYS=null;
+const mysTier=()=>wp([0,1,2,3,4],MBT.map(x=>x[2]));
+function mysPick(){const c=[...S.pool,...S.bench];if(!c.length)return null;const t=mysTier(),ord=[t,t+1,t-1,t+2,t-2,t+3,t-3,t+4,t-4].filter(x=>x>=0&&x<5);
+ for(const j of ord){const L=c.filter(id=>{const o=pl(id).o;return o>=MBT[j][0]&&o<=MBT[j][1]});if(L.length){const id=pick(L);S.pool=S.pool.filter(x=>x!==id);S.bench=S.bench.filter(x=>x!==id);return id}}return null}
+function openMys(id,el){MYS=id;S.blN=8+rnd(3);S.lot++;const order=rot(el,S.ns);S.au={k:'m',id:null,pos:pl(id).p,st:MYST,bid:0,ldc:0,ld:null,order,pass:[],first:order[0],log:[]};ls.set('fdt6_mys',{code:CODE,lot:S.lot,id});setTurn(S.au,order[0]);bc()}
+function mysRestore(){const u=S&&S.au;if(!u||u.sold||u.k!='m'||MYS!=null)return;const q=ls.get('fdt6_mys');MYS=q&&q.code==CODE&&q.lot==S.lot?q.id:mysPick()}
 function advance(){const u=S.au,o=u.order,n=o.length,i=o.indexOf(u.turn);for(let k=1;k<=n;k++){const p=o[(i+k)%n];if(u.pass.includes(p))continue;if(p==u.ld)return closeLot();setTurn(u,p);return bc()}closeLot()}
-const lotName=u=>u.k=='s'?STAD[u.id].n:u.k=='c'?CO[u.id].n:u.k=='k'?u.nm:pl(u.id).n;
-function closeLot(){const u=S.au;if(!u||u.sold)return;
- if(u.ld){const m=S.M[mi(u.ld)];if(u.esc&&u.esc.pid==u.ld){const p=pl(u.esc.id);u.log.push(`🔁 ${p.n} списан из состава ${m.club} (Trade-in)`);tradeIn(m,u.esc.id);u.esc=null}m.coins-=(u.ldc!=null?u.ldc:u.bid);if(u.k=='s')m.stad=u.id;else if(u.k=='c')m.coach=u.id;else{(u.ids||[u.id]).forEach(id=>addP(m,id));if(m.finishedAuction){while(m.sq.length>S.cfg.sq){const fa=m.sq.filter(i=>i>=1000).sort((a,b)=>pl(a).o-pl(b).o)[0];if(fa==null)break;release(m,fa)}autoXI(m,true)}}u.sold=`${lotName(u)} → ${m.club} за ${u.bid} 💰`;u.win=u.ld;S.ns=nextAfter(u.ld)}
- else{u.sold=`${lotName(u)} — лот сгорел`;u.burn=1;if(u.k=='c')S.cleft.push(u.id);S.ns=nextAfter(u.first)}
- u.turn=null;bc();setTimeout(nextLot,1800)}
+const lotName=u=>u.k=='m'&&u.id==null?'📦 Тайник · '+PN[u.pos]:u.k=='s'?STAD[u.id].n:u.k=='c'?CO[u.id].n:u.k=='k'?u.nm:pl(u.id).n;
+function closeLot(){const u=S.au;if(!u||u.sold)return;if(u.k=='m'&&u.id==null){mysRestore();u.id=MYS;MYS=null;ls.del('fdt6_mys');if(u.id==null){u.sold='📦 Тайник оказался пустым';u.burn=1;u.turn=null;bc();return setTimeout(nextLot,1800)}}const myL=u.k=='m'?'📦 Тайник: '+pl(u.id).o+' · ':'';
+ if(u.ld){const m=S.M[mi(u.ld)];if(u.esc&&u.esc.pid==u.ld){const p=pl(u.esc.id);u.log.push(`🔁 ${p.n} списан из состава ${m.club} (Trade-in)`);tradeIn(m,u.esc.id);u.esc=null}m.coins-=(u.ldc!=null?u.ldc:u.bid);if(u.k=='s')m.stad=u.id;else if(u.k=='c')m.coach=u.id;else{(u.ids||[u.id]).forEach(id=>addP(m,id));if(m.finishedAuction){while(m.sq.length>S.cfg.sq){const fa=m.sq.filter(i=>i>=1000).sort((a,b)=>pl(a).o-pl(b).o)[0];if(fa==null)break;release(m,fa)}autoXI(m,true)}}u.sold=`${myL}${lotName(u)} → ${m.club} за ${u.bid} 💰`;u.win=u.ld;S.ns=nextAfter(u.ld)}
+ else{u.sold=u.k=='m'?`📦 Тайник никто не взял — внутри был ${pl(u.id).o} ${pl(u.id).n}`:`${lotName(u)} — лот сгорел`;u.burn=1;if(u.k=='c')S.cleft.push(u.id);if(u.k=='m')S.bench.push(u.id);S.ns=nextAfter(u.first)}
+ u.turn=null;bc();setTimeout(nextLot,u.k=='m'?4200:1800)}
 function endCoachAuc(){const free=shuf([...S.cleft,...S.cpool]);S.M.forEach(m=>{if(m.coach==null)m.coach=free.length?free.shift():CO.find(c=>!S.M.some(x=>x.coach===c.i)).i});
  S.ph='auc';buildPool();S.aucEnd=Date.now()+(S.cfg.at||15)*60000;S.au=null;S.ord=shuf(S.ord);S.ns=S.ord[0];nextLot()}
 function finishDraft(){releaseEsc(S.au);S.M.forEach(m=>delete m.finishedAuction);S.au=null;S.fill=false;S.aucEnd=0;S.M.forEach(m=>{fillUp(m);autoXI(m)});preSeason()}
@@ -556,9 +554,26 @@ function shootout(h,a){const A=S.M[h],B=S.M[a],kick=(m,o)=>{const sh=pick(m.xi.m
  let x=0,y=0;for(let i=0;i<5;i++){x+=kick(A,B);y+=kick(B,A)}let g=0;while(x==y&&g++<20){x+=kick(A,B);y+=kick(B,A)}if(x==y)x++;return[x,y]}
 function startTour(){if(!curFx().length){applyResults([]);return bc()}if(S.cfg.mode=='q')simRound();else startLive();bc()}
 // quick tour: results are computed at once but revealed minute by minute on every phone; the table changes at the final whistle
-function simRound(){if(S.ph!='main'||S.mc)return;const it=curIt(),res=curFx().map(([h,a])=>{const r={h,a,...simM(S.M[h],S.M[a])};if(it.t=='C'&&r.ga==r.gb){r.pen=shootout(h,a);r.ev.push(`🥅 Ничья — серия пенальти ${r.pen[0]}:${r.pen[1]}`)}return r});
+function simRound(){if(S.ph!='main'||S.mc||S.pens)return;const it=curIt(),res=curFx().map(([h,a])=>({h,a,...simM(S.M[h],S.M[a])}));
  const mx=Math.max(90,...res.map(r=>90+r.add)),dur=(mx+25)*MCMS;S.prepEnd=0;S.mc={res,ms:MCMS,dur,end:Date.now()+dur,nm:it.t=='C'?'🏆 Кубок Лиги · '+S.cupName:'Лига · тур '+(it.i+1)}}
-function endMC(){const r=S.mc.res;S.mc=null;applyResults(r)}
+function endMC(){const r=S.mc.res;S.mc=null;cupOrApply(r)}
+// ---- live penalty shootout: a drawn Cup tie is decided by the two managers. Each round both secretly pick where their taker shoots and where their keeper dives.
+// Different side -> goal ~88% (± ratings), same side -> the keeper saves ~75%. 5 rounds with an early finish, then sudden death.
+const PDIR=['⬅️ Влево','⬆️ Центр','➡️ Вправо'],PDL=['влево','по центру','вправо'];let PENT=10000,PENR=4500,PKP={};
+function cupOrApply(res){if(curIt().t=='C'&&res.some(r=>r.ga==r.gb&&!r.pen))return startPens(res);applyResults(res)}
+function startPens(res){PKP={};S.prepEnd=0;S.pens={res,nm:'🏆 Кубок Лиги · '+S.cupName,rd:0,rev:false,t:res.map((r,i)=>r.ga==r.gb&&!r.pen?{i,h:r.h,a:r.a,x:[],y:[],cf:[0,0],dn:false,lk:null}:null).filter(Boolean)};nextPen()}
+function nextPen(){const P=S.pens;PKP={};P.rd++;P.rev=false;P.end=Date.now()+(offline()?864e5:PENT);P.t.forEach(t=>{t.cf=[0,0];if(!t.dn)t.lk=null});bc()}
+const penSh=(mi_,rd)=>{const m=S.M[mi_],L=m.xi.map(id=>S.P[id]).filter(p=>p&&p.p!='G').sort((a,b)=>b.o-a.o);return L.length?L[(rd-1)%L.length]:null};
+const penP=(s,d,so,ko,bon)=>s==d?Math.min(.45,Math.max(.12,.25+(so-ko)*.004+(bon||0))):Math.min(.97,Math.max(.75,.88+(so-ko)*.004+(bon||0)));
+const sumA=a=>a.reduce((x,y)=>x+y,0);
+function resolvePen(){const P=S.pens;P.t.forEach(t=>{if(t.dn)return;const pk=PKP[t.i]||[null,null],A=S.M[t.h],B=S.M[t.a],ph=pk[0]||[rnd(3),rnd(3)],pa=pk[1]||[rnd(3),rnd(3)],
+  sh=[penSh(t.h,P.rd),penSh(t.a,P.rd)],gk=[S.P[B.xi[0]],S.P[A.xi[0]]],hs=stadOf(A),hb=hs&&hs.b=='pen'?.04:0;
+  const g=[Math.random()<penP(ph[0],pa[1],sh[0]?sh[0].o:70,gk[0]?gk[0].o:70,hb)?1:0,Math.random()<penP(pa[0],ph[1],sh[1]?sh[1].o:70,gk[1]?gk[1].o:70)?1:0];
+  t.x.push(g[0]);t.y.push(g[1]);t.lk={s:[ph[0],pa[0]],d:[pa[1],ph[1]],g,sh:[sh[0]?sh[0].n:'?',sh[1]?sh[1].n:'?'],k:[gk[0]?gk[0].n:'?',gk[1]?gk[1].n:'?'],auto:[!pk[0],!pk[1]]};
+  const X=sumA(t.x),Y=sumA(t.y),n=t.x.length;
+  if((n<5&&(X>Y+5-n||Y>X+5-n))||(n>=5&&X!=Y))t.dn=true;else if(n>=15){t.x[n-1]=1;t.y[n-1]=0;t.lk.g=[1,0];t.coin=1;t.dn=true}});
+ P.rev=true;P.revEnd=Date.now()+(offline()?7000:PENR);bc()}
+function finishPens(){const P=S.pens;P.t.forEach(t=>{const r=P.res[t.i],X=sumA(t.x),Y=sumA(t.y);r.pen=[X,Y];r.ev.push(`🥅 Серия пенальти ${X}:${Y} — дальше ${S.M[X>Y?r.h:r.a].club}${t.coin?' (жребий)':''}`)});S.pens=null;PKP={};applyResults(P.res);bc()}
 function applyResults(res){const it=curIt(),w=m=>((coachOf(m)||{e:{}}).e.w||0);
  res.forEach(r=>{const A=S.M[r.h],B=S.M[r.a];
   if(it.t=='L'){A.st[0]++;B.st[0]++;A.st[4]+=r.ga;A.st[5]+=r.gb;B.st[4]+=r.gb;B.st[5]+=r.ga;if(r.ga>r.gb){A.st[1]++;B.st[3]++}else if(r.ga<r.gb){B.st[1]++;A.st[3]++}else{A.st[2]++;B.st[2]++}}
@@ -595,7 +610,8 @@ function resolveMoments(){const L=S.live;L.m.forEach((x,i)=>{const c=x.cur,pk=PK
   else{c.res=c.gk?'save':'miss';t=c.gk?`🧤 ${D.n} вытаскивает мяч после удара ${A.n}`:`😱 ${A.n} не реализует момент`}
   x.ev.push(`${min}' ${t}`)});
  L.rev=true;L.revEnd=Date.now()+(offline()?9000:REVEAL);bc()}
-function finishLive(){const L=S.live;applyResults(L.m.map(x=>{const gh=S.P[S.M[x.h].xi[0]],ga=S.P[S.M[x.a].xi[0]];if(!x.gb&&gh)gh.cs++;if(!x.ga&&ga)ga.cs++;return{h:x.h,a:x.a,ga:x.ga,gb:x.gb,ev:x.ev}}))}
+function finishLive(){const L=S.live,res=L.m.map(x=>{const gh=S.P[S.M[x.h].xi[0]],ga=S.P[S.M[x.a].xi[0]];if(!x.gb&&gh)gh.cs++;if(!x.ga&&ga)ga.cs++;return{h:x.h,a:x.a,ga:x.ga,gb:x.gb,ev:x.ev}});
+ (L.sus||[]).forEach(s=>{const r=res.find(r=>S.M[r.h].sq.includes(s[0])||S.M[r.a].sq.includes(s[0]))||res[0];if(r)r.sus=[...(r.sus||[]),s]});S.live=null;cupOrApply(res)}
 // ---- seasons
 const topBy=k=>{const P=S.M.flatMap(m=>m.sq.map(id=>S.P[id]).filter(Boolean));return P.filter(p=>p[k]>0).sort((a,b)=>b[k]-a[k])};
 // season-end money: a guaranteed bank of 10 for everybody + league places + cup + 2 per individual award; unspent coins stay
@@ -638,7 +654,7 @@ function buyMk(m,pid,id,rel){const k=S.mk.findIndex(x=>x.id===id);if(k<0||!mkOpe
 // trade-in: the player leaves the squad at once and goes back to the market
 function tradeIn(m,id){m.sq=m.sq.filter(x=>x!=id);m.xi=m.xi.map(x=>x==id?null:x);delete S.P[id];if(S.ph=='auc'&&id<1000)S.bench.push(id)}
 function trade(o){const A=S.M[mi(o.from)],B=S.M[mi(o.to)];if(!A||!B||!A.sq.includes(o.g)||!B.sq.includes(o.r)||A.coins<o.c)return;A.sq=A.sq.filter(x=>x!=o.g).concat(o.r);B.sq=B.sq.filter(x=>x!=o.r).concat(o.g);A.xi=A.xi.map(x=>x==o.g?o.r:x);B.xi=B.xi.map(x=>x==o.r?o.g:x);A.coins-=o.c;B.coins+=o.c;if(S.ph=='main'){autoXI(A,true);autoXI(B,true)}}
-function handle(a,pid){if(!S)return;const m=S.M[mi(pid)],H=S.M[0].pid==pid||!!S.off,u=S.au,L=S.live||S.mc,mkt=(S.ph=='main'&&!L)||S.ph=='off';
+function handle(a,pid){if(!S)return;const m=S.M[mi(pid)],H=S.M[0].pid==pid||!!S.off,u=S.au,L=S.live||S.mc||S.pens,mkt=(S.ph=='main'&&!L)||S.ph=='off';
  switch(a.a){
  case'join':if(S.ph=='lobby'&&!m&&!S.off&&S.M.length<20)S.M.push(newM(pid,a.n));break;
  case'club':if(m&&S.ph=='lobby'&&cl(a.c)&&!S.M.some(x=>x.club==a.c))m.club=a.c;break;
@@ -646,10 +662,9 @@ function handle(a,pid){if(!S)return;const m=S.M[mi(pid)],H=S.M[0].pid==pid||!!S.
  case'capt':{const id=+a.id,o=m&&(m.cOff||[]).find(x=>x[0]===id);if(S.ph=='capt'&&o&&m.capt==null&&m.coins>=o[1])buyCapt(m,id,o[1]);if(S.ph=='capt'&&S.M.every(x=>x.capt!=null))endCapt();break}
  case'bid':if(m&&u&&!u.sold&&u.turn==pid&&Number.isInteger(a.x)&&a.x>=0&&a.x<=m.coins){let tv=0;if(a.ti!=null){if(u.k=='c'||u.k=='s'||!m.sq.includes(a.ti)||pl(a.ti).esc)break;tv=tiVal(pl(a.ti).o);if(!tv)break}else if(u.k!='c'&&u.k!='s'&&need(m)<(u.ids?u.ids.length:1))break;
   const tot=a.x+tv;if(tot<(u.bid?u.bid+1:u.st))break;releaseEsc(u);if(tv){S.P[a.ti].esc=1;u.esc={pid,id:a.ti,tv};u.log.push(`🔒 ${m.n}: ${pl(a.ti).n} в залоге (+${tv})`)}u.bid=tot;u.ldc=a.x;u.ld=pid;advance()}break;
- case'bbid':if(m&&u&&!u.sold&&u.k=='b'&&u.order.includes(pid)&&Number.isInteger(a.x)&&a.x>=0&&a.x<=m.coins){BLB[pid]=a.x;if(!u.cf.includes(pid))u.cf.push(pid)}break;
  case'pass':if(m&&u&&!u.sold&&u.turn==pid){u.pass.push(pid);advance()}break;
  // a manager leaves the auction for good: passes every lot, empty places -> free agents, the coins stay in the club
- case'done':if(m&&!m.finishedAuction&&(S.ph=='auc'||S.ph=='oauc')){m.finishedAuction=true;if(u&&!u.sold&&u.k=='b'&&u.order.includes(pid)){BLB[pid]=0;if(!u.cf.includes(pid))u.cf.push(pid)}const f=Math.max(0,need(m));fillUp(m);autoXI(m,true);
+ case'done':if(m&&!m.finishedAuction&&(S.ph=='auc'||S.ph=='oauc')){m.finishedAuction=true;const f=Math.max(0,need(m));fillUp(m);autoXI(m,true);
   if(u&&!u.sold){if(u.esc&&u.esc.pid==pid&&u.ld!=pid)releaseEsc(u);if(u.order.includes(pid)&&!u.pass.includes(pid)&&u.ld!=pid){u.pass.push(pid);u.log=[...(u.log||[]),`🏁 ${m.n} завершил аукцион${f?' (+'+f+' св. агентов)':''}`];if(u.turn==pid)advance()}}
   const act=S.M.filter(x=>!x.finishedAuction&&x.coins>0&&(S.ph=='oauc'||need(x)>0));
   if(!act.length&&(!u||u.sold||!u.order.some(p=>!u.pass.includes(p)&&p!=u.ld))){if(u&&!u.sold){u.sold='Все менеджеры завершили аукцион';u.turn=null}if(S.ph=='auc')finishDraft();else endOA()}}break;
@@ -677,7 +692,9 @@ function handle(a,pid){if(!S)return;const m=S.M[mi(pid)],H=S.M[0].pid==pid||!!S.
  case'mus':if(H){const x=S.mus||{i:0,on:false},i=Number.isInteger(a.i)?a.i:x.i;S.mus={i:tlI(i),on:!!a.on,ext:!!a.ext,nm:a.ext?String(a.nm||'').slice(0,60):''}}break;
  case'colapaid':{const d=S.cola&&S.cola.d[a.k|0];if(d&&(d.t==pid||H))d.paid=d.paid?0:1;break}
  case'nx':if(H&&S.live&&S.live.rev&&!S.live.m.some(x=>x.cur&&x.cur.var=='check'))S.live.revEnd=Date.now();break;
- case'skip':if(H&&S.mc)endMC();break;   // only the host can cut the live match short - for everybody
+ case'skip':if(H&&S.mc)endMC();break;
+ case'pen':{const P=S.pens;if(!P||P.rev||!m||![0,1,2].includes(a.s)||![0,1,2].includes(a.d))break;const t=P.t.find(t=>!t.dn&&(S.M[t.h].pid==pid||S.M[t.a].pid==pid));if(!t)break;const sd=S.M[t.h].pid==pid?0:1;if(t.cf[sd])break;PKP[t.i]=PKP[t.i]||[null,null];PKP[t.i][sd]=[a.s,a.d];t.cf[sd]=1;if(P.t.every(t=>t.dn||(t.cf[0]&&t.cf[1])))resolvePen();break}
+ case'pskip':if(H&&S.pens){let g=0;while(S.pens.t.some(t=>!t.dn)&&g++<40){PKP={};resolvePen();S.pens.rd++}finishPens()}break;   // only the host can cut the live match short - for everybody
  case'list':{const id=+a.id,pr=+a.pr;if(m&&mkOpen()&&Number.isInteger(id)&&m.sq.includes(id)&&!pl(id).esc&&Number.isInteger(pr)&&pr>=1&&pr<=99&&m.sq.length>11&&!S.mk.some(x=>x.id===id))S.mk.push({id,pid,pr,t:Date.now()});break}
  case'unlist':S.mk=S.mk.filter(x=>!(x.id===+a.id&&x.pid==pid));break;
  case'buy':if(m&&m.tban&&S.ph=='off'){S.mkErr={pid,e:'⛔ Трансферный бан (FFP): покупки в межсезонье запрещены',t:Date.now()};break}if(m){const e=buyMk(m,pid,+a.id,a.rel==null?null:+a.rel);if(e)S.mkErr={pid,e,t:Date.now()}}break;
@@ -711,6 +728,7 @@ function MQ(url){const te=new TextEncoder(),td=new TextDecoder(),cid='fd'+Math.r
  o.pub=(t,s,ret)=>o.up&&raw(pkt(0x30|(ret?1:0),cat(s2b(t),te.encode(s))));
  o.close=()=>{closed=true;clearTimeout(rt);clearInterval(ping);o.up=false;try{ws&&ws.close()}catch(e){}};
  o.wake=()=>{if(!closed&&(!ws||ws.readyState>1)){retry=0;o.connect()}};
+ o.kick=()=>{const w=ws;ws=null;clearInterval(ping);if(w){w.onclose=w.onmessage=w.onopen=null;try{w.close()}catch(e){}}const was=o.up;o.up=false;if(was&&o.onDown)o.onDown();retry=0;if(!closed)o.connect()};   // drop a silent (zombie) socket and dial again
  return o}
 const T=k=>PFX+CODE+'/'+k,rid=()=>Math.random().toString(36).slice(2,10);
 const genCode=()=>Array.from({length:4},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[rnd(32)]).join('');
@@ -719,23 +737,29 @@ function toast(m){TOAST=m;R();clearTimeout(toast.t);toast.t=setTimeout(()=>{TOAS
 function tryBrokers(order,i,ok,fail){if(i>=order.length)return fail();const mq=MQ(BROKERS[order[i]]);let done=false;
  const to=setTimeout(()=>{if(done)return;done=true;mq.close();tryBrokers(order,i+1,ok,fail)},7000);
  mq.onUp=()=>{if(done)return;done=true;clearTimeout(to);ok(mq,order[i])};mq.connect()}
-let bcT=0,hostTimers=false;
+let bcT=0,hostTimers=false,HE=0,PZ=0;   // HE: last time the host heard its own heartbeat back; PZ: pause start (0 = running)
+// host lost the internet (socket down, browser offline, or its own heartbeat stopped coming back, e.g. the app was minimised):
+// the whole game freezes; when the host is back every deadline moves by the paused time, so nobody loses a turn
+function pzCheck(){if(!isHost||!S||S.off||!NET)return false;const n=Date.now(),gone=!NET.up||(!LOCALSRV&&navigator.onLine===false)||n-HE>14000;
+ if(gone&&!PZ){PZ=Math.min(n,HE+5500);if(NET.up&&n-HE>14000)NET.kick();R()}
+ else if(!gone&&PZ){shiftT(n-PZ);PZ=0;R();pubFull()}
+ return PZ>0}
+function shiftT(d){if(!(d>0)||!S)return;const L=S.live,u=S.au,P=S.pens,f=(o,k)=>{if(o&&o[k])o[k]+=d};if(u&&!u.sold)f(u,'end');['aucEnd','prepEnd','offEnd','captEnd'].forEach(k=>f(S,k));if(L){f(L,'end');f(L,'revEnd');L.m.forEach(x=>x.cur&&f(x.cur,'varAt'))}f(S.mc,'end');if(P){f(P,'end');f(P,'revEnd')}}
 function bc(){if(!isHost)return;if(S&&S.mk)S.mk=S.mk.filter(x=>{const s=S.M[mi(x.pid)];return s&&s.sq.includes(x.id)});onS();wantImgs();if(bcT)return;bcT=setTimeout(()=>{bcT=0;pubState()},60)}
 function pubFull(){if(!NET||!S)return;freshLeft();pubFull.t=Date.now();clearTimeout(FT);Object.keys(S).forEach(k=>LSJ[k]=JSON.stringify(S[k]));NET.pub(T('s'),JSON.stringify({...S,_q:PQ}),true)}
-function freshLeft(){const n=Date.now(),L=S.live;if(S.au&&!S.au.sold)S.au.left=Math.max(0,S.au.end-n);if(S.prepEnd)S.prepLeft=Math.max(0,S.prepEnd-n);if(S.offEnd)S.offLeft=Math.max(0,S.offEnd-n);if(S.captEnd)S.captLeft=Math.max(0,S.captEnd-n);if(S.aucEnd)S.aucLeft=Math.max(0,S.aucEnd-n);if(L)L.left=Math.max(0,(L.rev?L.revEnd:L.end)-n);if(S.mc)S.mc.left=Math.max(0,S.mc.end-n);S.t=n;return n}
+function freshLeft(){const n=Date.now(),L=S.live;if(S.au&&!S.au.sold)S.au.left=Math.max(0,S.au.end-n);if(S.prepEnd)S.prepLeft=Math.max(0,S.prepEnd-n);if(S.offEnd)S.offLeft=Math.max(0,S.offEnd-n);if(S.captEnd)S.captLeft=Math.max(0,S.captEnd-n);if(S.aucEnd)S.aucLeft=Math.max(0,S.aucEnd-n);if(L)L.left=Math.max(0,(L.rev?L.revEnd:L.end)-n);if(S.mc)S.mc.left=Math.max(0,S.mc.end-n);if(S.pens)S.pens.left=Math.max(0,(S.pens.rev?S.pens.revEnd:S.pens.end)-n);S.t=n;return n}
 function pubState(){if(!S)return;const n=freshLeft();if(NET){PQ++;const ch={},del=[];Object.keys(S).forEach(k=>{const j=JSON.stringify(S[k]);if(LSJ[k]!==j){ch[k]=S[k];LSJ[k]=j}});Object.keys(LSJ).forEach(k=>{if(!(k in S)){del.push(k);delete LSJ[k]}});
   if(n-(pubFull.t||0)>2500)pubFull();else{NET.pub(T('d'),JSON.stringify({q:PQ,k:ch,x:del}),false);clearTimeout(FT);FT=setTimeout(()=>{if(NET&&S)pubFull()},2600)}}ls.set(S.off?'fdt6_off':'fdt6_host',{code:CODE,me:ME,b:NB,S})}
-function tick(){if(!S)return;const n=Date.now(),u=S.au,L=S.live;
+function tick(){if(!S||pzCheck())return;const n=Date.now(),u=S.au,L=S.live;
  if(['auc','cauc','oauc','sauc'].includes(S.ph)&&u&&!u.sold&&u.turn&&n>=u.end){u.pass.push(u.turn);advance()}
- if(S.ph=='auc'&&u&&!u.sold&&u.k=='b'&&(n>=u.end||u.order.every(p=>u.cf.includes(p))))closeBlind();
  if(S.ph=='capt'&&S.captEnd&&n>=S.captEnd){endCapt();bc()}
  if(S.ph=='off'&&S.offEnd&&(n>=S.offEnd||S.M.every(m=>S.ready.includes(m.pid)))){S.offEnd=0;if(!S.oaDone)startOA();else startNewSeason();bc()}
- if(S.ph=='main'){if(S.mc){if(n>=S.mc.end){endMC();bc()}}else if(L){if(L.rev)L.m.forEach(x=>{if(x.cur&&x.cur.var=='check'&&n>=x.cur.varAt)varRes(x)});if(!L.rev&&n>=L.end)resolveMoments();else if(L.rev&&n>=L.revEnd){if(L.step<L.n)nextMoment();else{finishLive();bc()}}}
+ if(S.ph=='main'){if(S.pens){const P=S.pens;if(!P.rev&&(n>=P.end||P.t.every(t=>t.dn||(t.cf[0]&&t.cf[1]))))resolvePen();else if(P.rev&&n>=P.revEnd){if(P.t.every(t=>t.dn))finishPens();else nextPen()}}else if(S.mc){if(n>=S.mc.end){endMC();bc()}}else if(L){if(L.rev)L.m.forEach(x=>{if(x.cur&&x.cur.var=='check'&&n>=x.cur.varAt)varRes(x)});if(!L.rev&&n>=L.end)resolveMoments();else if(L.rev&&n>=L.revEnd){if(L.step<L.n)nextMoment();else{finishLive();bc()}}}
   else if(S.prepEnd&&(n>=S.prepEnd||S.M.every(m=>S.ready.includes(m.pid))))startTour()}}
 function startTimers(){if(!hostTimers){hostTimers=true;setInterval(tick,250);setInterval(()=>{NET&&NET.pub(T('h'),String(Date.now()))},5000)}}
 function hostUp(mq,b){NET=mq;NB=b;isHost=true;PQ=Date.now();LSJ={};pubFull.t=0;BUSY=false;ERR='';SIMG=Object.assign(ls.get('fdt6_simg')||{},SIMG);
- mq.onMsg=(t,p)=>{if(t!=T('a'))return;let d;try{d=JSON.parse(p)}catch(e){return}if(d&&typeof d.p=='string'&&d.p.length<40&&S)handle(d,d.p)};
- mq.onUp=()=>{pubState();R()};mq.onDown=()=>R();mq.sub(T('a'));
+ mq.onMsg=(t,p)=>{if(t==T('h')){HE=Date.now();return}if(t!=T('a'))return;let d;try{d=JSON.parse(p)}catch(e){return}if(d&&typeof d.p=='string'&&d.p.length<40&&S)handle(d,d.p)};
+ mq.onUp=()=>{HE=Date.now();mq.pub(T('h'),String(HE));pzCheck();pubState();R()};mq.onDown=()=>R();mq.sub(T('a'));mq.sub(T('h'));HE=Date.now();PZ=0;
  startTimers();
  if(['auc','cauc','oauc','sauc'].includes(S.ph)&&S.au&&S.au.sold)setTimeout(nextLot,1500);if(S.ph=='auc'&&!S.au&&!S.fill)setTimeout(nextLot,500);
  Object.entries(SIMG).forEach(([k,d])=>NET.pub(T('img/'+k),d,true));pubState();wantImgs();R()}
@@ -746,7 +770,7 @@ function create(){if(BUSY)return;const nk=nick(),cfg=mkCfg();NK=nk;try{localStor
  tryBrokers(BI(),0,(mq,b)=>{S={v:6,code:CODE,ph:'lobby',cfg,season:1,ageAdd:0,hist:[],adj:{},M:[],P:{},offers:[],fa:0,evs:[],last:[],ready:[],live:null,mc:null,mk:[],mkl:[],mus:{i:0,on:false},cola:{d:[]}};S.M.push(newM(ME,nk));hostUp(mq,b)},
   ()=>{BUSY=false;ERR='Не удалось подключиться к серверу игры. Проверьте интернет и попробуйте ещё раз.';R()})}
 function resumeHost(){const h=ls.get('fdt6_host');if(!h||BUSY)return;BUSY=true;ERR='Восстанавливаем комнату…';R();CODE=h.code;ME=h.me;
- tryBrokers([...(h.b<BROKERS.length?[h.b]:[]),...BI().filter(x=>x!=h.b)],0,(mq,b)=>{S=h.S;const n=Date.now(),L=S.live;if(S.au&&!S.au.sold&&S.au.turn)setTurn(S.au,S.au.turn);if(S.au&&!S.au.sold&&S.au.k=='b')S.au.end=Date.now()+(offline()?864e5:10000);if(S.ph=='main'&&!L)S.prepEnd=n+Math.max(20000,S.prepLeft||0);if(S.ph=='off'&&S.offEnd)S.offEnd=n+Math.max(20000,S.offLeft||0);if(S.ph=='auc'&&S.aucEnd)S.aucEnd=n+Math.max(30000,S.aucLeft||0);if(L){L.end=n+DUEL;L.revEnd=n+REVEAL}if(S.mc)S.mc.end=n+Math.max(1500,S.mc.left||0);S.mk=S.mk||[];hostUp(mq,b)},
+ tryBrokers([...(h.b<BROKERS.length?[h.b]:[]),...BI().filter(x=>x!=h.b)],0,(mq,b)=>{S=h.S;const n=Date.now(),L=S.live;if(S.au&&!S.au.sold&&S.au.turn)setTurn(S.au,S.au.turn);mysRestore();if(S.ph=='main'&&!L)S.prepEnd=n+Math.max(20000,S.prepLeft||0);if(S.ph=='off'&&S.offEnd)S.offEnd=n+Math.max(20000,S.offLeft||0);if(S.ph=='auc'&&S.aucEnd)S.aucEnd=n+Math.max(30000,S.aucLeft||0);if(L){L.end=n+DUEL;L.revEnd=n+REVEAL}if(S.mc)S.mc.end=n+Math.max(1500,S.mc.left||0);if(S.pens){PKP={};S.pens.t.forEach(t=>t.cf=[0,0]);S.pens.end=n+PENT;S.pens.revEnd=n+PENR}S.mk=S.mk||[];hostUp(mq,b)},
   ()=>{BUSY=false;ERR='Нет связи с сервером игры. Попробуйте ещё раз.';R()})}
 function join(code,b){if(BUSY)return;const nk=nick();code=normCode(code||($('rc')||{}).value||RC);
  if(code.length<4){ERR='Введите код комнаты — 4 символа, например A3F9';R();return}
@@ -762,8 +786,8 @@ function joinTry(order,i){if(i>=order.length){BUSY=false;ERR='Комната '+C
  mq.sub(T('s'));mq.sub(T('d'));mq.sub(T('h'));mq.sub(T('img/#'));mq.connect()}
 let jT=0;function ensureJoined(){if(!S||me()||S.ph!='lobby'||jT)return;send({a:'join',n:NK||'Игрок'});jT=setTimeout(()=>{jT=0;ensureJoined()},2500)}
 function reqSync(){if(Date.now()-SYT<1000)return;SYT=Date.now();send({a:'sync'},1)}
-function send(a,quiet){if(isHost)return handle(a,ME);if(!NET||!NET.pub(T('a'),JSON.stringify({...a,p:ME}))){if(!quiet)toast('Нет связи — переподключаемся, повторите через пару секунд')}}
-function onS(){const n=Date.now(),u=S.au,L=S.live,tk=u?S.ph+S.lot+'/'+u.turn+'/'+u.bid:'';if(tk!=TIK){TIK=tk;TIO=false;TIS=null;PEND=null}if(u&&u.sold&&LS!=S.ph+S.lot){LS=S.ph+S.lot;sndSold();if(!u.burn&&LS0)fxGavel()}LS0=1;if(!isHost){if(u&&u.left!=null)u.end=n+u.left;if(S.prepLeft!=null)S.prepEnd=n+S.prepLeft;if(S.offEnd&&S.offLeft!=null)S.offEnd=n+S.offLeft;if(S.captEnd&&S.captLeft!=null)S.captEnd=n+S.captLeft;if(S.aucEnd&&S.aucLeft!=null)S.aucEnd=n+S.aucLeft;if(L&&L.left!=null){if(L.rev)L.revEnd=n+L.left;else L.end=n+L.left}if(S.mc&&S.mc.left!=null)S.mc.end=n+S.mc.left}
+function send(a,quiet){if(isHost){if(PZ){if(!quiet)toast('⏸ Пауза — нет интернета. Игра продолжится, когда связь вернётся');return}return handle(a,ME)}if(!NET||!NET.pub(T('a'),JSON.stringify({...a,p:ME}))){if(!quiet)toast('Нет связи — переподключаемся, повторите через пару секунд')}}
+function onS(){const n=Date.now(),u=S.au,L=S.live,tk=u?S.ph+S.lot+'/'+u.turn+'/'+u.bid:'';if(tk!=TIK){TIK=tk;TIO=false;TIS=null;PEND=null}if(u&&u.sold&&LS!=S.ph+S.lot){LS=S.ph+S.lot;sndSold();if(!u.burn&&LS0)fxGavel()}LS0=1;if(!isHost){if(u&&u.left!=null)u.end=n+u.left;if(S.prepLeft!=null)S.prepEnd=n+S.prepLeft;if(S.offEnd&&S.offLeft!=null)S.offEnd=n+S.offLeft;if(S.captEnd&&S.captLeft!=null)S.captEnd=n+S.captLeft;if(S.aucEnd&&S.aucLeft!=null)S.aucEnd=n+S.aucLeft;if(L&&L.left!=null){if(L.rev)L.revEnd=n+L.left;else L.end=n+L.left}if(S.mc&&S.mc.left!=null)S.mc.end=n+S.mc.left;if(S.pens&&S.pens.left!=null){if(S.pens.rev)S.pens.revEnd=n+S.pens.left;else S.pens.end=n+S.pens.left}}
  const dl=(S.mkl||[])[0],dt=dl?dl.t:0;if(dt!==LMK){if(LMK!==null&&dl){if(dl.f==ME)setTimeout(()=>toast(`💸 ${dl.n} продан в ${dl.tc} за ${dl.pr} 💰`),0);else if(dl.to==ME)setTimeout(()=>toast(`✅ ${dl.n} теперь в вашем составе`),0)}LMK=dt}
  const me_=S.mkErr;if(me_&&me_.pid==ME&&me_.t!==onS.e){if(onS.e!==undefined)setTimeout(()=>toast(me_.e),0);onS.e=me_.t}else if(onS.e===undefined)onS.e=me_?me_.t:0;
  if(S.cola&&CODE){const k=JSON.stringify(S.cola);if(k!=LCOLA){LCOLA=k;ls.set('fdt_cola_'+CODE,S.cola)}}musSync();
@@ -783,18 +807,18 @@ function createOff(){const names=OFN.map(s=>String(s||'').trim().slice(0,14)).fi
  ERR='';CODE='OFF';NB=0;S={v:6,off:1,code:'OFF',ph:'lobby',cfg:mkCfg(),season:1,ageAdd:0,hist:[],adj:{},M:[],P:{},offers:[],fa:0,evs:[],last:[],ready:[],live:null,mc:null,mk:[],mkl:[],mus:{i:0,on:false},cola:{d:[]}};
  names.forEach((n,i)=>S.M.push(newM('p'+(i+1),n)));const fr=shuf(CL.map(c=>c[0]));S.M.forEach((m,i)=>m.club=fr[i]);ME=S.M[0].pid;HOLD=ME;offUp()}
 function offUp(){isHost=true;NET=null;BUSY=false;ERR='';SIMG=Object.assign(ls.get('fdt6_simg')||{},SIMG);startTimers();pubState();R()}
-function resumeOff(){const h=ls.get('fdt6_off');if(!h||!h.S)return;S=h.S;CODE='OFF';const n=Date.now(),L=S.live;if(S.au&&!S.au.sold&&S.au.turn)setTurn(S.au,S.au.turn);if(S.au&&!S.au.sold&&S.au.k=='b')S.au.end=Date.now()+(offline()?864e5:10000);if(S.ph=='auc'&&S.aucEnd)S.aucEnd=n+Math.max(30000,S.aucLeft||0);
- if(S.ph=='main'&&!L&&S.prepEnd)S.prepEnd=n+864e5;if(S.ph=='off'&&S.offEnd)S.offEnd=n+864e5;if(L){L.end=n+864e5;L.revEnd=n+6000}if(S.mc)S.mc.end=n+Math.max(1500,S.mc.left||0);
+function resumeOff(){const h=ls.get('fdt6_off');if(!h||!h.S)return;S=h.S;CODE='OFF';const n=Date.now(),L=S.live;if(S.au&&!S.au.sold&&S.au.turn)setTurn(S.au,S.au.turn);mysRestore();if(S.ph=='auc'&&S.aucEnd)S.aucEnd=n+Math.max(30000,S.aucLeft||0);
+ if(S.ph=='main'&&!L&&S.prepEnd)S.prepEnd=n+864e5;if(S.ph=='off'&&S.offEnd)S.offEnd=n+864e5;if(L){L.end=n+864e5;L.revEnd=n+6000}if(S.mc)S.mc.end=n+Math.max(1500,S.mc.left||0);if(S.pens){PKP={};S.pens.t.forEach(t=>t.cf=[0,0]);S.pens.end=n+864e5;S.pens.revEnd=n+6000}
  ME=h.me&&mi(h.me)>=0?h.me:S.M[0].pid;HOLD=null;offUp();if(['cauc','auc','oauc','sauc'].includes(S.ph)&&S.au&&S.au.sold)setTimeout(nextLot,1500);if(S.ph=='auc'&&!S.au)setTimeout(nextLot,500)}
 // who must hold the phone right now (null = everybody watches)
 function offWant(){const u=S.au,L=S.live;
  if(S.ph=='capt'){const x=S.M.find(m=>m.capt==null);return x?x.pid:null}
- if(S.ph=='auc'&&u&&!u.sold&&u.k=='b')return u.order.find(p=>!u.cf.includes(p))||null;
  if(['cauc','auc','oauc','sauc'].includes(S.ph))return u&&!u.sold&&u.turn?u.turn:null;
+ if(S.ph=='main'&&S.pens){if(S.pens.rev)return null;for(const t of S.pens.t){if(t.dn)continue;if(!t.cf[0])return S.M[t.h].pid;if(!t.cf[1])return S.M[t.a].pid}return null}
  if(S.ph=='main'&&L&&!L.rev){for(const x of L.m){const a=S.M[x.cur.side?x.a:x.h].pid,d=S.M[x.cur.side?x.h:x.a].pid;if(!x.cur.done[0])return a;if(!x.cur.done[1])return d}return null}
- if((S.ph=='main'&&!L&&!S.mc)||S.ph=='off'){if(S.offers.length)return S.offers[0].to;const nr=S.M.map(m=>m.pid).filter(p=>!S.ready.includes(p));return nr.length?(nr.includes(PP)?PP:nr[0]):null}
+ if((S.ph=='main'&&!L&&!S.mc&&!S.pens)||S.ph=='off'){if(S.offers.length)return S.offers[0].to;const nr=S.M.map(m=>m.pid).filter(p=>!S.ready.includes(p));return nr.length?(nr.includes(PP)?PP:nr[0]):null}
  return null}
-function offWhy(){const u=S.au;if(u&&!u.sold&&u.k=='b')return'🙈 Торги вслепую: сделайте секретную ставку';if(S.ph=='capt')return'👑 Купите капитана клуба';if(u&&!u.sold&&u.turn==ME)return'🔨 Ваш ход на аукционе: <b>'+esc(lotName(u))+'</b>';if(S.live&&!S.live.rev)return'⚔️ Секретный выбор в дуэли — соперник не должен видеть экран';if(S.offers.some(o=>o.to==ME))return'🔁 Вам пришло предложение обмена';if(S.ph=='off')return'🔄 Межсезонье: продажи, рынок и обмены — потом «Готов»';return'📋 Подготовка к туру: состав, рынок и обмены — потом «Готов»'}
+function offWhy(){const u=S.au;if(S.pens&&!S.pens.rev)return'🥅 Серия пенальти: выберите удар и прыжок вратаря — соперник не должен видеть экран';if(S.ph=='capt')return'👑 Купите капитана клуба';if(u&&!u.sold&&u.turn==ME)return'🔨 Ваш ход на аукционе: <b>'+esc(lotName(u))+'</b>';if(S.live&&!S.live.rev)return'⚔️ Секретный выбор в дуэли — соперник не должен видеть экран';if(S.offers.some(o=>o.to==ME))return'🔁 Вам пришло предложение обмена';if(S.ph=='off')return'🔄 Межсезонье: продажи, рынок и обмены — потом «Готов»';return'📋 Подготовка к туру: состав, рынок и обмены — потом «Готов»'}
 function passV(){const m=me();return`<div class="pass"><div class="text-6xl">📱</div><div class="tl" style="margin-top:12px">ПЕРЕДАЙТЕ ТЕЛЕФОН</div><div class="pn">${crest(m.club)} ${esc(m.n)}</div><div class="text-sm" style="opacity:.75">${esc(m.club||'')} · 💰 ${m.coins}</div><div class="c text-sm" style="margin-top:18px">${offWhy()}</div><div class="text-xs" style="opacity:.6;margin-top:8px">Остальные — не подглядывайте 🙈</div>${btn('✋ Я — '+esc(m.n)+', показать','HOLD=ME;R()','v')}</div>`}
 function offBar(){const nr=S.M.filter(m=>!S.ready.includes(m.pid)&&m.pid!=ME);return`<div class="c text-sm" style="border-color:#3b82f6;padding:8px 10px">📱 Сейчас играет <b>${esc(me().n)}</b>. Закончили — «Готов», и телефон перейдёт к следующему.${nr.length?`<select onchange="if(this.value){PP=this.value;R()}"><option value="">Передать телефон другому игроку…</option>${nr.map(m=>`<option value="${m.pid}">${esc(m.n)}</option>`).join('')}</select>`:''}${btn(S.ph=='off'?'✅ Готов — передать дальше':'✅ Готов к туру — передать дальше',"send({a:'ready'})",'v')}</div>`}
 function offLobbyV(){return`<h2>📱 Офлайн-лига · Pass & Play</h2><div class="c text-sm">Один телефон на всю компанию, интернет не нужен. В свой ход игра попросит передать телефон нужному игроку.<div class="text-xs mt-1" style="opacity:.6">${S.cfg.circ} кр. · ${S.cfg.bud} 💰 · состав ${S.cfg.sq} · ${S.cfg.mode=='q'?'📺 матч-центр':'⚔️ дуэли'}</div></div>
@@ -824,7 +848,8 @@ function shareLink(btn){const u=tgLink()||link(),txt='Заходи в мою ф�
  if(tg&&tg.openTelegramLink){try{tg.openTelegramLink('https://t.me/share/url?url='+encodeURIComponent(u)+'&text='+encodeURIComponent(txt));return}catch(e){}}
  if(navigator.share){navigator.share({title:'FC Draft Online',text:txt,url:u}).catch(()=>{});return}
  try{navigator.clipboard.writeText(u).then(()=>{btn.textContent='Ссылка скопирована ✓'},()=>prompt('Скопируйте ссылку',u))}catch(e){prompt('Скопируйте ссылку',u)}}
-const hostAway=()=>!isHost&&lastHB&&Date.now()-lastHB>16000;
+const hostAway=()=>!isHost&&lastHB&&Date.now()-lastHB>12000;
+function pauseV(){return`<div class="ov"><div class="text-center" style="margin-top:18vh"><div class="pzi">⏸</div><h2 style="font-size:1.7rem">ПАУЗА</h2><div class="c text-sm">${isHost?'У вас (хоста) пропал интернет. Игра у всех остановлена — таймеры заморожены.':NET&&NET.up?'У хоста пропал интернет (или он свернул игру). Таймеры заморожены — никто не теряет ход.':'У вас нет связи с сервером игры — переподключаемся…'}<div class="text-xs mt-2" style="opacity:.7">Игра продолжится сама с того же места, как только связь вернётся. Ничего нажимать не нужно.</div></div>${btn('☰ Меню','MENU=true;R()','g')}</div></div>`}
 ['online','pageshow','focus'].forEach(ev=>window.addEventListener(ev,()=>{if(NET)NET.wake()}));
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState!='hidden'&&NET)NET.wake()});
 // ================= VIEWS =================
@@ -877,20 +902,15 @@ const splitBtn=()=>`<button class="b g" onclick="SPLIT=!SPLIT;R()">${SPLIT?'🙈
 function bidNow(v){hapI('light');PEND={k:TIK,t:`✅ Ставка ${v} 💰 отправлена…`};send({a:'bid',x:v});R()}
 function passNow(){PEND={k:TIK,t:'✅ Пас принят…'};send({a:'pass'});R()}
 const loanBar=m=>m.tban?'':`<div class="flex gap-2 items-center justify-center mt-2 text-xs"><span style="opacity:.7">🏦 Кредит (долг ${m.debt||0}/${DEBTMAX}):</span><button class="tag" style="padding:6px 10px" ${(m.debt||0)+5>DEBTMAX?'disabled':''} onclick="send({a:'loan',x:5})">+5 💰</button><button class="tag" style="padding:6px 10px" ${(m.debt||0)+10>DEBTMAX?'disabled':''} onclick="send({a:'loan',x:10})">+10 💰</button></div>`;
-let MYBB=null,LS0=0;
 // one-shot effects live outside #app so re-renders never cut the animation
 function fxEl(html,ms,cls){try{const d=document.createElement('div');d.className='fx '+(cls||'');d.innerHTML=html;document.body.appendChild(d);setTimeout(()=>{try{d.remove()}catch(e){}},ms)}catch(e){}}
 function knock(){try{const c=au(),t=c.currentTime;vNz(c,t,c.destination,'lowpass',900,.12,.9);const o=c.createOscillator();o.frequency.setValueAtTime(110,t);o.frequency.exponentialRampToValueAtTime(50,t+.15);o.connect(venv(c,t,.002,.2,.8,c.destination));o.start(t);o.stop(t+.25)}catch(e){}}
 function fxGavel(){fxEl(`<div class="gv"><div class="hm">🔨</div><div class="stp">ПРОДАНО</div>${[...Array(16)].map((_,i)=>`<i class="sp" style="--a:${i*22.5}deg;--d:${70+rnd(70)}px"></i>`).join('')}</div>`,1900,'fxg');setTimeout(knock,260)}
 function fxGoal(g){fxEl(`<div class="gbk"></div><div class="gban"><div class="gt">⚽ ГОЛ!</div>${g.ph?`<img src="${esc(g.ph)}" referrerpolicy="no-referrer" onerror="this.remove()">`:''}<b>${esc(g.n)}</b><span>${esc(g.club)} · ${esc(g.min)}'</span>${g.sc?`<div class="gsc">${esc(g.sc)}</div>`:''}</div>`,2000,'fxgoal')}
 function fizz(){try{const c=au(),t=c.currentTime;vNz(c,t,c.destination,'highpass',3200,.9,.35);tone(1400,.06,'sine',.2);tone(500,.08,'triangle',.25,.02)}catch(e){}}
-function blindV(u,m){const inL=u.order.includes(ME),done=u.cf.includes(ME),T=BLT[u.tier]||BLT[2],lot=`<div class="flex gap-3 items-center mt-2">${utCard(u.id)}<div class="flex-1 text-sm">${card(u.id)}</div></div>`;
- let h=`<div class="flex justify-between text-sm"><b class="text-yellow-400">🙈 Торги вслепую</b><span style="opacity:.7">Лот #${S.lot}</span></div><div class="c text-center blindhd"><b>${T[3]}</b><div class="text-xs" style="opacity:.75">Все ставят втайне 10 секунд. Потом ставки вскрываются одновременно. Больше всех — забирает; при равенстве — клуб с более слабым составом.</div></div>${lot}`;
- if(u.sold){const rv=u.rv||[],mx=Math.max(0,...rv.map(b=>b.x));h+=`<div class="flex gap-2 flex-wrap justify-center mt-3">${rv.map((b,i)=>{const x=S.M[mi(b.pid)]||{};return`<div class="flip ${b.pid==u.win?'win':''}"><div class="in" style="animation-delay:${.3+i*.25}s"><div class="fr">🙈</div><div class="bk"><b>${b.x}</b><span>💰</span><i>${esc(short(x.n||'?'))}</i></div></div></div>`}).join('')}</div><div class="c text-center text-lg ${u.burn?'':'text-yellow-400'} rvl">${u.burn?'🔥':'🔨'} ${esc(u.sold)}${u.tie?'<div class="text-xs" style="opacity:.75">Ставки равны — забрал клуб с более слабым составом</div>':''}</div>`;return h}
- h+=`<div class="c text-center"><div class="text-xs" style="opacity:.7">ДО ВСКРЫТИЯ</div><div class="text-4xl font-black"><span id="tm">--</span></div><div class="bar mt-1"><div id="bar" style="width:100%"></div></div><div class="mt-2">${u.order.map(p=>{const x=S.M[mi(p)];return`<span class="tag ${u.cf.includes(p)?'ld':''}">${u.cf.includes(p)?'🔒':'⏳'} ${esc(x?x.n:'?')}</span>`}).join('')}</div></div>`;
- if(!inL)return h+`<div class="c text-center text-sm" style="opacity:.75">Вы не участвуете в этом лоте (нет мест в основе или вы завершили аукцион).</div>`;
- const qs=[0,1,2,3,5,8,12].filter(v=>v<=m.coins);
- return h+`<div class="c text-center"><div class="text-xs" style="opacity:.7">ВАША СЕКРЕТНАЯ СТАВКА · 💰 ${m.coins}</div>${done?`<div class="text-emerald-400 mt-1">✅ Ставка ${MYBB!=null?MYBB+' 💰 ':''}принята и скрыта — можно изменить до вскрытия</div>`:''}<div class="grid grid-cols-4 gap-2 mt-2">${qs.map(v=>`<button class="b ${MYBB===v&&done?'v':''}" style="margin:0;padding:10px 0" onclick="MYBB=${v};send({a:'bbid',x:${v}});R()">${v}</button>`).join('')}</div><div class="flex gap-2 mt-2"><input id="bbx" type="number" inputmode="numeric" min="0" max="${m.coins}" placeholder="Своя сумма (0–${m.coins})" style="margin:0"><button class="b v" style="margin:0;width:auto;padding:0 16px" onclick="const v=Math.round(+$('bbx').value);if(v>=0&&v<=${m.coins}){MYBB=v;send({a:'bbid',x:v});R()}">Подтвердить ставку</button></div>${loanBar(m)}</div>`}
+function mysBox(u){return`<div class="c text-center mbx"><div class="mbi">📦</div><div class="text-xl font-black text-yellow-400">ТАЙНИК</div><div class="text-sm mt-1">Позиция: <b class="text-lg">${PN[u.pos]||'?'}</b> · кто внутри — узнаете после удара молотка</div><div class="flex flex-wrap justify-center gap-1 mt-2">${MBT.map(t=>`<span class="tag">${t[3]} · ${t[2]}%</span>`).join('')}</div><div class="text-[11px] mt-1" style="opacity:.6">Старт ${MYST} 💰 для любого игрока. Можно сорвать звезду, а можно купить «кота в мешке».</div></div>`}
+function mysOpen(u){return`<div class="c text-center mbx"><div class="text-xs" style="opacity:.7">📦 ТАЙНИК ОТКРЫТ</div><div class="flex gap-3 items-center mt-2 mflip">${utCard(u.id)}<div class="flex-1 text-sm text-left">${card(u.id)}</div></div></div>`}
+let LS0=0;
 // ---- player dossier: big photo, info, energy and a FIFA-style hexagon radar (stats derived from position + rating)
 const SLBL=['PAC','SHO','PAS','DRI','DEF','PHY'],SRU=['Скорость','Удар','Пас','Дриблинг','Защита','Физика'];
 function stats6(p){const P={S:[2,5,-6,1,-40,-2],W:[8,-2,-2,5,-38,-12],X:[8,-2,-2,5,-38,-12],Y:[5,-6,1,3,-25,-8],Z:[5,-6,1,3,-25,-8],A:[-2,1,4,5,-35,-12],M:[-6,-5,5,2,-10,-3],D:[-8,-12,1,-4,3,3],C:[-12,-35,-14,-15,4,3],L:[3,-22,-6,-4,1,-4],R:[3,-22,-6,-4,1,-4],G:[-30,-45,-15,-25,-30,-10]}[p.p]||[0,0,0,0,0,0];let h=((p.id||0)*2654435761)>>>0;
@@ -911,12 +931,11 @@ function aucV(){const u=S.au,m=me(),ph=S.ph,hd=ph=='sauc'?'🏟 Аукцион �
  const sub=ph=='auc'?(S.ap==1?`В основу: ${S.pool.length} игроков в пуле · одиночные лоты`:`Скамейка: ${S.bench.length} игроков · по одному на лот`):ph=='oauc'?`Осталось лотов: ${S.oaLeft+(u&&!u.sold?1:0)}${S.oaMix?' · пул: '+S.oaMix.map((n,j)=>n?TIERS[j][3].split(' ')[0]+'×'+n:'').filter(Boolean).join(' '):''}`:ph=='sauc'?`Старт 1 монета · ещё стадионов: ${S.spool.length} · бонус действует в домашних матчах`:'';
  if(ph=='auc'&&S.fill){const nd=need(m);return`<h2>🏁 Аукцион завершён · Сезон ${S.season}</h2><div class="c text-sm">Торговаться больше не с кем — оставшиеся места заполняются свободными агентами (OVR 64–70).</div>${nd>0?btn(`⚡ Заполнить состав (${nd} ${nd==1?'игрок':'игроков'})`,"send({a:'fill'})",'v'):'<div class="c text-center">✅ Ваш состав укомплектован</div>'}<div class="c text-sm">${S.M.map(x=>`<span class="tag ${need(x)<=0?'ld':''}">${need(x)<=0?'✅':'⏳'} ${esc(x.n)} ${x.sq.length}/${S.cfg.sq}</span>`).join('')}</div>${isHost?btn('Заполнить всех и начать сезон →',"send({a:'fillall'})",'g'):''}${miniSquad(m)}`}
  if(!u)return`<h2>${hd}</h2><div class="c text-center">Готовим лот…</div>${miniSquad(m)}`;
- if(u.k=='b')return blindV(u,m);
  const ld=u.ld?S.M[mi(u.ld)]:null,my=u.turn==ME&&!u.sold,inLot=u.order.includes(ME),minB=u.bid?u.bid+1:u.st;
 const fin=(ph=='auc'||ph=='oauc')?(m.finishedAuction?`<div class="c text-center text-sm" style="border-color:#10b981">🏁 Вы завершили аукцион: бюджет <b>${m.coins} 💰</b> сохранён, состав ${m.sq.length}/${S.cfg.sq}. Дальше только наблюдаете за торгами.</div>`:btn('🏁 Завершить аукцион (Сохранить бюджет)',`if(confirm(${esc(JSON.stringify(finMsg(m)))}))send({a:'done'})`,'g')):'';
  const gt=ph=='auc'&&S.aucEnd?`<div class="c text-center" style="padding:6px"><span class="text-xs" style="opacity:.6">⏳ ОБЩИЙ ТАЙМЕР АУКЦИОНА</span> <b id="gt" class="text-xl">--</b></div>`:'';
  const whyOut=ph=='sauc'?(m.stad!=null?'у вас уже есть стадион':'не хватает монет'):ph=='cauc'?(m.coach!=null?'у вас уже есть тренер':'не хватает монет'):(ph=='auc'&&S.ap==1&&m.sq.length>=11)?'основа уже набрана':need(m)<(u.ids?u.ids.length:1)?'нет мест в составе':'не хватает монет на стартовую цену';
- const lot=u.k=='s'?stadCard(u.id):u.k=='c'?coachCard(u.id):u.k=='k'?`<div class="c"><b class="text-yellow-400">📦 ${esc(u.nm)}</b><div class="flex gap-2 mt-2 overflow-x-auto">${u.ids.map(id=>utCard(id,null,1)).join('')}</div></div>`:`<div class="flex gap-3 items-center mt-2">${utCard(u.id)}<div class="flex-1 text-sm">${card(u.id)}</div></div>`;
+ const lot=u.k=='m'?(u.id==null?mysBox(u):mysOpen(u)):u.k=='s'?stadCard(u.id):u.k=='c'?coachCard(u.id):u.k=='k'?`<div class="c"><b class="text-yellow-400">📦 ${esc(u.nm)}</b><div class="flex gap-2 mt-2 overflow-x-auto">${u.ids.map(id=>utCard(id,null,1)).join('')}</div></div>`:`<div class="flex gap-3 items-center mt-2">${utCard(u.id)}<div class="flex-1 text-sm">${card(u.id)}</div></div>`;
  return`<div class="flex justify-between text-sm"><b class="text-yellow-400">${hd}</b><span style="opacity:.7">Лот #${S.lot}</span></div><div class="text-xs" style="opacity:.6">Сезон ${S.season} · ${sub}</div>${gt}
  ${lot}${splitBtn()}${SPLIT?pitchPanel(m):''}
  <div class="c text-center"><div class="flex justify-between text-xs" style="opacity:.7"><span>Старт: ${u.st} 💰</span><span>ТЕКУЩАЯ СТАВКА</span><span>Ваши: ${m.coins} 💰${m.debt?` <b style="color:#f87171">(долг ${m.debt})</b>`:''}</span></div><div class="text-4xl font-black text-yellow-400">${u.bid||'—'}</div>${loanBar(m)}<div>${ld?(ld.pid==ME?'✅ Вы лидируете':'Лидер: <b>'+esc(ld.n)+'</b> · '+esc(ld.club)):'Ставок пока нет'}</div>
@@ -1019,6 +1038,25 @@ function liveV(){const L=S.live,x=myMatch(),others=L.m.filter(y=>y!==x),it=curIt
  if(S.off&&L.rev){const vs=L.m.filter(y=>y.cur.res=='goal'&&!y.cur.var&&!(y.varU||[]).includes(S.M[y.cur.side?y.h:y.a].pid));h+=vs.map(y=>{const d=S.M[y.cur.side?y.h:y.a];return btn(`📺 VAR для ${esc(d.n)} (${esc(d.club)}) — отмена 20%`,`handle({a:'var'},'${d.pid}')`,'r')}).join('')+(L.m.some(y=>y.cur.var=='check')?'':btn('Дальше ▶',"send({a:'nx'})",'g'))}
  if(others.length)h+=`<h2>Другие матчи</h2>${others.map(y=>`<div class="c">${sb(y)}${L.rev&&y.cur?`<div class="text-xs text-center mt-1" style="opacity:.7">${esc(y.ev[y.ev.length-1]||'')}</div>`:''}</div>`).join('')}`;
  return h}
+let PSEL={k:'',s:null,d:null};
+function pensV(){const P=S.pens,mine=P.t.find(t=>S.M[t.h].pid==ME||S.M[t.a].pid==ME),others=P.t.filter(t=>t!==mine),k=S.si+'/'+P.rd+'/'+ME;if(PSEL.k!=k)PSEL={k,s:null,d:null};
+ const dots=a=>{const n=Math.max(5,a.length);return[...Array(n)].map((_,i)=>i<a.length?(a[i]?'🟢':'🔴'):'⚪').join('')};
+ const box=t=>{const X=sumA(t.x),Y=sumA(t.y),r=P.res[t.i];return`<div class="c"><div class="vs"><span class="flex items-center gap-1 text-sm">${crest(S.M[t.h].club)} ${cn(t.h)}</span><span class="score">${X}:${Y}</span><span class="flex items-center gap-1 text-sm">${cn(t.a)} ${crest(S.M[t.a].club)}</span></div><div class="flex justify-between pdot mt-1"><span>${dots(t.x)}</span><span>${dots(t.y)}</span></div><div class="text-[11px] text-center" style="opacity:.6">основное время ${r.ga}:${r.gb}</div>${t.dn&&P.rev?`<div class="boom goal" style="font-size:20px">🏆 Дальше: ${esc(S.M[X>Y?t.h:t.a].club)}${t.coin?' (жребий)':''}</div>`:''}</div>`};
+ const kick=(t,j)=>{const l=t.lk;if(!l)return'';const g=l.g[j],s=l.s[j],d=l.d[j];return`<div class="text-sm">${j?'🔵':'🟡'} <b>${esc(short(l.sh[j]))}</b> бьёт ${PDL[s]}${l.auto[j]?' <i style="opacity:.6">(авто)</i>':''} · 🧤 ${esc(short(l.k[j]))} ${d==s?'угадал угол':d==1?'остался в центре':'прыгнул '+PDL[d]} → <b class="${g?'text-emerald-400':'text-red-400'}">${g?'⚽ ГОЛ':d==s?'🧤 СЕЙВ':'😱 МИМО'}</b></div>`};
+ const goal=(t,j)=>{const l=t.lk;if(!l)return'';const xs=['14%','46%','78%'];return`<div class="gol"><i style="left:${xs[l.d[j]]}">🧤</i><i class="bl" style="left:${xs[l.s[j]]};${l.g[j]?'':'opacity:.55'}">⚽</i></div>`};
+ let h=`<div class="flex justify-between text-sm"><b class="text-yellow-400">🥅 Серия пенальти · ${esc(P.nm)}</b><span id="pnt" class="font-black">--</span></div><div class="bar mt-1"><div id="pnbar" style="width:100%"></div></div><div class="text-xs mt-1" style="opacity:.7">Раунд ${P.rd}${P.rd>5?' · до первой ошибки':' из 5'} · ничья в основное время — решают менеджеры</div>`;
+ if(mine){const sd=S.M[mine.h].pid==ME?0:1,my=S.M[sd?mine.a:mine.h],op=S.M[sd?mine.h:mine.a],picked=mine.cf[sd]||(!S.off&&PSEL.sent);h+=box(mine);
+  if(P.rev&&mine.lk){const g=mine.lk.g[sd];h+=`<div class="c"><div class="boom ${g?'goal':''}">${g?'⚽ ВАШ ГОЛ!':mine.lk.d[sd]==mine.lk.s[sd]?'🧤 СЕЙВ — вратарь угадал!':'😱 МИМО!'}</div>${goal(mine,sd)}${kick(mine,0)}${kick(mine,1)}</div>`}
+  else if(mine.dn)h+=`<div class="c text-center">Ваша серия завершена.</div>`;
+  else if(picked)h+=`<div class="c text-center">✅ Выбор сделан. ${mine.cf[1-sd]?'Соперник тоже готов — бьём…':'Ждём соперника…'}</div>`;
+  else{const sh=penSh(sd?mine.a:mine.h,P.rd),gk=S.P[my.xi[0]],osh=penSh(sd?mine.h:mine.a,P.rd);
+   h+=`<div class="c"><div class="text-sm">⚽ Бьёт ваш <b>${esc(sh?sh.n:'?')}</b>${sh?` <span style="color:${rc(sh.o)}">${sh.o}</span>`:''} — куда?</div><div class="pkb mt-1">${PDIR.map((d,i)=>`<button class="b ${PSEL.s===i?'v':''}" onclick="PSEL.s=${i};R()">${d}</button>`).join('')}</div>
+   <div class="text-sm mt-3">🧤 Ваш вратарь <b>${esc(gk?gk.n:'?')}</b> против <b>${esc(osh?osh.n:'?')}</b> (${esc(op.club)}) — куда прыгает?</div><div class="pkb mt-1">${PDIR.map((d,i)=>`<button class="b ${PSEL.d===i?'v':''}" onclick="PSEL.d=${i};R()">${d}</button>`).join('')}</div>
+   ${btn(PSEL.s!=null&&PSEL.d!=null?'✅ Подтвердить: удар '+PDL[PSEL.s]+', прыжок '+PDL[PSEL.d]:'Выберите удар и прыжок',"if(PSEL.s!=null&&PSEL.d!=null){PSEL.sent=1;send({a:'pen',s:PSEL.s,d:PSEL.d});R()}",'v',PSEL.s==null||PSEL.d==null)}<div class="text-[11px] mt-1" style="opacity:.6">Не успели за 10 с — выбор будет случайным.</div></div>`}}
+ else h+=`<div class="c text-center text-sm">Вы не участвуете в серии — смотрите за дуэлью нервов 🍿</div>`;
+ h+=others.map(t=>box(t)+(P.rev&&t.lk?`<div class="c text-xs">${kick(t,0)}${kick(t,1)}</div>`:`<div class="text-xs text-center" style="opacity:.6">${t.dn?'серия завершена':(t.cf[0]?'🔒':'⏳')+' '+esc(S.M[t.h].n)+' · '+(t.cf[1]?'🔒':'⏳')+' '+esc(S.M[t.a].n)}</div>`)).join('');
+ if(isHost&&!S.off)h+=btn('⏩ Досчитать серии автоматически (хост)',"if(confirm('Досчитать все серии случайно?'))send({a:'pskip'})",'g');
+ return h}
 function sumV(){const s=S.sum,ch=table()[0];return`<div class="c text-center" style="border-color:#d4a72c"><div class="text-6xl">🏆</div><div class="text-xs" style="opacity:.6">ИТОГИ СЕЗОНА ${s.s}</div><h2 style="font-size:1.6rem">${esc(ch.m.club)}</h2><div class="flex justify-center mt-1">${crest(ch.m.club)}</div><b>${esc(ch.m.n)} — чемпион лиги!</b>${S.cup.win!=null?`<div class="mt-2">🏆 Кубок Лиги: <b>${cn(S.cup.win)}</b></div>`:''}<div class="text-xs mt-2" style="opacity:.7">Бюджет на новый сезон: несгораемый банк +${BASE} каждому, лига +${PRIZE[0]}/+${PRIZE[1]}/+${PRIZE[2]}, Кубок +${CUPW}, 👟 бомбардир / 🎯 ассистент / 🧤 вратарь +${BOOT} клубу игрока. Остатки монет сохраняются, составы переходят в новый сезон.</div></div>
  ${S.M.some(m=>m.debt>0)?`<div class="c text-sm" style="border-color:#dc2626"><b>⚖️ Финансовый фэйр-плей</b>${S.M.filter(m=>m.debt>0).map(m=>`<div>🏦 ${esc(m.club)} (${esc(m.n)}): долг ${m.debt} — не погасят до межсезонья: трансферный бан; до нового сезона: −${penOf(m.debt)} очков</div>`).join('')}</div>`:''}${tableH(s.rows)}${cupV()}${awards()}${cabinet()}${hallV()}
  ${isHost?btn('Перейти к межсезонью →',"send({a:'next'})",'v'):'<div class="c text-center" style="opacity:.7">Ждём, пока хост откроет межсезонье…</div>'}`}
@@ -1041,7 +1079,9 @@ function menuV(){return`<div class="ov"><div><h2>Меню</h2><div class="c">${o
  <div class="c text-sm"><b>Аукцион</b><div style="opacity:.8">Пул = менеджеры × состав. Общий таймер аукциона (10–30 мин, задаёт хост), 7 с на ход, 5 с после ставки. Пока идёт таймер, покупать может любой с монетами — даже в одиночку по стартовой цене. Trade-in: ставка + игрок в залог (OVR 70–79 → +1, 80–85 → +2, 86+ → +4): перебили — игрок вернётся, выиграли — уйдёт и освободит слот (так можно торговаться и с полным составом). Таймер кончился или все набраны — пустые места займут свободные агенты (64–70). Кнопка «Завершить аукцион (Сохранить бюджет)» выводит вас из торгов: пустые места сразу займут свободные агенты, монеты останутся на трансферный рынок и следующий сезон; когда закончат все — драфт завершается досрочно. Затем аукцион домашних стадионов (старт 1 монета).</div></div>
  <div class="c text-sm"><b>🔋 Усталость</b><div style="opacity:.8">Под карточкой — батарейка энергии (зелёная 60–100%, жёлтая 30–59%, красная ниже 30%). OVR на карточке не меняется, но ниже 50% игрок скрыто слабее на 5, ниже 30% — на 15 и в 2,5 раза чаще травмируется. За матч: низкий прессинг −10–15%, средний −20–25%, высокий −35–45%. На скамейке +40–50% (с Иванычем ещё +10%).</div></div>
  <div class="c text-sm"><b>⚙️ Стиль игры</b><div style="opacity:.8">«Состав» → Options: Автобус, Контратаки, Контроль мяча, Прессинг, Силовой навал, Баланс + интенсивность. Стиль не под состав (например, «Автобус» с топ-атакой и слабой защитой) — −10% к эффективности. Против философии тренера — −5 к скрытой силе. Состав и тренер под стиль — +15% к реализации моментов.</div></div>
- <div class="c text-sm"><b>🙈 Торги вслепую</b><div style="opacity:.8">На аукционе всегда один игрок на лот. Раз в 8–10 лотов — раунд вслепую: 10 секунд, каждый втайне ставит от 0 до своего баланса, потом все ставки вскрываются одновременно. Шансы лота: 90+ — 5%, 86–89 — 15%, 81–85 — 50%, 71–80 — 20%, до 70 — 10%. При равенстве побеждает клуб с более слабым составом.</div></div>
+ <div class="c text-sm"><b>📦 Тайник</b><div style="opacity:.8">На аукционе всегда один игрок на лот. Раз в 8–10 лотов выставляется тайник: видна только позиция, имя и рейтинг скрыты до удара молотка. Обычные торги по очереди, старт 2 монеты. Кто внутри: 90+ — 5%, 86–89 — 15%, 81–85 — 50%, 71–80 — 20%, до 70 — 10%.</div></div>
+ <div class="c text-sm"><b>🥅 Серия пенальти в Кубке</b><div style="opacity:.8">Ничья в кубковом матче — менеджеры сами бьют пенальти: в каждом раунде втайне выбираете, куда бьёт ваш игрок и куда прыгает ваш вратарь (10 с). Не угадал вратарь — почти всегда гол, угадал — чаще сейв. 5 ударов, потом до первой ошибки.</div></div>
+ <div class="c text-sm"><b>⏸ Пауза без интернета</b><div style="opacity:.8">Если у хоста пропал интернет (или он свернул игру), игра у всех встаёт на паузу: таймеры замирают и продолжаются с того же места, когда хост вернётся.</div></div>
  <div class="c text-sm"><b>📊 Досье игрока</b><div style="opacity:.8">Нажмите на карточку игрока (на поле — дважды): фото, клуб, стиль, энергия и радар PAC / SHO / PAS / DRI / DEF / PHY.</div></div>
  <div class="c text-sm"><b>🔥 В огне</b><div style="opacity:.8">2 победы подряд и больше — у клуба горит значок пламени в таблице и в матчах тура.</div></div>
  <div class="c text-sm"><b>👑 Капитан</b><div style="opacity:.8">Перед аукционами каждый покупает капитана из 6 персональных кандидатов по фиксированной цене: OVR 80–83 — 3 💰, 77–79 — 2 💰, 70–75 — 1 💰.</div></div>
@@ -1058,7 +1098,7 @@ function menuV(){return`<div class="ov"><div><h2>Меню</h2><div class="c">${o
  <div class="c text-sm"><b>Позиции и сыгранность</b><div style="opacity:.8">Основная позиция — 100%, вторичная −4, чужая −30, вратарь в поле / полевой в воротах — 30. Сыгранность ◆ 0–3 на игрока, до 33 на команду, даёт до +7% силы.</div></div>
  ${btn('Закрыть',"MENU=false;R()",'v')}${btn('Выйти из комнаты',"MENU=false;leave()",'r')}${credits()}</div></div>`}
 // new version check: the page asks the site for its own latest copy (bypassing caches) and offers a one-tap reload
-const APPV='17';let UPD=false;
+const APPV='18';let UPD=false;
 function checkUpd(){if(!ONSITE||!window.fetch||navigator.onLine===false||UPD)return;fetch(location.pathname+'?fcv='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(x=>{const m=String(x).match(/name="fcv" content="(\d+)"/);if(m&&+m[1]>+APPV){UPD=true;R()}}).catch(()=>{})}
 function doUpd(){const q=new URLSearchParams(location.search);q.set('u',Date.now());location.replace(location.pathname+'?'+q.toString())}
 const updV=()=>UPD?`<div class="c" style="border-color:#10b981;background:#06281c"><b>🆕 Вышла новая версия игры</b><div class="text-xs mt-1" style="opacity:.8">${S&&isHost?'Комната сохранится — после обновления нажмите «Продолжить как хост».':'Обновите страницу, чтобы получить новые функции. Все игроки в комнате должны обновиться.'}</div>${btn('🔄 Обновить сейчас','doUpd()','v')}</div>`:'';
@@ -1067,21 +1107,22 @@ function topV(){if(offline())return updV()+`<div class="top"><span class="dot" s
 function R(){const a=$('app'),n=$('nav'),ae=document.activeElement,fid=ae&&ae.id&&(ae.tagName=='INPUT'||ae.tagName=='SELECT')?ae.id:null,fv=fid?ae.value:null;
  const tz=TOAST?`<div class="toast">${esc(TOAST)}</div>`:'';
  if(!S){n.innerHTML='';a.innerHTML=homeV()+tz}
- else{let h='';const main=S.ph=='main'&&!S.live&&!S.mc;
+ else{let h='';const main=S.ph=='main'&&!S.live&&!S.mc&&!S.pens;
  if(S.off&&S.ph!='lobby'&&me()){const w=offWant();if(w&&w!=ME){ME=w;HOLD=null;SEL=null;TIO=false;TIS=null;FMO=false;BUYO=null}}
  if(S.off&&S.ph!='lobby'&&me()&&HOLD!==ME&&offWant()){n.innerHTML='';a.innerHTML=topV()+passV()+(MENU?menuV():'')+tz}
  else if(!me()){n.innerHTML='';a.innerHTML=topV()+(S.ph=='lobby'?'<div class="c text-center mt-4">Входим в лобби…</div>':`<div class="c text-center mt-4">Игра в комнате ${esc(CODE)} уже идёт.${S.M.length>1?'<div class="text-sm mt-2">Вы участник этой лиги на новом телефоне? Выберите себя:</div>'+S.M.slice(1).map(m=>btn(`Я — ${esc(m.n)} (${esc(m.club||'')})`,`claimM('${m.pid}')`,'g')).join(''):''}${btn('На главную','leave()','g')}</div>`)+(MENU?menuV():'')+tz}
- else{if(S.ph=='lobby')h=lobbyV();else if(S.ph=='capt')h=captV();else if(['cauc','auc','oauc','sauc'].includes(S.ph))h=aucV();else if(S.ph=='sum')h=sumV()+colaV()+credits();else if(S.ph=='off')h=offV();else if(S.live)h=liveV();else if(S.mc)h=mcV();else h=({sq:sqV,rd:rdV,tab:tabV,mk:mkV,cola:colaV,tr:trV}[TAB]||sqV)();if(S.off&&(main||S.ph=='off'))h=offBar()+h;if(S.off&&S.ph=='lobby')h=offLobbyV();
- a.innerHTML=topV()+h+(FMO&&['cauc','auc','main','oauc'].includes(S.ph)&&!S.live?fmV():'')+(main||S.ph=='off'?offerV()+(BUYO!=null?relV():''):'')+(COLAO?`<div class="ov"><div>${colaV()}${btn('Закрыть',"COLAO=false;R()",'v')}</div></div>`:'')+(S.ph=='sum'&&S.sum&&S.sum.cola&&COLAPOP!==CODE+'/'+S.sum.s&&!COLAO?colaPopV():(['sum','off'].includes(S.ph)&&me().debt>0&&me().ffpK!==S.season&&!COLAO?ffpPopV():''))+(PLY!=null?playerV(PLY):'')+(MENU?menuV():'')+tz;
+ else{if(S.ph=='lobby')h=lobbyV();else if(S.ph=='capt')h=captV();else if(['cauc','auc','oauc','sauc'].includes(S.ph))h=aucV();else if(S.ph=='sum')h=sumV()+colaV()+credits();else if(S.ph=='off')h=offV();else if(S.live)h=liveV();else if(S.pens)h=pensV();else if(S.mc)h=mcV();else h=({sq:sqV,rd:rdV,tab:tabV,mk:mkV,cola:colaV,tr:trV}[TAB]||sqV)();if(S.off&&(main||S.ph=='off'))h=offBar()+h;if(S.off&&S.ph=='lobby')h=offLobbyV();
+ a.innerHTML=topV()+h+(FMO&&['cauc','auc','main','oauc'].includes(S.ph)&&!S.live?fmV():'')+(main||S.ph=='off'?offerV()+(BUYO!=null?relV():''):'')+(COLAO?`<div class="ov"><div>${colaV()}${btn('Закрыть',"COLAO=false;R()",'v')}</div></div>`:'')+(S.ph=='sum'&&S.sum&&S.sum.cola&&COLAPOP!==CODE+'/'+S.sum.s&&!COLAO?colaPopV():(['sum','off'].includes(S.ph)&&me().debt>0&&me().ffpK!==S.season&&!COLAO?ffpPopV():''))+(PLY!=null?playerV(PLY):'')+(!S.off&&(PZ||hostAway())?pauseV():'')+(MENU?menuV():'')+tz;
  n.innerHTML=main?`<div class="nav">${[['sq','📋','Состав'],['rd','⚽',curIt().t=='C'?'Кубок':'Тур'],['tab','📊','Таблица'],['mk','🏷','Рынок'+(S.mk.filter(x=>x.pid!=ME).length?' ·'+S.mk.filter(x=>x.pid!=ME).length:'')],['cola','🥤','Кола'],['tr','🔁','Обмен']].map(t=>`<button class="${TAB==t[0]?'on':''}" onclick="TAB='${t[0]}';SEL=null;R()"><div class="text-lg">${t[1]}</div>${t[2]}</button>`).join('')}</div>`:''}}
  renderMus();tgSync();
  if(fid){const el=$(fid);if(el&&el!==document.activeElement){if(fv!=null&&el.tagName=='INPUT')el.value=fv;try{el.focus({preventScroll:true})}catch(e){}}}}
-function tickUI(){if(!S)return;const n=Date.now(),L=S.live;
+function tickUI(){if(!S||PZ||hostAway())return;const n=Date.now(),L=S.live;
  if(S.aucEnd&&$('gt')){const l=Math.max(0,S.aucEnd-n),s=Math.ceil(l/1000);$('gt').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');$('gt').style.color=s<=60?'#ef4444':''}
  if(S.au&&!S.au.sold&&$('tm')){const u=S.au,l=Math.max(0,u.end-n),s=Math.ceil(l/1000);$('tm').textContent=offline()?'без таймера':s+' с';$('tm').style.color=s<=2?'#ef4444':'';$('bar').style.width=Math.min(100,l/TFIRST*100)+'%';if(s<=3&&s>0&&s!=TKS&&S.au.turn==ME)sndTick();TKS=s}
  if(S.ph=='capt'&&S.captEnd&&$('ct')){const s=Math.ceil(Math.max(0,S.captEnd-n)/1000);$('ct').textContent=offline()?'без таймера':s+' с'}
  if(S.ph=='off'&&S.offEnd&&$('ot')){const l=Math.max(0,S.offEnd-n),s=Math.ceil(l/1000);$('ot').textContent=offline()?'без таймера':Math.floor(s/60)+':'+String(s%60).padStart(2,'0');$('ot').style.color=s<=15?'#ef4444':'';$('obar').style.width=Math.min(100,l/XFER*100)+'%'}
  if(S.ph=='main'&&!L&&S.prepEnd&&$('pt')){const l=Math.max(0,S.prepEnd-n),s=Math.ceil(l/1000);$('pt').textContent=offline()?'без таймера':Math.floor(s/60)+':'+String(s%60).padStart(2,'0');$('pt').style.color=s<=10?'#ef4444':'';$('pbar').style.width=Math.min(100,l/(S.prepDur||XFER)*100)+'%'}
+ if(S.pens&&$('pnt')){const P=S.pens,tot=P.rev?PENR:PENT,l=Math.max(0,(P.rev?P.revEnd:P.end)-n),s=Math.ceil(l/1000);$('pnt').textContent=P.rev?'дальше через '+s+' с':offline()?'без таймера':s+' с';$('pnt').style.color=!P.rev&&s<=3?'#ef4444':'';$('pnbar').style.width=Math.min(100,l/tot*100)+'%'}
  if(L&&$('lt')){const tot=L.rev?REVEAL:DUEL,l=Math.max(0,(L.rev?L.revEnd:L.end)-n),s=Math.ceil(l/1000);$('lt').textContent=L.rev?'дальше через '+s+' с':offline()?'без таймера':s+' с';$('lt').style.color=!L.rev&&s<=3?'#ef4444':'';$('lbar').style.width=Math.min(100,l/tot*100)+'%';if(!L.rev&&s<=3&&s>0&&s!=TKS&&myMatch())sndTick();TKS=s}}
 // timers and bars are drawn locally every animation frame from the end time the host sent -> smooth on every phone
 {const raf=window.requestAnimationFrame;let lt=0;const loop=ts=>{if(!raf||!ts||ts-lt>=33){lt=ts||0;try{tickUI()}catch(e){}}raf?raf(loop):setTimeout(loop,100)};loop()}
