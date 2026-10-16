@@ -1,0 +1,43 @@
+name: Draft photo pack
+
+# Downloads photos of every player, coach, stadium and club crest of FC Draft Online,
+# shrinks them to small WebP files and commits them to public/draft/ph/ (incremental:
+# only missing photos are fetched). The Pages deploy runs right after it.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['scripts/draft-photos.cjs', '.github/workflows/draft-photos.yml']
+  schedule:
+    - cron: '17 3 * * 1'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: draft-photos
+  cancel-in-progress: false
+
+jobs:
+  photos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install the image tool
+        run: mkdir -p /tmp/ph && cd /tmp/ph && npm init -y >/dev/null && npm i sharp@0.33.5
+      - name: Build the photo pack
+        env:
+          SHARP: /tmp/ph/node_modules/sharp
+        run: node scripts/draft-photos.cjs
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git add public/draft/ph
+          if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+          git commit -m "Draft photo pack update"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && break; sleep 5; done

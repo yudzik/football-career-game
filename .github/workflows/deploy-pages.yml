@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # the photo pack is committed by a bot, which does not trigger «push» — deploy after it instead
+  workflow_run:
+    workflows: ['Draft photo pack']
+    types: [completed]
 
 permissions:
   contents: read
@@ -34,6 +38,10 @@ jobs:
         env:
           GH_PAGES: 'true'
         run: npm run build
+
+      # FC Draft Online: the photo pack as one archive for the hotspot mode (local-server.js serves ./ph/)
+      - name: Draft photo archive
+        run: if [ -d dist/draft/ph ]; then cd dist/draft && zip -qr ph.zip ph; fi
 
       # enablement provisions the Pages site itself when the repository has none, instead of
       # failing with "Get Pages site failed ... Not Found" and requiring a trip to Settings.
