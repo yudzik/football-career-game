@@ -45,11 +45,13 @@ const G = e => ctx.__(e);
 
 const mapF = path.join(OUT, 'map.json'), failF = path.join(OUT, 'fail.json');
 const old = fs.existsSync(mapF) ? JSON.parse(fs.readFileSync(mapF, 'utf8')) : { m: {} };
-const fail = fs.existsSync(failF) ? JSON.parse(fs.readFileSync(failF, 'utf8')) : {};
+const REV = 2;   // lookup method version: failures from an older method are retried at once
+let fail = fs.existsSync(failF) ? JSON.parse(fs.readFileSync(failF, 'utf8')) : {}; if (fail._rev !== REV) fail = { _rev: REV };
 const M = { ...(old.m || {}) };
 const fileOf = k => k.replace(/[^A-Za-z0-9]/g, '_') + '.webp';
 const have = k => M[k] && fs.existsSync(path.join(OUT, M[k]));
 const retry = k => !fail[k] || Date.now() - fail[k] > 14 * 864e5;
+const miss = k => { fail[k] = Date.now(); missed++ };
 const SIZE = { p: [160, 160, 'contain', 72], c: [160, 160, 'cover', 72], T: [96, 96, 'contain', 80], s: [640, 360, 'cover', 62] };
 let api = 0, made = 0, missed = 0;
 
@@ -76,23 +78,54 @@ function writeOut(final) {
 }
 let lastW = Date.now();
 const tick = () => { if (Date.now() - lastW > 60000) { writeOut(false); lastW = Date.now() } };
+// ---- Wikipedia: lead image + short description for up to 40 titles per request (pilicense=any also returns club logos)
+async function wp(titles, size) {
+  const out = {};
+  for (let i = 0; i < titles.length; i += 40) {
+    const chunk = titles.slice(i, i + 40), r = await ufetch('https://en.wikipedia.org/w/api.php?action=query&format=json&redirects=1&prop=pageimages|description&piprop=thumbnail&pilicense=any&pilimit=50&pithumbsize=' + size + '&titles=' + encodeURIComponent(chunk.join('|')));
+    let j = {}; try { j = await r.json() } catch (e) {}
+    const q = j.query || {}, mp = {}, pg = {};
+    [...(q.normalized || []), ...(q.redirects || [])].forEach(x => mp[x.from] = x.to);
+    Object.values(q.pages || {}).forEach(p => pg[p.title] = { src: (p.thumbnail || {}).source || '', desc: p.description || '' });
+    chunk.forEach(t => { let x = t.replace(/_/g, ' '); x = mp[x] || x; x = mp[x] || x; if (pg[x]) out[t] = pg[x] });
+    api++; await sleep(400);
+  }
+  return out;
+}
+async function wpSearch(q, size) {
+  const r = await ufetch('https://en.wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrlimit=1&gsrsearch=' + encodeURIComponent(q) + '&prop=pageimages|description&piprop=thumbnail&pilicense=any&pithumbsize=' + size);
+  let j = {}; try { j = await r.json() } catch (e) {} api++; await sleep(400);
+  const p = Object.values((j.query || {}).pages || {})[0]; return p ? { src: (p.thumbnail || {}).source || '', desc: p.description || '' } : null;
+}
+const isFoot = d => /football|soccer/i.test(d || '');
 (async () => {
-  // coaches + stadiums: Wikipedia lead photos (the game's own loaders)
-  const co = G('CO').filter(c => !have('c' + c.i) && retry('c' + c.i));
-  if (co.length) { try { await G('loadCoaches()') } catch (e) {} const IMG = G('IMG'); for (const c of co) await save('c' + c.i, c.ph || IMG['c' + c.i] || '') }
-  const st = G('STAD').filter(s => !have('s' + s.i) && retry('s' + s.i));
-  if (st.length) { try { await G('loadStadImgs()') } catch (e) {} const SI = G('STIMG'); for (const s of st) await save('s' + s.i, SI[s.i] || '') }
-  // club crests (league clubs + every club of the player database)
+  const DB = G('DB'), CO = G('CO'), STAD = G('STAD');
   const teams = [...new Set([...G('Object.values(CLUBS).map(c=>c[2]).filter(Boolean)'), ...G('CL.map(c=>c[4])')])];
-  for (const n of teams) { const k = 'T:' + n; if (have(k) || !retry(k) || api >= LIMIT || late()) continue; tick(); let u = ''; try { u = await G(`findTeam(${JSON.stringify(n)})`) || '' } catch (e) {} api++; await save(k, u); await sleep(2100) }
-  // players
-  const DB = G('DB');
-  for (const p of DB) { const k = 'p' + p.id; if (have(k) || !retry(k) || late()) continue; tick(); let u = p.ph || '';
-    if (!u) { if (api >= LIMIT) continue; try { u = await G(`findPlayer(DB[${p.id}])`) || '' } catch (e) {} api++; await sleep(2100) }
-    await save(k, u); if ((made + missed) % 25 === 0) console.log(`… ${made} saved, ${missed} missed, ${api} lookups`) }
+  // coaches: their Wikipedia articles
+  { const L = CO.filter(c => !have('c' + c.i) && retry('c' + c.i)), W = await wp(L.filter(c => c.wk).map(c => c.wk), 300);
+    for (const c of L) { const x = c.wk && W[c.wk]; await save('c' + c.i, c.ph || (x && x.src) || ''); await sleep(250) } }
+  // stadiums: article photo, then the game's own Commons search
+  { const L = STAD.filter(s => !have('s' + s.i) && retry('s' + s.i)), W = await wp(L.map(s => s.wk), 960);
+    let SI = {}; if (L.some(s => !(W[s.wk] || {}).src)) { try { await G('loadStadImgs()') } catch (e) {} SI = G('STIMG') }
+    for (const s of L) { await save('s' + s.i, (W[s.wk] || {}).src || SI[s.i] || ''); await sleep(250) } }
+  // crests: Wikipedia club article logo, TheSportsDB as a fallback
+  for (const n of teams) { const k = 'T:' + n; if (have(k) || !retry(k) || late()) continue; tick();
+    let x = (await wp([n + ' F.C.', n], 200)); let u = [n + ' F.C.', n].map(t => x[t]).find(v => v && v.src && isFoot(v.desc));
+    if (!u) { const s2 = await wpSearch(n + ' football club', 200); if (s2 && s2.src && isFoot(s2.desc)) u = s2 }
+    let url = u ? u.src : ''; if (!url && api < LIMIT) { try { url = await G(`findTeam(${JSON.stringify(n)})`) || '' } catch (e) {} api++; await sleep(2100) }
+    await save(k, url); await sleep(250) }
+  // players: «Name», then «Name (footballer)»; only football articles count; TheSportsDB as the last resort
+  { const L = DB.filter(p => !have('p' + p.id) && retry('p' + p.id)), found = {};
+    L.filter(p => p.ph).forEach(p => found[p.id] = p.ph);
+    const pass = async suffix => { const rest = L.filter(p => !found[p.id] && p.e); const W = await wp(rest.map(p => p.e + suffix), 240); rest.forEach(p => { const x = W[p.e + suffix]; if (x && x.src && isFoot(x.desc)) found[p.id] = x.src }) };
+    await pass(''); await pass(' (footballer)'); await pass(' (soccer)');
+    let blocked = 0;
+    for (const p of L) { const k = 'p' + p.id; if (late()) break; tick(); let url = found[p.id] || '';
+      if (!url && blocked < 5 && api < LIMIT) { try { url = await G(`findPlayer(DB[${p.id}])`) || '' } catch (e) {} api++; const sd = ST['www.thesportsdb.com'] || {}; blocked = (sd[403] || 0) + (sd[429] || 0) > (sd[200] || 0) + 3 ? blocked + 1 : 0; await sleep(2100) }
+      await save(k, url); await sleep(200); if ((made + missed) % 25 === 0) console.log(`… ${made} saved, ${missed} missed, ${api} lookups`) } }
   const w = writeOut(true), todo = DB.filter(p => !M['p' + p.id] && retry('p' + p.id)).length + teams.filter(n => !M['T:' + n] && retry('T:' + n)).length;
   const rep = { at: new Date().toISOString(), minutes: +((Date.now() - T0) / 60000).toFixed(1), photos: w.n, mb: +(w.bytes / 1048576).toFixed(2), made, missed, lookups: api, todo,
-    players: DB.filter(p => M['p' + p.id]).length + '/' + DB.length, coaches: G('CO').filter(c => M['c' + c.i]).length + '/' + G('CO.length'), stadiums: G('STAD').filter(s => M['s' + s.i]).length + '/' + G('STAD.length'), crests: teams.filter(n => M['T:' + n]).length + '/' + teams.length, http: ST };
+    players: DB.filter(p => M['p' + p.id]).length + '/' + DB.length, coaches: CO.filter(c => M['c' + c.i]).length + '/' + CO.length, stadiums: STAD.filter(s => M['s' + s.i]).length + '/' + STAD.length, crests: teams.filter(n => M['T:' + n]).length + '/' + teams.length, http: ST };
   fs.writeFileSync(path.join(OUT, 'report.json'), JSON.stringify(rep, null, 1));
   console.log(JSON.stringify(rep));
   if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `more=${todo > 0 && late() ? 1 : 0}\n`);
