@@ -5,7 +5,7 @@
 //  • Russian names of players and clubs: Wikidata (Transfermarkt player ID P2446, team ID P7223)
 // Output: public/draft/db-src.json (reviewed, then shipped as db.json) and public/draft/db-report.json
 'use strict';
-const fs = require('fs'), path = require('path');
+const fs = require('fs'), path = require('path'), zlib = require('zlib');
 const ROOT = path.join(__dirname, '..'), OUT = path.join(ROOT, 'public/draft');
 const UA = 'FCDraftOnline/1.0 (https://github.com/yudzik/football-career-game; squad database build)';
 const API = process.env.TM_API || 'https://transfermarkt-api.fly.dev';
@@ -41,6 +41,7 @@ const mvBase = v => { if (!v || v <= MV[0][0]) return MV[0][1] - 2; for (let i =
 const AGEF = a => a <= 18 ? -4 : a == 19 ? -3 : a == 20 ? -2 : a <= 22 ? -1 : a <= 29 ? 0 : a <= 31 ? 1 : a <= 33 ? 2 : 3;
 const LGF = { RPL: 2, BPL: 2, TUR: 0, POR: 0, NED: 0, BEL: 0 };
 const ratingOf = (v, age, pos, lg) => Math.max(50, Math.min(94, Math.round(mvBase(v) + AGEF(age) + (pos == 'G' ? 2 : 0) + (LGF[lg] || 0))));
+const splitCsv = l => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const ch = l[i]; if (q) { if (ch == '"' && l[i + 1] == '"') { c += '"'; i++ } else if (ch == '"') q = false; else c += ch } else if (ch == '"') q = true; else if (ch == ',') { o.push(c); c = '' } else c += ch } o.push(c); return o };
 const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
 
 async function sparqlLabels(prop, ids) { // Transfermarkt id -> {ru, en}
@@ -80,6 +81,13 @@ function ruShort(ru, tm) { if (!ru || /[A-Za-z]/.test(ru)) return null; ru = ru.
   for (const c of clubs) { const j = cache[c.id]; if (!j || !j.players) { c.err = 'no squad'; continue } c.n = j.players.length; c.upd = j.updatedAt; c.mvShare = +(j.players.filter(p => p.marketValue).length / (j.players.length || 1)).toFixed(2);
     j.players.forEach(p => players.push({ id: String(p.id), name: p.name, img: p.imageUrl || null, pos: p.position, no: p.shirtNumber, dob: p.dateOfBirth, age: p.age, nat: p.nationality, mv: p.marketValue || 0, club: c })) }
   rep.noMV = clubs.filter(c => c.mvShare < .6).map(c => c.name);
+  // market values missing in the API response: filled from the open transfermarkt-datasets dump (weekly, by Transfermarkt player id)
+  try { const r = await fetch('https://pub-e682421888d945d684bcae8890b0ec20.r2.dev/data/players.csv.gz', { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(120000) });
+    const csv = zlib.gunzipSync(Buffer.from(await r.arrayBuffer())).toString('utf8'), lines = csv.split('\n'), hd = splitCsv(lines[0]), iId = hd.indexOf('player_id'), iMv = hd.indexOf('market_value_in_eur'), iUp = hd.indexOf('last_season'), MVD = {};
+    for (let k = 1; k < lines.length; k++) { if (!lines[k]) continue; const f = splitCsv(lines[k]); if (f[iMv]) MVD[f[iId]] = +f[iMv] }
+    let filled = 0; players.forEach(p => { if (!p.mv && MVD[p.id]) { p.mv = MVD[p.id]; filled++ } }); rep.mvFilled = filled; rep.mvDump = Object.keys(MVD).length;
+  } catch (e) { rep.mvDumpErr = String(e) }
+  rep.mvMissing = players.filter(p => !p.mv).length;
   rep.clubs = clubs.length; rep.clubErr = clubs.filter(c => c.err).map(c => c.name); rep.playersRaw = players.length;
   const PL = await sparqlLabels('P2446', [...new Set(players.map(p => p.id))]), CL = await sparqlLabels('P7223', clubs.map(c => c.id));
   const seen = new Set(), out = [];
