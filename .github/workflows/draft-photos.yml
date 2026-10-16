@@ -38,6 +38,7 @@ jobs:
           PH_MINUTES: '40'
         run: node scripts/draft-photos.cjs
       - name: Commit
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
