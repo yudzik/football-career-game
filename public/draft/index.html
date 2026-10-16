@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>FC Draft Online</title><meta name="fcv" content="18">
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>FC Draft Online</title><meta name="fcv" content="19">
 <script src="https://cdn.tailwindcss.com/3.4.17"></script><script src="https://telegram.org/js/telegram-web-app.js" async onload="try{tgInit()}catch(e){}"></script>
 <style>/* offline fallback: the utility classes this page uses (same values as Tailwind), so the layout holds without the CDN */
 *,::before,::after{border-width:0;border-style:solid;border-color:#e5e7eb}html{line-height:1.5}h1,h2,h3,p{margin:0}h1,h2,h3{font-size:inherit;font-weight:inherit}button,input,select{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0}button{background:transparent;padding:0;cursor:pointer}a{color:inherit;text-decoration:inherit}img,svg{display:block;max-width:100%}table{border-collapse:collapse}
@@ -24,7 +24,8 @@ h2{font-size:1.2rem;font-weight:900;color:#d4a72c;margin-top:6px}
 .ut .ph{position:absolute;right:-6px;top:10px;width:96px;height:104px;object-fit:contain;object-position:bottom}
 .ut .nm{position:absolute;left:4px;right:4px;top:118px;text-align:center;font-weight:900;font-size:13px;white-space:nowrap;overflow:hidden;border-top:1px solid #0003;padding-top:3px}
 .ut .st{position:absolute;left:0;right:0;top:138px;text-align:center;font-size:10px;font-weight:800;opacity:.85}
-.sel .pc{outline:3px solid #fff}.nav{position:fixed;left:0;right:0;bottom:0;background:#11171a;border-top:1px solid #28323a;display:flex;padding-bottom:calc(env(safe-area-inset-bottom,0px) + var(--tg-content-safe-area-inset-bottom,0px));z-index:20}.nav button{flex:1;padding:12px 2px;font-size:11px;font-weight:700;color:#8a979d}.nav button.on{color:#d4a72c}
+.sel .pc{outline:3px solid #fff}.devb{position:fixed;left:10px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:45;width:46px;height:46px;border-radius:50%;background:#7c3aed;color:#fff;font-size:22px;box-shadow:0 4px 16px #0008;border:2px solid #c4b5fd}.dvg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.dvg .b{margin:0;font-size:13px;padding:11px 6px}.dvi{font:11px/1.5 ui-monospace,monospace;opacity:.8;word-break:break-all}
+.nav{position:fixed;left:0;right:0;bottom:0;background:#11171a;border-top:1px solid #28323a;display:flex;padding-bottom:calc(env(safe-area-inset-bottom,0px) + var(--tg-content-safe-area-inset-bottom,0px));z-index:20}.nav button{flex:1;padding:12px 2px;font-size:11px;font-weight:700;color:#8a979d}.nav button.on{color:#d4a72c}
 .crest{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-size:9px;font-weight:900;border:2px solid #fff3;flex:none;overflow:hidden}
 .mini{position:relative;width:100%;padding-top:130%;background:#0f5c34;border-radius:8px}.mini i{position:absolute;width:7px;height:7px;border-radius:50%;background:#facc15;transform:translate(-50%,50%)}
 .hero{position:relative;border-radius:20px;overflow:hidden;padding:24px 16px 18px;margin-top:6px;background:radial-gradient(120% 90% at 50% 0%,#14783f 0%,#0b3d24 55%,#0d1113 100%);border:1px solid #1e8a52}
@@ -249,6 +250,8 @@ const SITE='https://yudzik.github.io/football-career-game/draft/',ONSITE=/github
 const BROKERS=LOCALSRV?['ws://'+location.host+'/mqtt']:['wss://broker.emqx.io:8084/mqtt','wss://broker.hivemq.com:8884/mqtt','wss://test.mosquitto.org:8081/mqtt'],BI=()=>BROKERS.map((_,i)=>i),PFX='fcdraft-yd7/';
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
 try{NK=localStorage.getItem('fdt_nk')||''}catch(e){}
+// ---- developer mode: test alone on one device — bots, playing as any manager, timer skips, test shootout / pause, extra «phones» as browser tabs
+let DEV=!!ls.get('fdt_dev'),DEVO=false,HME=null,DEVPZ=0,BOTK={},BOTD=1;const DEV2=new URLSearchParams(location.search).get('dev2')||'';if(DEV2)NK='Тест-'+DEV2.slice(0,3).toUpperCase();
 // a pool player's current state: base data + rating progression + age for this season
 const base=id=>{const p=DB[id];if(!p)return null;return{...p,o:p.o+((S&&S.adj&&S.adj[id])||0),age:p.age+((S&&S.ageAdd)||0)}};
 const pl=id=>(S&&S.P[id])||base(id),mi=pid=>S.M.findIndex(m=>m.pid==pid),me=()=>S&&S.M[mi(ME)],cl=k=>CL.find(c=>c[0]==k),rc=o=>o>=88?'#5eead4':o>=80?'#f5c542':o>=71?'#cbd5e1':'#c2793a';
@@ -573,7 +576,7 @@ function resolvePen(){const P=S.pens;P.t.forEach(t=>{if(t.dn)return;const pk=PKP
   const X=sumA(t.x),Y=sumA(t.y),n=t.x.length;
   if((n<5&&(X>Y+5-n||Y>X+5-n))||(n>=5&&X!=Y))t.dn=true;else if(n>=15){t.x[n-1]=1;t.y[n-1]=0;t.lk.g=[1,0];t.coin=1;t.dn=true}});
  P.rev=true;P.revEnd=Date.now()+(offline()?7000:PENR);bc()}
-function finishPens(){const P=S.pens;P.t.forEach(t=>{const r=P.res[t.i],X=sumA(t.x),Y=sumA(t.y);r.pen=[X,Y];r.ev.push(`🥅 Серия пенальти ${X}:${Y} — дальше ${S.M[X>Y?r.h:r.a].club}${t.coin?' (жребий)':''}`)});S.pens=null;PKP={};applyResults(P.res);bc()}
+function finishPens(){const P=S.pens;if(P.test){S.pens=null;PKP={};S.prepEnd=Date.now()+30000;S.prepDur=30000;bc();return}P.t.forEach(t=>{const r=P.res[t.i],X=sumA(t.x),Y=sumA(t.y);r.pen=[X,Y];r.ev.push(`🥅 Серия пенальти ${X}:${Y} — дальше ${S.M[X>Y?r.h:r.a].club}${t.coin?' (жребий)':''}`)});S.pens=null;PKP={};applyResults(P.res);bc()}
 function applyResults(res){const it=curIt(),w=m=>((coachOf(m)||{e:{}}).e.w||0);
  res.forEach(r=>{const A=S.M[r.h],B=S.M[r.a];
   if(it.t=='L'){A.st[0]++;B.st[0]++;A.st[4]+=r.ga;A.st[5]+=r.gb;B.st[4]+=r.gb;B.st[5]+=r.ga;if(r.ga>r.gb){A.st[1]++;B.st[3]++}else if(r.ga<r.gb){B.st[1]++;A.st[3]++}else{A.st[2]++;B.st[2]++}}
@@ -740,23 +743,61 @@ function tryBrokers(order,i,ok,fail){if(i>=order.length)return fail();const mq=M
 let bcT=0,hostTimers=false,HE=0,PZ=0;   // HE: last time the host heard its own heartbeat back; PZ: pause start (0 = running)
 // host lost the internet (socket down, browser offline, or its own heartbeat stopped coming back, e.g. the app was minimised):
 // the whole game freezes; when the host is back every deadline moves by the paused time, so nobody loses a turn
-function pzCheck(){if(!isHost||!S||S.off||!NET)return false;const n=Date.now(),gone=!NET.up||(!LOCALSRV&&navigator.onLine===false)||n-HE>14000;
- if(gone&&!PZ){PZ=Math.min(n,HE+5500);if(NET.up&&n-HE>14000)NET.kick();R()}
+function pzCheck(){if(!isHost||!S||S.off||!NET)return false;const n=Date.now(),gone=!NET.up||(!LOCALSRV&&navigator.onLine===false)||n-HE>14000||DEVPZ>n;
+ if(gone&&!PZ){PZ=DEVPZ>n?n:Math.min(n,HE+5500);if(NET.up&&n-HE>14000)NET.kick();R()}
  else if(!gone&&PZ){shiftT(n-PZ);PZ=0;R();pubFull()}
  return PZ>0}
+const isBot=pid=>{const m=S&&S.M[mi(pid)];return!!(m&&m.bot)};
+// a bot «thinks» 0.6–2.2 s before every decision, then acts through the same actions a phone sends
+function botAct(m,key,fn){const n=Date.now(),k=BOTK[m.pid];if(!k||k.key!=key){BOTK[m.pid]={key,at:n+(600+rnd(1600))*BOTD};return}if(n>=k.at&&!k.done){k.done=1;fn()}}
+function botLim(m,u){const k=u.k,rs=k=='c'||k=='s'?0:Math.max(0,need(m)-1),cap=Math.max(0,m.coins-rs);let v;
+ if(k=='c')v=2+rnd(3);else if(k=='s')v=1+rnd(3);else if(k=='m')v=2+rnd(4);else if(k=='k')v=u.ids.length*2+rnd(2);else{const o=pl(u.id).o;v=startPrice(o)+(o>=85?4:o>=80?3:1)+rnd(3)}
+ return Math.min(v,cap)}
+function bots(){if(!isHost||!S||PZ||!S.M.some(m=>m.bot))return;const u=S.au,L=S.live,P=S.pens;
+ S.M.forEach((m,i)=>{if(!m.bot||m.pid==ME)return;const id=m.pid,act=a=>handle(a,id);
+  if(S.ph=='capt'){if(m.capt==null&&m.cOff&&m.cOff.length)botAct(m,'capt',()=>{const o=m.cOff.filter(o=>o[1]<=m.coins).sort((a,b)=>b[1]-a[1])[0]||m.cOff[0];act({a:'capt',id:o[0]})});return}
+  if(['cauc','auc','oauc','sauc'].includes(S.ph)){if(u&&!u.sold&&u.turn==id)botAct(m,'au'+S.ph+S.lot+'/'+u.bid,()=>{if(S.au!==u||u.sold||u.turn!=id)return;const nx=u.bid?u.bid+1:u.st,ok=nx<=botLim(m,u)&&nx<=m.coins&&(u.k=='c'||u.k=='s'||need(m)>=(u.ids?u.ids.length:1));act(ok?{a:'bid',x:nx}:{a:'pass'})});return}
+  if(S.ph=='main'&&P){if(!P.rev){const t=P.t.find(t=>!t.dn&&(t.h==i||t.a==i));if(t&&!t.cf[t.h==i?0:1])botAct(m,'pen'+S.si+'/'+P.rd,()=>act({a:'pen',s:rnd(3),d:rnd(3)}))}return}
+  if(S.ph=='main'&&L){if(!L.rev){const x=L.m.find(x=>x.h==i||x.a==i);if(x&&x.cur&&!x.cur.done[(x.cur.side?x.a:x.h)==i?0:1])botAct(m,'lv'+S.si+'/'+L.step,()=>act({a:'pick',o:rnd(3)}))}return}
+  const of=S.offers.find(o=>o.to==id);if(of){botAct(m,'of'+of.id,()=>act({a:'resp',id:of.id,ok:Math.random()<.5}));return}
+  if(((S.ph=='main'&&!S.mc)||S.ph=='off')&&!S.ready.includes(id))botAct(m,'rd'+S.ph+S.season+'/'+S.si,()=>{if(!S.ready.includes(id))act({a:'ready'})})})}
+function addBot(){if(!S||S.ph!='lobby'||S.M.length>=20)return;const k=S.M.filter(m=>m.bot).length+1,b=newM('b'+rid(),'🤖 Бот '+k),fr=CL.map(c=>c[0]).filter(c=>!S.M.some(m=>m.club==c));b.bot=1;b.club=pick(fr);S.M.push(b);bc();R()}
+function devT0(){const n=Date.now(),u=S.au,L=S.live,P=S.pens;if(u&&!u.sold)u.end=n;['prepEnd','offEnd','captEnd'].forEach(k=>{if(S[k])S[k]=n});if(L){if(L.rev)L.revEnd=n;else L.end=n}if(S.mc)S.mc.end=n;if(P){if(P.rev)P.revEnd=n;else P.end=n}}
+function devSeason(){const md=S.cfg.mode;S.cfg.mode='q';let g=0;while(S.ph=='main'&&g++<150){if(S.pens){let k=0;while(S.pens.t.some(t=>!t.dn)&&k++<40){PKP={};resolvePen();S.pens.rd++}finishPens()}else if(S.mc)endMC();else if(S.live)finishLive();else startTour()}S.cfg.mode=md}
+function devDo(k){if(!S||!isHost)return;const me_=me();
+ if(k=='bot')return addBot();
+ if(k=='bot3'){for(let i=0;i<3;i++)addBot();return}
+ if(k=='t0')devT0();
+ else if(k=='c50'){me_.coins+=50}
+ else if(k=='c50a'){S.M.forEach(m=>m.coins+=50)}
+ else if(k=='mys'){S.blc=999;toast('📦 Следующий лот — тайник')}
+ else if(k=='pen'){if(S.ph!='main'||S.live||S.mc||S.pens||S.M.length<2)return toast('Тест-серия — в паузе между турами');const res=[];for(let i=0;i+1<S.M.length;i+=2)res.push({h:i,a:i+1,ga:1,gb:1,ev:[]});startPens(res);S.pens.test=1;S.pens.nm='🛠 Тестовая серия пенальти';DEVO=false}
+ else if(k=='pz'){if(S.off)return toast('В офлайн-режиме паузы нет — хост и есть этот телефон');DEVPZ=Date.now()+20000;DEVO=false;pzCheck()}
+ else if(k=='season'){if(S.ph!='main')return toast('Доступно во время сезона');devSeason();DEVO=false}
+ else if(k=='tab'){if(S.off||!CODE)return toast('Нужна онлайн-комната');try{window.open(link()+'&dev2='+rid(),'_blank')}catch(e){}return}
+ bc();R()}
+function playAs(pid){if(!isHost||S.off)return;if(!HME)HME=ME;ME=pid;if(ME==HME)HME=null;SEL=null;TIO=false;TIS=null;PEND=null;FMO=false;BUYO=null;R()}
+function devV(){const u=S.au,host=isHost,on=!S.off,nb=S.M.filter(m=>m.bot).length,dt=(x,y)=>`<span style="opacity:.6">${x}</span> <b>${esc(String(y))}</b>`;
+ return`<div class="ov" onclick="if(event.target===this){DEVO=false;R()}"><div><h2>🛠 Режим разработчика</h2>
+ <div class="c dvi">${[dt('версия',APPV),dt('фаза',S.ph),dt('сезон/тур',S.season+'/'+(S.si||0)),dt('лот',(S.lot||0)+(u?' · '+u.k+(u.sold?' ✓':'')+(u.turn?' · ход '+((S.M[mi(u.turn)]||{}).n||'?'):''):'')),dt('роль',host?'хост':'клиент'+(DEV2?' (вкладка-тест)':'')),dt('связь',S.off?'офлайн':NET&&NET.up?'онлайн · '+(BROKERS[NB]||'').replace(/^wss?:\/\//,'').split('/')[0]:'нет'),dt('синхр.',host?'PQ '+PQ:'LQ '+LQ),dt('менеджеров',S.M.length+(nb?' (ботов '+nb+')':'')),host&&PZ?dt('пауза','идёт'):''].filter(Boolean).join(' · ')}</div>
+ ${host?`<div class="c"><b>🤖 Боты</b><div class="text-xs mt-1" style="opacity:.7">Сами покупают капитана, торгуются, выбирают в дуэлях и пенальти, жмут «Готов». Добавляются в лобби.</div>${S.ph=='lobby'?`<div class="dvg mt-2">${btn('🤖 +1 бот',"devDo('bot')",'g')}${btn('🤖 +3 бота',"devDo('bot3')",'g')}</div>`:`<div class="text-xs mt-1">Ботов в лиге: <b>${nb}</b></div>`}</div>`:''}
+ ${host&&on?`<div class="c"><b>🎭 Играть за</b><div class="text-xs mt-1" style="opacity:.7">Экран и действия выбранного менеджера (бот на это время не ходит сам).</div><div class="mt-2">${S.M.map(m=>`<button class="tag ${m.pid==ME?'ld':''}" style="margin:3px" onclick="playAs('${m.pid}')">${m.pid==(HME||ME)&&m===S.M[0]?'👑 ':''}${esc(m.n)}</button>`).join('')}</div>${HME?btn('↩️ Вернуться к себе',`playAs('${HME}')`,'v'):''}</div>`:''}
+ ${host?`<div class="c"><b>⚡ Быстрые действия</b><div class="dvg mt-2">${btn('⏭ Таймер → 0',"devDo('t0')",'g')}${btn('💰 +50 мне',"devDo('c50')",'g')}${btn('💰 +50 всем',"devDo('c50a')",'g')}${btn('📦 Тайник следующим',"devDo('mys')",'g',S.ph!='auc')}${btn('🥅 Тест-серия пенальти',"devDo('pen')",'g',S.ph!='main'||!!S.live||!!S.mc||!!S.pens)}${btn('🏁 Доиграть сезон',"devDo('season')",'g',S.ph!='main')}${on?btn('⏸ Тест паузы (20 с)',"devDo('pz')",'g'):''}</div></div>`:''}
+ ${on?`<div class="c"><b>📱 Ещё один «телефон»</b><div class="text-xs mt-1" style="opacity:.7">Откроет игру в новой вкладке как отдельного игрока (свой id и имя «Тест-…») и сам зайдёт в эту комнату. Можно открыть несколько.</div>${btn('📱 Открыть вкладку-игрока',"devDo('tab')",'g',!CODE||S.off)}</div>`:''}
+ ${btn('🛠 Выключить режим разработчика',"DEV=false;DEVO=false;ls.set('fdt_dev',false);R()",'r')}${btn('Закрыть',"DEVO=false;R()",'v')}</div></div>`}
 function shiftT(d){if(!(d>0)||!S)return;const L=S.live,u=S.au,P=S.pens,f=(o,k)=>{if(o&&o[k])o[k]+=d};if(u&&!u.sold)f(u,'end');['aucEnd','prepEnd','offEnd','captEnd'].forEach(k=>f(S,k));if(L){f(L,'end');f(L,'revEnd');L.m.forEach(x=>x.cur&&f(x.cur,'varAt'))}f(S.mc,'end');if(P){f(P,'end');f(P,'revEnd')}}
 function bc(){if(!isHost)return;if(S&&S.mk)S.mk=S.mk.filter(x=>{const s=S.M[mi(x.pid)];return s&&s.sq.includes(x.id)});onS();wantImgs();if(bcT)return;bcT=setTimeout(()=>{bcT=0;pubState()},60)}
 function pubFull(){if(!NET||!S)return;freshLeft();pubFull.t=Date.now();clearTimeout(FT);Object.keys(S).forEach(k=>LSJ[k]=JSON.stringify(S[k]));NET.pub(T('s'),JSON.stringify({...S,_q:PQ}),true)}
 function freshLeft(){const n=Date.now(),L=S.live;if(S.au&&!S.au.sold)S.au.left=Math.max(0,S.au.end-n);if(S.prepEnd)S.prepLeft=Math.max(0,S.prepEnd-n);if(S.offEnd)S.offLeft=Math.max(0,S.offEnd-n);if(S.captEnd)S.captLeft=Math.max(0,S.captEnd-n);if(S.aucEnd)S.aucLeft=Math.max(0,S.aucEnd-n);if(L)L.left=Math.max(0,(L.rev?L.revEnd:L.end)-n);if(S.mc)S.mc.left=Math.max(0,S.mc.end-n);if(S.pens)S.pens.left=Math.max(0,(S.pens.rev?S.pens.revEnd:S.pens.end)-n);S.t=n;return n}
 function pubState(){if(!S)return;const n=freshLeft();if(NET){PQ++;const ch={},del=[];Object.keys(S).forEach(k=>{const j=JSON.stringify(S[k]);if(LSJ[k]!==j){ch[k]=S[k];LSJ[k]=j}});Object.keys(LSJ).forEach(k=>{if(!(k in S)){del.push(k);delete LSJ[k]}});
-  if(n-(pubFull.t||0)>2500)pubFull();else{NET.pub(T('d'),JSON.stringify({q:PQ,k:ch,x:del}),false);clearTimeout(FT);FT=setTimeout(()=>{if(NET&&S)pubFull()},2600)}}ls.set(S.off?'fdt6_off':'fdt6_host',{code:CODE,me:ME,b:NB,S})}
+  if(n-(pubFull.t||0)>2500)pubFull();else{NET.pub(T('d'),JSON.stringify({q:PQ,k:ch,x:del}),false);clearTimeout(FT);FT=setTimeout(()=>{if(NET&&S)pubFull()},2600)}}ls.set(S.off?'fdt6_off':'fdt6_host',{code:CODE,me:HME||ME,b:NB,S})}
 function tick(){if(!S||pzCheck())return;const n=Date.now(),u=S.au,L=S.live;
  if(['auc','cauc','oauc','sauc'].includes(S.ph)&&u&&!u.sold&&u.turn&&n>=u.end){u.pass.push(u.turn);advance()}
  if(S.ph=='capt'&&S.captEnd&&n>=S.captEnd){endCapt();bc()}
  if(S.ph=='off'&&S.offEnd&&(n>=S.offEnd||S.M.every(m=>S.ready.includes(m.pid)))){S.offEnd=0;if(!S.oaDone)startOA();else startNewSeason();bc()}
  if(S.ph=='main'){if(S.pens){const P=S.pens;if(!P.rev&&(n>=P.end||P.t.every(t=>t.dn||(t.cf[0]&&t.cf[1]))))resolvePen();else if(P.rev&&n>=P.revEnd){if(P.t.every(t=>t.dn))finishPens();else nextPen()}}else if(S.mc){if(n>=S.mc.end){endMC();bc()}}else if(L){if(L.rev)L.m.forEach(x=>{if(x.cur&&x.cur.var=='check'&&n>=x.cur.varAt)varRes(x)});if(!L.rev&&n>=L.end)resolveMoments();else if(L.rev&&n>=L.revEnd){if(L.step<L.n)nextMoment();else{finishLive();bc()}}}
   else if(S.prepEnd&&(n>=S.prepEnd||S.M.every(m=>S.ready.includes(m.pid))))startTour()}}
-function startTimers(){if(!hostTimers){hostTimers=true;setInterval(tick,250);setInterval(()=>{NET&&NET.pub(T('h'),String(Date.now()))},5000)}}
+function startTimers(){if(!hostTimers){hostTimers=true;setInterval(tick,250);setInterval(()=>{if(NET&&!(DEVPZ>Date.now()))NET.pub(T('h'),String(Date.now()))},5000);setInterval(()=>{try{bots()}catch(e){}},400)}}
 function hostUp(mq,b){NET=mq;NB=b;isHost=true;PQ=Date.now();LSJ={};pubFull.t=0;BUSY=false;ERR='';SIMG=Object.assign(ls.get('fdt6_simg')||{},SIMG);
  mq.onMsg=(t,p)=>{if(t==T('h')){HE=Date.now();return}if(t!=T('a'))return;let d;try{d=JSON.parse(p)}catch(e){return}if(d&&typeof d.p=='string'&&d.p.length<40&&S)handle(d,d.p)};
  mq.onUp=()=>{HE=Date.now();mq.pub(T('h'),String(HE));pzCheck();pubState();R()};mq.onDown=()=>R();mq.sub(T('a'));mq.sub(T('h'));HE=Date.now();PZ=0;
@@ -774,14 +815,14 @@ function resumeHost(){const h=ls.get('fdt6_host');if(!h||BUSY)return;BUSY=true;E
   ()=>{BUSY=false;ERR='Нет связи с сервером игры. Попробуйте ещё раз.';R()})}
 function join(code,b){if(BUSY)return;const nk=nick();code=normCode(code||($('rc')||{}).value||RC);
  if(code.length<4){ERR='Введите код комнаты — 4 символа, например A3F9';R();return}
- NK=nk;RC=code;CODE=code;try{localStorage.setItem('fdt_nk',nk)}catch(e){}
- const ids=ls.get('fdt6_ids')||{};ME=ids[code]||('u'+rid());ids[code]=ME;ls.set('fdt6_ids',ids);
+ NK=nk;RC=code;CODE=code;if(!DEV2)try{localStorage.setItem('fdt_nk',nk)}catch(e){}
+ const ids=ls.get('fdt6_ids')||{};ME=DEV2?'d'+DEV2:(ids[code]||('u'+rid()));if(!DEV2){ids[code]=ME;ls.set('fdt6_ids',ids)}
  BUSY=true;ERR='Ищем комнату '+code+'…';R();b=+b;joinTry(b>=0&&b<BROKERS.length?[b,...BI().filter(x=>x!=b)]:BI(),0)}
 function joinTry(order,i){if(i>=order.length){BUSY=false;ERR='Комната '+CODE+' не найдена. Проверьте код и что хост держит игру открытой.';R();return}
  const mq=MQ(BROKERS[order[i]]);let got=false;const kill=setTimeout(()=>{if(!got){mq.close();joinTry(order,i+1)}},9000),ip=T('img/');
  mq.onMsg=(t,p)=>{if(t==T('h')){lastHB=Date.now();return}if(t.startsWith(ip)){const k=t.slice(ip.length);if(p===''||p.startsWith('data:image/')||urlOK(p)){SIMG[k]=p;schedR()}return}if(t==T('d')){if(!S)return;let d;try{d=JSON.parse(p)}catch(e){return}if(!d||typeof d.q!='number'||d.q<=LQ)return;if(d.q!=LQ+1){reqSync();return}LQ=d.q;Object.assign(S,d.k||{});(d.x||[]).forEach(k=>delete S[k]);onS();return}
   if(t!=T('s'))return;let d;try{d=JSON.parse(p)}catch(e){return}if(!d||!d.M||d.v!=6)return;if(d._q!=null){if(S&&d._q<LQ)return;LQ=d._q}delete d._q;
-  if(!got){got=true;clearTimeout(kill);NET=mq;NB=order[i];BUSY=false;ERR='';lastHB=Date.now();ls.set('fdt6_last',{code:CODE,b:NB});mq.onUp=()=>R();mq.onDown=()=>R()}
+  if(!got){got=true;clearTimeout(kill);NET=mq;NB=order[i];BUSY=false;ERR='';lastHB=Date.now();if(!DEV2)ls.set('fdt6_last',{code:CODE,b:NB});mq.onUp=()=>R();mq.onDown=()=>R()}
   S=d;onS();ensureJoined()};
  mq.sub(T('s'));mq.sub(T('d'));mq.sub(T('h'));mq.sub(T('img/#'));mq.connect()}
 let jT=0;function ensureJoined(){if(!S||me()||S.ph!='lobby'||jT)return;send({a:'join',n:NK||'Игрок'});jT=setTimeout(()=>{jT=0;ensureJoined()},2500)}
@@ -811,7 +852,8 @@ function resumeOff(){const h=ls.get('fdt6_off');if(!h||!h.S)return;S=h.S;CODE='O
  if(S.ph=='main'&&!L&&S.prepEnd)S.prepEnd=n+864e5;if(S.ph=='off'&&S.offEnd)S.offEnd=n+864e5;if(L){L.end=n+864e5;L.revEnd=n+6000}if(S.mc)S.mc.end=n+Math.max(1500,S.mc.left||0);if(S.pens){PKP={};S.pens.t.forEach(t=>t.cf=[0,0]);S.pens.end=n+864e5;S.pens.revEnd=n+6000}
  ME=h.me&&mi(h.me)>=0?h.me:S.M[0].pid;HOLD=null;offUp();if(['cauc','auc','oauc','sauc'].includes(S.ph)&&S.au&&S.au.sold)setTimeout(nextLot,1500);if(S.ph=='auc'&&!S.au)setTimeout(nextLot,500)}
 // who must hold the phone right now (null = everybody watches)
-function offWant(){const u=S.au,L=S.live;
+function offWant(){const w=offWant0();return w&&isBot(w)?null:w}
+function offWant0(){const u=S.au,L=S.live;
  if(S.ph=='capt'){const x=S.M.find(m=>m.capt==null);return x?x.pid:null}
  if(['cauc','auc','oauc','sauc'].includes(S.ph))return u&&!u.sold&&u.turn?u.turn:null;
  if(S.ph=='main'&&S.pens){if(S.pens.rev)return null;for(const t of S.pens.t){if(t.dn)continue;if(!t.cf[0])return S.M[t.h].pid;if(!t.cf[1])return S.M[t.a].pid}return null}
@@ -1096,23 +1138,24 @@ function menuV(){return`<div class="ov"><div><h2>Меню</h2><div class="c">${o
  <div class="c text-sm"><b>💎 Межсезонный мини-аукцион</b><div style="opacity:.8">Лоты выпадают как в гаче: 90+ ≈4% (не больше одной звезды), 84–89 ≈17%, 78–83 ≈42%, 70–77 ≈33%.</div></div>
  <div class="c text-sm"><b>Стадионы</b>${STAD.map(s=>`<div style="opacity:.85">🏟 <b>${esc(s.n)}</b> (👥 ${esc(s.cap)}) — ${esc(s.d)}${S.M.find(m=>m.stad===s.i)?' · <span class="text-yellow-400">'+esc(S.M.find(m=>m.stad===s.i).club)+'</span>':''}</div>`).join('')}</div>
  <div class="c text-sm"><b>Позиции и сыгранность</b><div style="opacity:.8">Основная позиция — 100%, вторичная −4, чужая −30, вратарь в поле / полевой в воротах — 30. Сыгранность ◆ 0–3 на игрока, до 33 на команду, даёт до +7% силы.</div></div>
- ${btn('Закрыть',"MENU=false;R()",'v')}${btn('Выйти из комнаты',"MENU=false;leave()",'r')}${credits()}</div></div>`}
+ ${btn(DEV?'🛠 Режим разработчика: ВКЛ — открыть панель':'🛠 Включить режим разработчика',"DEV=true;ls.set('fdt_dev',true);MENU=false;DEVO=true;R()",'g')}${btn('Закрыть',"MENU=false;R()",'v')}${btn('Выйти из комнаты',"MENU=false;leave()",'r')}${credits()}</div></div>`}
 // new version check: the page asks the site for its own latest copy (bypassing caches) and offers a one-tap reload
-const APPV='18';let UPD=false;
+const APPV='19';let UPD=false;
 function checkUpd(){if(!ONSITE||!window.fetch||navigator.onLine===false||UPD)return;fetch(location.pathname+'?fcv='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(x=>{const m=String(x).match(/name="fcv" content="(\d+)"/);if(m&&+m[1]>+APPV){UPD=true;R()}}).catch(()=>{})}
 function doUpd(){const q=new URLSearchParams(location.search);q.set('u',Date.now());location.replace(location.pathname+'?'+q.toString())}
 const updV=()=>UPD?`<div class="c" style="border-color:#10b981;background:#06281c"><b>🆕 Вышла новая версия игры</b><div class="text-xs mt-1" style="opacity:.8">${S&&isHost?'Комната сохранится — после обновления нажмите «Продолжить как хост».':'Обновите страницу, чтобы получить новые функции. Все игроки в комнате должны обновиться.'}</div>${btn('🔄 Обновить сейчас','doUpd()','v')}</div>`:'';
+if(DEV2)setTimeout(()=>{const q=new URLSearchParams(location.search);if(!S&&!BUSY&&q.get('r'))join(q.get('r'),q.get('b'))},300);
 setTimeout(checkUpd,4000);setInterval(checkUpd,180000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState!='hidden')checkUpd()});
-function topV(){if(offline())return updV()+`<div class="top"><span class="dot" style="background:#3b82f6"></span><span style="flex:1">📱 Офлайн · Pass & Play${me()?' · у телефона: <b>'+esc(me().n)+'</b>':''}</span><button onclick="MENU=true;R()">☰ Меню</button></div>`;const on=NET&&NET.up;return updV()+`<div class="top"><span class="dot" style="background:${on?'#10b981':'#ef4444'}"></span><span style="flex:1">Комната <b>${esc(CODE)}</b>${isHost?' · хост':''} · ${on?'онлайн':'нет связи…'}</span><button onclick="MENU=true;R()">☰ Меню</button></div>${hostAway()?'<div class="warn">Хост не в сети — игра продолжится, когда он вернётся во вкладку с игрой.</div>':''}`}
+function topV(){if(offline())return updV()+`<div class="top"><span class="dot" style="background:#3b82f6"></span><span style="flex:1">📱 Офлайн · Pass & Play${me()?' · у телефона: <b>'+esc(me().n)+'</b>':''}</span><button onclick="MENU=true;R()">☰ Меню</button></div>`;const on=NET&&NET.up;return updV()+`<div class="top"><span class="dot" style="background:${on?'#10b981':'#ef4444'}"></span><span style="flex:1">${HME?'<b style="color:#c4b5fd">🎭 за '+esc((me()||{}).n||'?')+'</b> · ':''}Комната <b>${esc(CODE)}</b>${isHost?' · хост':''} · ${on?'онлайн':'нет связи…'}</span><button onclick="MENU=true;R()">☰ Меню</button></div>${hostAway()?'<div class="warn">Хост не в сети — игра продолжится, когда он вернётся во вкладку с игрой.</div>':''}`}
 function R(){const a=$('app'),n=$('nav'),ae=document.activeElement,fid=ae&&ae.id&&(ae.tagName=='INPUT'||ae.tagName=='SELECT')?ae.id:null,fv=fid?ae.value:null;
  const tz=TOAST?`<div class="toast">${esc(TOAST)}</div>`:'';
- if(!S){n.innerHTML='';a.innerHTML=homeV()+tz}
+ if(!S){n.innerHTML='';a.innerHTML=homeV()+`<button class="b g" style="margin-top:14px;opacity:.75" onclick="DEV=!DEV;ls.set('fdt_dev',DEV);R()">🛠 Режим разработчика: ${DEV?'ВКЛ':'выкл'}</button>${DEV?'<div class="text-xs text-center" style="opacity:.6">Создайте комнату (онлайн или офлайн) — в ней появится кнопка 🛠 с ботами и тестами.</div>':''}`+tz}
  else{let h='';const main=S.ph=='main'&&!S.live&&!S.mc&&!S.pens;
  if(S.off&&S.ph!='lobby'&&me()){const w=offWant();if(w&&w!=ME){ME=w;HOLD=null;SEL=null;TIO=false;TIS=null;FMO=false;BUYO=null}}
  if(S.off&&S.ph!='lobby'&&me()&&HOLD!==ME&&offWant()){n.innerHTML='';a.innerHTML=topV()+passV()+(MENU?menuV():'')+tz}
  else if(!me()){n.innerHTML='';a.innerHTML=topV()+(S.ph=='lobby'?'<div class="c text-center mt-4">Входим в лобби…</div>':`<div class="c text-center mt-4">Игра в комнате ${esc(CODE)} уже идёт.${S.M.length>1?'<div class="text-sm mt-2">Вы участник этой лиги на новом телефоне? Выберите себя:</div>'+S.M.slice(1).map(m=>btn(`Я — ${esc(m.n)} (${esc(m.club||'')})`,`claimM('${m.pid}')`,'g')).join(''):''}${btn('На главную','leave()','g')}</div>`)+(MENU?menuV():'')+tz}
  else{if(S.ph=='lobby')h=lobbyV();else if(S.ph=='capt')h=captV();else if(['cauc','auc','oauc','sauc'].includes(S.ph))h=aucV();else if(S.ph=='sum')h=sumV()+colaV()+credits();else if(S.ph=='off')h=offV();else if(S.live)h=liveV();else if(S.pens)h=pensV();else if(S.mc)h=mcV();else h=({sq:sqV,rd:rdV,tab:tabV,mk:mkV,cola:colaV,tr:trV}[TAB]||sqV)();if(S.off&&(main||S.ph=='off'))h=offBar()+h;if(S.off&&S.ph=='lobby')h=offLobbyV();
- a.innerHTML=topV()+h+(FMO&&['cauc','auc','main','oauc'].includes(S.ph)&&!S.live?fmV():'')+(main||S.ph=='off'?offerV()+(BUYO!=null?relV():''):'')+(COLAO?`<div class="ov"><div>${colaV()}${btn('Закрыть',"COLAO=false;R()",'v')}</div></div>`:'')+(S.ph=='sum'&&S.sum&&S.sum.cola&&COLAPOP!==CODE+'/'+S.sum.s&&!COLAO?colaPopV():(['sum','off'].includes(S.ph)&&me().debt>0&&me().ffpK!==S.season&&!COLAO?ffpPopV():''))+(PLY!=null?playerV(PLY):'')+(!S.off&&(PZ||hostAway())?pauseV():'')+(MENU?menuV():'')+tz;
+ a.innerHTML=topV()+h+(FMO&&['cauc','auc','main','oauc'].includes(S.ph)&&!S.live?fmV():'')+(main||S.ph=='off'?offerV()+(BUYO!=null?relV():''):'')+(COLAO?`<div class="ov"><div>${colaV()}${btn('Закрыть',"COLAO=false;R()",'v')}</div></div>`:'')+(S.ph=='sum'&&S.sum&&S.sum.cola&&COLAPOP!==CODE+'/'+S.sum.s&&!COLAO?colaPopV():(['sum','off'].includes(S.ph)&&me().debt>0&&me().ffpK!==S.season&&!COLAO?ffpPopV():''))+(PLY!=null?playerV(PLY):'')+(!S.off&&(PZ||hostAway())?pauseV():'')+(DEV&&!DEVO?'<button class="devb" onclick="DEVO=true;R()">🛠</button>':'')+(DEV&&DEVO?devV():'')+(MENU?menuV():'')+tz;
  n.innerHTML=main?`<div class="nav">${[['sq','📋','Состав'],['rd','⚽',curIt().t=='C'?'Кубок':'Тур'],['tab','📊','Таблица'],['mk','🏷','Рынок'+(S.mk.filter(x=>x.pid!=ME).length?' ·'+S.mk.filter(x=>x.pid!=ME).length:'')],['cola','🥤','Кола'],['tr','🔁','Обмен']].map(t=>`<button class="${TAB==t[0]?'on':''}" onclick="TAB='${t[0]}';SEL=null;R()"><div class="text-lg">${t[1]}</div>${t[2]}</button>`).join('')}</div>`:''}}
  renderMus();tgSync();
  if(fid){const el=$(fid);if(el&&el!==document.activeElement){if(fv!=null&&el.tagName=='INPUT')el.value=fv;try{el.focus({preventScroll:true})}catch(e){}}}}
