@@ -1,24 +1,21 @@
 {
- "at": "2026-10-16T22:47:43.184Z",
- "minutes": 40,
- "photos": 4805,
- "mb": 12.57,
- "made": 4341,
- "missed": 15,
+ "at": "2026-10-16T23:03:19.905Z",
+ "minutes": 15.3,
+ "photos": 6081,
+ "mb": 16.23,
+ "made": 1276,
+ "missed": 14,
  "lookups": 0,
- "todo": 1290,
+ "todo": 0,
  "players": "370/380",
  "coaches": "24/28",
  "stadiums": "20/20",
  "crests": "50/50",
- "dbPlayers": "4159/5567",
- "dbTodo": 1290,
+ "dbPlayers": "5435/5567",
+ "dbTodo": 0,
  "http": {
-  "tmssl.akamaized.net": {
-   "200": 182
-  },
   "img.a.transfermarkt.technology": {
-   "200": 4174
+   "200": 1290
   }
  }
 }
