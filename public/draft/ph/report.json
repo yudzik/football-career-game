@@ -1,0 +1,37 @@
+{
+ "at": "2026-10-16T19:41:10.962Z",
+ "minutes": 33.4,
+ "photos": 80,
+ "mb": 0.65,
+ "made": 80,
+ "missed": 398,
+ "lookups": 429,
+ "todo": 0,
+ "players": "28/380",
+ "coaches": "0/28",
+ "stadiums": "12/20",
+ "crests": "40/50",
+ "http": {
+  "en.wikipedia.org": {
+   "200": 2
+  },
+  "commons.wikimedia.org": {
+   "200": 19
+  },
+  "upload.wikimedia.org": {
+   "200": 12,
+   "429": 1
+  },
+  "www.thesportsdb.com": {
+   "200": 74,
+   "403": 348,
+   "429": 28
+  },
+  "r2.thesportsdb.com": {
+   "200": 67
+  },
+  "data": {
+   "200": 1
+  }
+ }
+}
