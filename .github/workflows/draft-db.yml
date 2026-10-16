@@ -1,6 +1,6 @@
 name: Draft player database
 
-# Builds the FC Draft Online 2026/27 database (11 leagues, real squads) from Wikipedia, Wikidata and the EA ratings list.
+# Builds the FC Draft Online 2026/27 database (11 leagues, real squads) from Transfermarkt (+ Russian names from Wikidata).
 on:
   workflow_dispatch:
   push:
