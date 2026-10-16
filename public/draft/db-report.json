@@ -1,0 +1,2134 @@
+{
+ "leagues": {
+  "APL": {
+   "season": 2026,
+   "n": 20,
+   "clubs": [
+    "Manchester City",
+    "Arsenal FC",
+    "Chelsea FC",
+    "Liverpool FC",
+    "Manchester United",
+    "Tottenham Hotspur",
+    "Newcastle United",
+    "Brighton & Hove Albion",
+    "Brentford FC",
+    "Aston Villa",
+    "AFC Bournemouth",
+    "Crystal Palace",
+    "Nottingham Forest",
+    "Sunderland AFC",
+    "Leeds United",
+    "Everton FC",
+    "Fulham FC",
+    "Ipswich Town",
+    "Coventry City",
+    "Hull City"
+   ]
+  },
+  "LL": {
+   "season": 2026,
+   "n": 20,
+   "clubs": [
+    "Real Madrid",
+    "FC Barcelona",
+    "Atlético de Madrid",
+    "Villarreal CF",
+    "Real Sociedad",
+    "Real Betis Balompié",
+    "Athletic Bilbao",
+    "Celta de Vigo",
+    "Sevilla FC",
+    "Valencia CF",
+    "RCD Espanyol Barcelona",
+    "Deportivo A Coruña",
+    "Racing Santander",
+    "Rayo Vallecano",
+    "Getafe CF",
+    "Levante UD",
+    "CA Osasuna",
+    "Elche CF",
+    "Deportivo Alavés",
+    "Málaga CF"
+   ]
+  },
+  "SA": {
+   "season": 2026,
+   "n": 20,
+   "clubs": [
+    "Inter Milan",
+    "Juventus FC",
+    "Como 1907",
+    "AC Milan",
+    "AS Roma",
+    "Atalanta BC",
+    "SSC Napoli",
+    "ACF Fiorentina",
+    "SS Lazio",
+    "Bologna FC 1909",
+    "US Sassuolo",
+    "Torino FC",
+    "Genoa CFC",
+    "Udinese Calcio",
+    "Parma Calcio 1913",
+    "Cagliari Calcio",
+    "Venezia FC",
+    "Frosinone Calcio",
+    "AC Monza",
+    "US Lecce"
+   ]
+  },
+  "L1": {
+   "season": 2026,
+   "n": 18,
+   "clubs": [
+    "Paris Saint-Germain",
+    "AS Monaco",
+    "RC Strasbourg Alsace",
+    "Olympique Lyon",
+    "Stade Rennais FC",
+    "LOSC Lille",
+    "RC Lens",
+    "Paris FC",
+    "Olympique Marseille",
+    "OGC Nice",
+    "FC Toulouse",
+    "FC Lorient",
+    "AJ Auxerre",
+    "Stade Brestois 29",
+    "Angers SCO",
+    "Le Havre AC",
+    "ESTAC Troyes",
+    "Le Mans FC"
+   ]
+  },
+  "BL": {
+   "season": 2026,
+   "n": 18,
+   "clubs": [
+    "Bayern Munich",
+    "Borussia Dortmund",
+    "Bayer 04 Leverkusen",
+    "RB Leipzig",
+    "VfB Stuttgart",
+    "Eintracht Frankfurt",
+    "TSG 1899 Hoffenheim",
+    "SC Freiburg",
+    "FC Augsburg",
+    "1.FSV Mainz 05",
+    "1.FC Köln",
+    "Hamburger SV",
+    "Borussia Mönchengladbach",
+    "SV Werder Bremen",
+    "1.FC Union Berlin",
+    "FC Schalke 04",
+    "SV 07 Elversberg",
+    "SC Paderborn 07"
+   ]
+  },
+  "RPL": {
+   "season": 2026,
+   "n": 16,
+   "clubs": [
+    "Zenit St. Petersburg",
+    "Spartak Moscow",
+    "CSKA Moscow",
+    "Dynamo Moscow",
+    "FC Krasnodar",
+    "Lokomotiv Moscow",
+    "Rubin Kazan",
+    "Baltika Kaliningrad",
+    "FC Rostov",
+    "Akhmat Grozny",
+    "Akron Tolyatti",
+    "Rodina Moscow",
+    "Krylya Sovetov Samara",
+    "FC Orenburg",
+    "Dinamo Makhachkala",
+    "Fakel Voronezh"
+   ]
+  },
+  "BPL": {
+   "season": 2025,
+   "n": 16,
+   "clubs": [
+    "ML Vitebsk",
+    "Dinamo Minsk",
+    "Dynamo Brest",
+    "Torpedo-BelAZ Zhodino",
+    "FK Gomel",
+    "BATE Borisov",
+    "Isloch Minsk Region",
+    "Neman Grodno",
+    "Slavia Mozyr",
+    "FK Minsk",
+    "Dnepr Mogilev",
+    "FK Vitebsk",
+    "FC Baranovichi",
+    "Naftan Novopolotsk",
+    "Arsenal Dzerzhinsk",
+    "Belshina Bobruisk"
+   ]
+  },
+  "TUR": {
+   "season": 2026,
+   "n": 18,
+   "clubs": [
+    "Galatasaray",
+    "Beşiktaş JK",
+    "Fenerbahce",
+    "Trabzonspor",
+    "Basaksehir FK",
+    "Göztepe",
+    "Corum FK",
+    "Samsunspor",
+    "Caykur Rizespor",
+    "Kasimpasa",
+    "Alanyaspor",
+    "Konyaspor",
+    "Amed SK",
+    "Gaziantep FK",
+    "Genclerbirligi Ankara",
+    "Kocaelispor",
+    "Erzurumspor FK",
+    "Eyüpspor"
+   ]
+  },
+  "POR": {
+   "season": 2026,
+   "n": 18,
+   "clubs": [
+    "FC Porto",
+    "SL Benfica",
+    "Sporting CP",
+    "SC Braga",
+    "FC Famalicão",
+    "Vitória Guimarães SC",
+    "FC Alverca",
+    "CF Estrela Amadora",
+    "GD Estoril Praia",
+    "Rio Ave FC",
+    "FC Arouca",
+    "Casa Pia AC",
+    "Moreirense FC",
+    "Gil Vicente FC",
+    "CD Santa Clara",
+    "CD Nacional",
+    "Académico Viseu FC",
+    "CS Marítimo"
+   ]
+  },
+  "NED": {
+   "season": 2026,
+   "n": 18,
+   "clubs": [
+    "PSV Eindhoven",
+    "Feyenoord Rotterdam",
+    "Ajax Amsterdam",
+    "AZ Alkmaar",
+    "FC Twente Enschede",
+    "FC Utrecht",
+    "NEC Nijmegen",
+    "SC Heerenveen",
+    "FC Groningen",
+    "Sparta Rotterdam",
+    "PEC Zwolle",
+    "Go Ahead Eagles",
+    "Willem II Tilburg",
+    "Excelsior Rotterdam",
+    "ADO Den Haag",
+    "Fortuna Sittard",
+    "SC Cambuur Leeuwarden",
+    "SC Telstar"
+   ]
+  },
+  "BEL": {
+   "season": 2026,
+   "n": 18,
+   "clubs": [
+    "Club Brugge KV",
+    "KRC Genk",
+    "Union Saint-Gilloise",
+    "RSC Anderlecht",
+    "KAA Gent",
+    "Standard Liège",
+    "Royal Antwerp FC",
+    "KVC Westerlo",
+    "Sint-Truidense VV",
+    "KV Mechelen",
+    "Cercle Brugge ",
+    "Royal Charleroi SC",
+    "Oud-Heverlee Leuven",
+    "Zulte Waregem",
+    "Lommel SK",
+    "RAAL La Louvière",
+    "KV Kortrijk",
+    "SK Beveren"
+   ]
+  }
+ },
+ "http": {
+  "transfermarkt-api.fly.dev": {
+   "200": 207,
+   "429": 5
+  },
+  "query.wikidata.org": {
+   "200": 24
+  }
+ },
+ "api": "https://transfermarkt-api.fly.dev",
+ "pass0": 49,
+ "pass1": 49,
+ "pass2": 49,
+ "pass3": 49,
+ "noMV": [
+  "Sunderland AFC",
+  "Real Madrid",
+  "Atlético de Madrid",
+  "Villarreal CF",
+  "Celta de Vigo",
+  "Sevilla FC",
+  "RC Strasbourg Alsace",
+  "Olympique Lyon",
+  "Olympique Marseille",
+  "AJ Auxerre",
+  "1.FSV Mainz 05",
+  "Hamburger SV",
+  "SV Werder Bremen",
+  "Zenit St. Petersburg",
+  "Spartak Moscow",
+  "CSKA Moscow",
+  "FC Krasnodar",
+  "FC Rostov",
+  "FC Orenburg",
+  "Dinamo Minsk",
+  "BATE Borisov",
+  "FK Vitebsk",
+  "FC Baranovichi",
+  "Arsenal Dzerzhinsk",
+  "Belshina Bobruisk",
+  "FC Porto",
+  "SL Benfica",
+  "Sporting CP",
+  "SC Braga",
+  "FC Famalicão",
+  "Vitória Guimarães SC",
+  "FC Alverca",
+  "CF Estrela Amadora",
+  "FC Arouca",
+  "Moreirense FC",
+  "Gil Vicente FC",
+  "CD Santa Clara",
+  "CD Nacional",
+  "CS Marítimo",
+  "PSV Eindhoven",
+  "Feyenoord Rotterdam",
+  "Ajax Amsterdam",
+  "AZ Alkmaar",
+  "FC Utrecht",
+  "SC Heerenveen",
+  "FC Groningen",
+  "PEC Zwolle",
+  "Fortuna Sittard",
+  "Oud-Heverlee Leuven"
+ ],
+ "mvFilled": 1073,
+ "mvDump": 41528,
+ "mvMissing": 386,
+ "clubs": 200,
+ "clubErr": [],
+ "playersRaw": 5567,
+ "players": 5567,
+ "ruNames": 4225,
+ "minutes": 21.7,
+ "byLeague": {
+  "APL": {
+   "players": 547,
+   "avg": 79.9,
+   "top": [
+    "Холанн 93 (Манчестер Сити, 26, €220.0m)",
+    "Андерсон 91 (Манчестер Сити, 23, €120.0m)",
+    "Фернандес 91 (Манчестер Сити, 25, €120.0m)",
+    "Райс 91 (Арсенал, 27, €120.0m)",
+    "Роджерс 91 (Челси, 24, €120.0m)",
+    "Шерки 90 (Манчестер Сити, 23, €110.0m)"
+   ],
+   "low": [
+    "Браун 50",
+    "Тутеров 50",
+    "Alex Borto 50"
+   ]
+  },
+  "LL": {
+   "players": 519,
+   "avg": 74,
+   "top": [
+    "Мбаппе 93 (Реал Мадрид, 28, €180.0m)",
+    "Педри 92 (Барселона, 23, €150.0m)",
+    "Беллингем 91 (Реал Мадрид, 23, €130.0m)",
+    "Жуниор 91 (Реал Мадрид, 26, €140.0m)",
+    "Лопес 90 (Барселона, 23, €110.0m)",
+    "Ямаль 90 (Барселона, 19, €220.0m)"
+   ],
+   "low": [
+    "Ромо 50",
+    "Гильен 50",
+    "Сантос 50"
+   ]
+  },
+  "SA": {
+   "players": 579,
+   "avg": 74.7,
+   "top": [
+    "Мартинес 89 (Интернационале, 29, €85.0m)",
+    "Бастони 87 (Интернационале, 27, €65.0m)",
+    "Йылдыз 87 (Ювентус, 21, €75.0m)",
+    "Пас 87 (Комо, 22, €80.0m)",
+    "Батурина 87 (Комо, 23, €55.0m)",
+    "Коне 87 (Рома, 25, €60.0m)"
+   ],
+   "low": [
+    "Giulio Vinciati 54",
+    "Де Мартис 54",
+    "Ukko Happonen 53"
+   ]
+  },
+  "L1": {
+   "players": 479,
+   "avg": 71.6,
+   "top": [
+    "Витор 91 (Пари Сен-Жермен, 26, €140.0m)",
+    "Кварацхелия 91 (Пари Сен-Жермен, 25, €140.0m)",
+    "Невиш 90 (Пари Сен-Жермен, 22, €140.0m)",
+    "Дуэ 90 (Пари Сен-Жермен, 21, €120.0m)",
+    "Дембеле 90 (Пари Сен-Жермен, 29, €100.0m)",
+    "Пачо 88 (Пари Сен-Жермен, 25, €80.0m)"
+   ],
+   "low": [
+    "Christ Batola 50",
+    "Augustin Delbecque 50",
+    "Вагнер 50"
+   ]
+  },
+  "BL": {
+   "players": 508,
+   "avg": 73.3,
+   "top": [
+    "Олисе 93 (Бавария, 24, €180.0m)",
+    "Кейн 89 (Бавария, 33, €60.0m)",
+    "Упамекано 88 (Бавария, 27, €75.0m)",
+    "Павлович 88 (Бавария, 22, €90.0m)",
+    "Мусиала 88 (Бавария, 23, €80.0m)",
+    "Диас 88 (Бавария, 29, €70.0m)"
+   ],
+   "low": [
+    "Darwin Soylu 50",
+    "Paul Erevbenagie 50",
+    "Elias Etringer 50"
+   ]
+  },
+  "RPL": {
+   "players": 438,
+   "avg": 69.5,
+   "top": [
+    "Силва 85 (Зенит, 25, €24.0m)",
+    "Кисляк 84 (ЦСКА, 21, €25.0m)",
+    "Тюкавин 83 (Динамо, 24, €17.0m)",
+    "Агкацев 83 (Краснодар, 24, €12.0m)",
+    "Вендел 82 (Зенит, 29, €15.0m)",
+    "Сантос Роза 82 (Зенит, 24, €15.0m)"
+   ],
+   "low": [
+    "Касаджиков 50",
+    "Бош 50",
+    "Aleksandr Belyaev 50"
+   ]
+  },
+  "BPL": {
+   "players": 415,
+   "avg": 57.1,
+   "top": [
+    "Павлюченко 71 (МЛ Витебск, 28, €1.0m)",
+    "Мохаммади 71 (МЛ Витебск, 33, €0.9m)",
+    "Громыко 71 (МЛ Витебск, 29, €1.5m)",
+    "Волков 69 (МЛ Витебск, 29, €1.0m)",
+    "Гнака 69 (МЛ Витебск, 27, €1.0m)",
+    "Босич 69 (МЛ Витебск, 25, €1.0m)"
+   ],
+   "low": [
+    "Ачаповский 50",
+    "Шведчиков 50",
+    "Згурский 50"
+   ]
+  },
+  "TUR": {
+   "players": 526,
+   "avg": 66.9,
+   "top": [
+    "Осимхен 87 (Галатасарай, 27, €65.0m)",
+    "Леан 85 (Галатасарай, 27, €40.0m)",
+    "Гринвуд 85 (Фенербахче, 25, €40.0m)",
+    "Барыш Йылмаз 84 (Галатасарай, 26, €30.0m)",
+    "Влахович 84 (Бешикташ, 26, €32.0m)",
+    "Салах 84 (Трабзонспор, 34, €17.0m)"
+   ],
+   "low": [
+    "Berhan Kutlay Şatlı 50",
+    "Ömer Ahmet Ceyhan 50",
+    "Musa Eren Karakaş 50"
+   ]
+  },
+  "POR": {
+   "players": 519,
+   "avg": 65.8,
+   "top": [
+    "Кошта 87 (Порту, 27, €40.0m)",
+    "Омородион 85 (Порту, 22, €45.0m)",
+    "Трубин 85 (Бенфика, 25, €25.0m)",
+    "Инасиу 85 (Спортинг, 25, €40.0m)",
+    "Кивёр 84 (Порту, 26, €35.0m)",
+    "Варела 84 (Порту, 25, €32.0m)"
+   ],
+   "low": [
+    "Maurice Boakye 50",
+    "José Melro 50",
+    "Mons Bassouamina 50"
+   ]
+  },
+  "NED": {
+   "players": 504,
+   "avg": 66.1,
+   "top": [
+    "Пепи 84 (ПСВ, 23, €30.0m)",
+    "Анис Хадж-Мусса 83 (Фейеноорд, 24, €23.0m)",
+    "Гертрёйда 82 (ПСВ, 26, €20.0m)",
+    "Схаутен 82 (ПСВ, 29, €20.0m)",
+    "Бас 82 (Аякс, 23, €20.0m)",
+    "Адингра 82 (Аякс, 24, €22.0m)"
+   ],
+   "low": [
+    "Finn Mulder 50",
+    "Abdelraffie Benzzine 50",
+    "Yamano Olfers 50"
+   ]
+  },
+  "BEL": {
+   "players": 533,
+   "avg": 66.6,
+   "top": [
+    "Ордоньес 83 (Брюгге, 22, €33.0m)",
+    "Тресольди 83 (Брюгге, 22, €35.0m)",
+    "Сейс 82 (Брюгге, 21, €27.0m)",
+    "Боржеш 82 (Брюгге, 22, €23.0m)",
+    "Брюгман 80 (Генк, 18, €20.0m)",
+    "Кевин Макаллистер 79 (Юнион, 28, €12.0m)"
+   ],
+   "low": [
+    "Аддаи 50",
+    "Chike Van De Ven 50",
+    "Manu Verbruggen 50"
+   ]
+  }
+ },
+ "clubsDetail": [
+  {
+   "lg": "APL",
+   "e": "Manchester City",
+   "r": "Манчестер Сити",
+   "n": 24,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Arsenal FC",
+   "r": "Арсенал",
+   "n": 24,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Chelsea FC",
+   "r": "Челси",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Liverpool FC",
+   "r": "Ливерпуль",
+   "n": 31,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Manchester United",
+   "r": "Манчестер Юнайтед",
+   "n": 29,
+   "mv": 0.97,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Tottenham Hotspur",
+   "r": "Тоттенхэм Хотспур",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Newcastle United",
+   "r": "Ньюкасл Юнайтед",
+   "n": 25,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Brighton & Hove Albion",
+   "r": "Брайтон энд Хоув Альбион",
+   "n": 30,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Brentford FC",
+   "r": "Брентфорд",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Aston Villa",
+   "r": "Астон Вилла",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "AFC Bournemouth",
+   "r": "Борнмут",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Crystal Palace",
+   "r": "Кристал Пэлас",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Nottingham Forest",
+   "r": "Ноттингем Форест",
+   "n": 24,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Sunderland AFC",
+   "r": "Сандерленд",
+   "n": 29,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Leeds United",
+   "r": "Лидс Юнайтед",
+   "n": 24,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Everton FC",
+   "r": "Эвертон",
+   "n": 22,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Fulham FC",
+   "r": "Фулхэм",
+   "n": 26,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Ipswich Town",
+   "r": "Ипсвич Таун",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Coventry City",
+   "r": "Ковентри Сити",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "APL",
+   "e": "Hull City",
+   "r": "Халл Сити",
+   "n": 33,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Real Madrid",
+   "r": "Реал Мадрид",
+   "n": 27,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "FC Barcelona",
+   "r": "Барселона",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Atlético de Madrid",
+   "r": "Атлетико Мадрид",
+   "n": 25,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Villarreal CF",
+   "r": "Вильярреал",
+   "n": 25,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Real Sociedad",
+   "r": "Реал Сосьедад",
+   "n": 26,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Real Betis Balompié",
+   "r": "Реал Бетис",
+   "n": 25,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Athletic Bilbao",
+   "r": "Атлетик Бильбао",
+   "n": 26,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Celta de Vigo",
+   "r": "Сельта",
+   "n": 26,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Sevilla FC",
+   "r": "Севилья",
+   "n": 26,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Valencia CF",
+   "r": "Валенсия",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "RCD Espanyol Barcelona",
+   "r": "Эспаньол",
+   "n": 25,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Deportivo A Coruña",
+   "r": "Депортиво Ла-Корунья",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Racing Santander",
+   "r": "Расинг",
+   "n": 24,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Rayo Vallecano",
+   "r": "Райо Вальекано",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Getafe CF",
+   "r": "Хетафе",
+   "n": 25,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Levante UD",
+   "r": "Леванте",
+   "n": 24,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "CA Osasuna",
+   "r": "Осасуна",
+   "n": 25,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Elche CF",
+   "r": "Эльче",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Deportivo Alavés",
+   "r": "Алавес",
+   "n": 24,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "LL",
+   "e": "Málaga CF",
+   "r": "Малага",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "Inter Milan",
+   "r": "Интернационале",
+   "n": 24,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "Juventus FC",
+   "r": "Ювентус",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "Como 1907",
+   "r": "Комо",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "AC Milan",
+   "r": "Милан",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "AS Roma",
+   "r": "Рома",
+   "n": 25,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "Atalanta BC",
+   "r": "Аталанта",
+   "n": 25,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "SSC Napoli",
+   "r": "Наполи",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "ACF Fiorentina",
+   "r": "Фиорентина",
+   "n": 25,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "SS Lazio",
+   "r": "Лацио",
+   "n": 33,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "Bologna FC 1909",
+   "r": "Болонья",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "US Sassuolo",
+   "r": "Сассуоло",
+   "n": 32,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "Torino FC",
+   "r": "Торино",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "Genoa CFC",
+   "r": "Дженоа",
+   "n": 33,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "Udinese Calcio",
+   "r": "Удинезе",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "Parma Calcio 1913",
+   "r": "Парма",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "Cagliari Calcio",
+   "r": "Кальяри",
+   "n": 30,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "Venezia FC",
+   "r": "Венеция",
+   "n": 35,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "Frosinone Calcio",
+   "r": "Фрозиноне",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "AC Monza",
+   "r": "Монца",
+   "n": 31,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "SA",
+   "e": "US Lecce",
+   "r": "Лечче",
+   "n": 33,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "Paris Saint-Germain",
+   "r": "Пари Сен-Жермен",
+   "n": 24,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "AS Monaco",
+   "r": "Монако",
+   "n": 26,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "RC Strasbourg Alsace",
+   "r": "Страсбур",
+   "n": 29,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "Olympique Lyon",
+   "r": "Олимпик",
+   "n": 29,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "Stade Rennais FC",
+   "r": "Ренн",
+   "n": 26,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "LOSC Lille",
+   "r": "Лилль",
+   "n": 26,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "RC Lens",
+   "r": "Ланс",
+   "n": 29,
+   "mv": 0.97,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "Paris FC",
+   "r": "Париж",
+   "n": 25,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "Olympique Marseille",
+   "r": "Олимпик",
+   "n": 25,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "OGC Nice",
+   "r": "Ницца",
+   "n": 29,
+   "mv": 0.93,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "FC Toulouse",
+   "r": "Тулуза",
+   "n": 24,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "FC Lorient",
+   "r": "Лорьян",
+   "n": 26,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "AJ Auxerre",
+   "r": "Осер",
+   "n": 31,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "Stade Brestois 29",
+   "r": "Брест",
+   "n": 23,
+   "mv": 0.91,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "Angers SCO",
+   "r": "Анже",
+   "n": 23,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "Le Havre AC",
+   "r": "Гавр",
+   "n": 27,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "ESTAC Troyes",
+   "r": "Труа",
+   "n": 28,
+   "mv": 0.93,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "L1",
+   "e": "Le Mans FC",
+   "r": "Ле-Ман",
+   "n": 29,
+   "mv": 0.93,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "Bayern Munich",
+   "r": "Бавария",
+   "n": 23,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "Borussia Dortmund",
+   "r": "Боруссия",
+   "n": 30,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "Bayer 04 Leverkusen",
+   "r": "Байер 04",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "RB Leipzig",
+   "r": "РБ Лейпциг",
+   "n": 29,
+   "mv": 0.97,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "VfB Stuttgart",
+   "r": "Штутгарт",
+   "n": 30,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "Eintracht Frankfurt",
+   "r": "Айнтрахт",
+   "n": 26,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "TSG 1899 Hoffenheim",
+   "r": "Хоффенхайм",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "SC Freiburg",
+   "r": "Фрайбург",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "FC Augsburg",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "1.FSV Mainz 05",
+   "r": "Майнц 05",
+   "n": 27,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "1.FC Köln",
+   "r": "Кёльн",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "Hamburger SV",
+   "r": "Гамбург",
+   "n": 28,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "Borussia Mönchengladbach",
+   "r": "Боруссия",
+   "n": 30,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "SV Werder Bremen",
+   "r": "Вердер",
+   "n": 31,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "1.FC Union Berlin",
+   "r": "Унион",
+   "n": 30,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "FC Schalke 04",
+   "r": "Шальке 04",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "SV 07 Elversberg",
+   "r": "Эльферсберг",
+   "n": 27,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BL",
+   "e": "SC Paderborn 07",
+   "r": "Падерборн 07",
+   "n": 32,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "Zenit St. Petersburg",
+   "r": "Зенит",
+   "n": 25,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "Spartak Moscow",
+   "r": "Спартак",
+   "n": 26,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "CSKA Moscow",
+   "r": "ЦСКА",
+   "n": 29,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "Dynamo Moscow",
+   "r": "Динамо",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "FC Krasnodar",
+   "r": "Краснодар",
+   "n": 25,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "Lokomotiv Moscow",
+   "r": "Локомотив",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "Rubin Kazan",
+   "r": "Рубин",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "Baltika Kaliningrad",
+   "r": "Балтика",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "FC Rostov",
+   "r": "Ростов",
+   "n": 28,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "Akhmat Grozny",
+   "r": "Ахмат",
+   "n": 25,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "Akron Tolyatti",
+   "r": "Акрон",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "Rodina Moscow",
+   "r": "Родина (футбольный клуб, Москва)",
+   "n": 30,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "Krylya Sovetov Samara",
+   "r": "Крылья Советов",
+   "n": 25,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "FC Orenburg",
+   "r": "Оренбург",
+   "n": 33,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "Dinamo Makhachkala",
+   "r": "Махачкала (футбольный клуб)",
+   "n": 26,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "RPL",
+   "e": "Fakel Voronezh",
+   "r": "Факел",
+   "n": 26,
+   "mv": 0.92,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "ML Vitebsk",
+   "r": "МЛ Витебск",
+   "n": 26,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "Dinamo Minsk",
+   "r": "Динамо",
+   "n": 25,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "Dynamo Brest",
+   "r": "Динамо-Брест",
+   "n": 24,
+   "mv": 0.92,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "Torpedo-BelAZ Zhodino",
+   "r": "Торпедо-БелАЗ",
+   "n": 31,
+   "mv": 0.9,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "FK Gomel",
+   "r": "Гомель",
+   "n": 24,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "BATE Borisov",
+   "r": "БАТЭ",
+   "n": 27,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "Isloch Minsk Region",
+   "r": "Ислочь",
+   "n": 25,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "Neman Grodno",
+   "r": "Неман",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "Slavia Mozyr",
+   "r": "Славия-Мозырь",
+   "n": 25,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "FK Minsk",
+   "r": "Минск",
+   "n": 25,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "Dnepr Mogilev",
+   "r": "Днепр-Могилёв",
+   "n": 31,
+   "mv": 0.81,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "FK Vitebsk",
+   "r": "Витебск",
+   "n": 26,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "FC Baranovichi",
+   "r": "Барановичи",
+   "n": 26,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "Naftan Novopolotsk",
+   "r": "Нафтан",
+   "n": 27,
+   "mv": 0.81,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "Arsenal Dzerzhinsk",
+   "r": "Арсенал",
+   "n": 23,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BPL",
+   "e": "Belshina Bobruisk",
+   "r": "Белшина",
+   "n": 23,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Galatasaray",
+   "r": "Галатасарай",
+   "n": 32,
+   "mv": 0.94,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Beşiktaş JK",
+   "r": "Бешикташ",
+   "n": 31,
+   "mv": 0.94,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Fenerbahce",
+   "r": "Фенербахче",
+   "n": 30,
+   "mv": 0.93,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Trabzonspor",
+   "r": "Трабзонспор",
+   "n": 30,
+   "mv": 0.97,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Basaksehir FK",
+   "r": "Истанбул Башакшехир",
+   "n": 30,
+   "mv": 0.93,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Göztepe",
+   "r": "Гёзтепе",
+   "n": 26,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Corum FK",
+   "r": "Чорум (футбольный клуб)",
+   "n": 29,
+   "mv": 0.97,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Samsunspor",
+   "r": "Самсунспор",
+   "n": 28,
+   "mv": 0.89,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Caykur Rizespor",
+   "r": "Ризеспор",
+   "n": 29,
+   "mv": 0.93,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Kasimpasa",
+   "r": "Касымпаша",
+   "n": 32,
+   "mv": 0.94,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Alanyaspor",
+   "r": "Аланьяспор",
+   "n": 27,
+   "mv": 0.93,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Konyaspor",
+   "r": "Коньяспор",
+   "n": 28,
+   "mv": 0.89,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Amed SK",
+   "r": "Амед",
+   "n": 28,
+   "mv": 0.86,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Gaziantep FK",
+   "r": "Газиантеп",
+   "n": 31,
+   "mv": 0.9,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Genclerbirligi Ankara",
+   "r": "Генчлербирлиги",
+   "n": 30,
+   "mv": 0.87,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Kocaelispor",
+   "r": "Коджаэлиспор",
+   "n": 29,
+   "mv": 0.93,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Erzurumspor FK",
+   "r": "ББ Эрзурумспор",
+   "n": 28,
+   "mv": 0.93,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "TUR",
+   "e": "Eyüpspor",
+   "r": "Эюпспор",
+   "n": 28,
+   "mv": 0.86,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "FC Porto",
+   "r": "Порту",
+   "n": 29,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "SL Benfica",
+   "r": "Бенфика",
+   "n": 26,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "Sporting CP",
+   "r": "Спортинг",
+   "n": 29,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "SC Braga",
+   "r": "Брага",
+   "n": 27,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "FC Famalicão",
+   "r": "Фамаликан (футбольный клуб)",
+   "n": 26,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "Vitória Guimarães SC",
+   "r": "Витория",
+   "n": 30,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "FC Alverca",
+   "r": "Алверка (футбольный клуб)",
+   "n": 33,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "CF Estrela Amadora",
+   "r": "Эштрела",
+   "n": 29,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "GD Estoril Praia",
+   "r": "Эшторил-Прая",
+   "n": 29,
+   "mv": 0.93,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "Rio Ave FC",
+   "r": "Риу Ави",
+   "n": 34,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "FC Arouca",
+   "r": "Арока (футбольный клуб)",
+   "n": 27,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "Casa Pia AC",
+   "r": "Каза Пия (футбольный клуб)",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "Moreirense FC",
+   "r": "Морейренсе",
+   "n": 27,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "Gil Vicente FC",
+   "r": "Жил Висенте",
+   "n": 28,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "CD Santa Clara",
+   "r": "Санта-Клара",
+   "n": 25,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "CD Nacional",
+   "r": "Насьонал",
+   "n": 32,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "Académico Viseu FC",
+   "r": "Академику де Визеу (футбольный клуб)",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "POR",
+   "e": "CS Marítimo",
+   "r": "Маритиму",
+   "n": 30,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "PSV Eindhoven",
+   "r": "ПСВ",
+   "n": 31,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "Feyenoord Rotterdam",
+   "r": "Фейеноорд",
+   "n": 31,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "Ajax Amsterdam",
+   "r": "Аякс",
+   "n": 28,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "AZ Alkmaar",
+   "r": "АЗ",
+   "n": 29,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "FC Twente Enschede",
+   "r": "Твенте",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "FC Utrecht",
+   "r": "Утрехт",
+   "n": 31,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "NEC Nijmegen",
+   "r": "НЕК",
+   "n": 31,
+   "mv": 0.9,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "SC Heerenveen",
+   "r": "Херенвен",
+   "n": 25,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "FC Groningen",
+   "r": "Гронинген",
+   "n": 29,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "Sparta Rotterdam",
+   "r": "Спарта",
+   "n": 25,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "PEC Zwolle",
+   "r": "Зволле",
+   "n": 26,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "Go Ahead Eagles",
+   "r": "Гоу Эхед Иглс",
+   "n": 29,
+   "mv": 0.9,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "Willem II Tilburg",
+   "r": "Виллем II",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "Excelsior Rotterdam",
+   "r": "Эксельсиор",
+   "n": 25,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "ADO Den Haag",
+   "r": "АДО Ден Хааг",
+   "n": 29,
+   "mv": 0.9,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "Fortuna Sittard",
+   "r": "Фортуна",
+   "n": 24,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "SC Cambuur Leeuwarden",
+   "r": "Камбюр",
+   "n": 28,
+   "mv": 0.96,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "NED",
+   "e": "SC Telstar",
+   "r": "Телстар",
+   "n": 27,
+   "mv": 0.89,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "Club Brugge KV",
+   "r": "Брюгге",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "KRC Genk",
+   "r": "Генк",
+   "n": 31,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "Union Saint-Gilloise",
+   "r": "Юнион",
+   "n": 26,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "RSC Anderlecht",
+   "r": "Андерлехт",
+   "n": 33,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "KAA Gent",
+   "r": "Гент",
+   "n": 34,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "Standard Liège",
+   "r": "Стандард",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "Royal Antwerp FC",
+   "r": "Антверпен",
+   "n": 31,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "KVC Westerlo",
+   "r": "Вестерло",
+   "n": 31,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "Sint-Truidense VV",
+   "r": "Сент-Трюйден",
+   "n": 27,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "KV Mechelen",
+   "r": "Мехелен",
+   "n": 34,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "Cercle Brugge ",
+   "r": "Серкль Брюгге",
+   "n": 28,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "Royal Charleroi SC",
+   "r": "Шарлеруа",
+   "n": 25,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "Oud-Heverlee Leuven",
+   "r": "Ауд-Хеверле Лёвен",
+   "n": 34,
+   "mv": 0,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "Zulte Waregem",
+   "r": "Зюлте-Варегем",
+   "n": 26,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "Lommel SK",
+   "r": "Ломмел (футбольный клуб)",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "RAAL La Louvière",
+   "r": "ФК «Ла-Лувьер» (1919)",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "KV Kortrijk",
+   "r": "Кортрейк",
+   "n": 31,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  },
+  {
+   "lg": "BEL",
+   "e": "SK Beveren",
+   "r": "Васланд-Беверен",
+   "n": 29,
+   "mv": 1,
+   "upd": "2026-10-16T17:50:04.272771"
+  }
+ ]
+}
