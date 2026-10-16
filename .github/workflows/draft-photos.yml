@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: draft-photos
@@ -30,8 +31,11 @@ jobs:
       - name: Install the image tool
         run: mkdir -p /tmp/ph && cd /tmp/ph && npm init -y >/dev/null && npm i sharp@0.33.5
       - name: Build the photo pack
+        id: build
+        timeout-minutes: 50
         env:
           SHARP: /tmp/ph/node_modules/sharp
+          PH_MINUTES: '40'
         run: node scripts/draft-photos.cjs
       - name: Commit
         run: |
@@ -41,3 +45,9 @@ jobs:
           if git diff --cached --quiet; then echo "no changes"; exit 0; fi
           git commit -m "Draft photo pack update"
           for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && break; sleep 5; done
+      # not finished within the time budget (API rate limits): start the next run, it continues where this one stopped
+      - name: Continue in a new run
+        if: steps.build.outputs.more == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run draft-photos.yml --ref main

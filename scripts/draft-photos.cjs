@@ -11,15 +11,20 @@ const ROOT = path.join(__dirname, '..'), OUT = path.join(ROOT, 'public/draft/ph'
 const UA = 'FCDraftOnline/1.0 (https://github.com/yudzik/football-career-game; photo pack build)';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const LIMIT = +(process.env.PH_LIMIT || 1e9);   // max new API lookups per run (rate limits)
+const T0 = Date.now(), BUDGET = +(process.env.PH_MINUTES || 40) * 60000;   // stop in time and keep what is done; the next run continues
+const late = () => Date.now() - T0 > BUDGET;
+const ST = {};   // request outcomes per host, saved in report.json
+const note = (u, k) => { const h = /^https?:/.test(String(u)) ? String(u).split('/')[2] : 'data'; ST[h] = ST[h] || {}; ST[h][k] = (ST[h][k] || 0) + 1 };
 fs.mkdirSync(OUT, { recursive: true });
 
 const ufetch = async (u, o = {}) => {
   for (let i = 0; i < 4; i++) {
     try {
-      const r = await fetch(u, { ...o, headers: { 'User-Agent': UA, ...(o.headers || {}) } });
-      if (r.status === 429 || r.status >= 500) { await sleep(20000 * (i + 1)); continue }
+      const r = await fetch(u, { ...o, headers: { 'User-Agent': UA, ...(o.headers || {}) }, signal: AbortSignal.timeout(20000) });
+      note(u, r.status);
+      if (r.status === 429 || r.status >= 500) { await sleep(15000 * (i + 1)); continue }
       return r;
-    } catch (e) { await sleep(3000 * (i + 1)) }
+    } catch (e) { note(u, 'err'); await sleep(3000 * (i + 1)) }
   }
   return { ok: false, status: 0, json: async () => ({}), arrayBuffer: async () => new ArrayBuffer(0) };
 };
@@ -51,7 +56,7 @@ let api = 0, made = 0, missed = 0;
 async function save(k, url) {
   if (!url) { fail[k] = Date.now(); missed++; return }
   const r = await ufetch(url); if (!r.ok) { fail[k] = Date.now(); missed++; return }
-  const buf = Buffer.from(await r.arrayBuffer()); if (buf.length < 200) { fail[k] = Date.now(); missed++; return }
+  let buf; try { buf = Buffer.from(await r.arrayBuffer()) } catch (e) { fail[k] = Date.now(); missed++; return } if (buf.length < 200) { fail[k] = Date.now(); missed++; return }
   const [w, h, fit, q] = SIZE[k[0]] || SIZE.p;
   try {
     const out = await sharp(buf).resize(w, h, { fit, background: { r: 0, g: 0, b: 0, alpha: 0 }, withoutEnlargement: false }).webp({ quality: q }).toBuffer();
@@ -59,6 +64,18 @@ async function save(k, url) {
   } catch (e) { fail[k] = Date.now(); missed++ }
 }
 
+function writeOut(final) {
+  const keep = new Set(Object.values(M)); keep.add('map.json'); keep.add('fail.json'); keep.add('report.json');
+  if (final) for (const f of fs.readdirSync(OUT)) if (!keep.has(f)) fs.unlinkSync(path.join(OUT, f));
+  let bytes = 0; for (const f of keep) { const fp = path.join(OUT, f); if (f.endsWith('.webp') && fs.existsSync(fp)) bytes += fs.statSync(fp).size }
+  const ks = Object.keys(M).sort(), m = {}; ks.forEach(k => m[k] = M[k]);
+  const same = JSON.stringify(m) === JSON.stringify(old.m || {});
+  fs.writeFileSync(mapF, JSON.stringify({ v: same && old.v ? old.v : Date.now(), n: ks.length, bytes, m }));
+  fs.writeFileSync(failF, JSON.stringify(fail));
+  return { n: ks.length, bytes };
+}
+let lastW = Date.now();
+const tick = () => { if (Date.now() - lastW > 60000) { writeOut(false); lastW = Date.now() } };
 (async () => {
   // coaches + stadiums: Wikipedia lead photos (the game's own loaders)
   const co = G('CO').filter(c => !have('c' + c.i) && retry('c' + c.i));
@@ -67,21 +84,17 @@ async function save(k, url) {
   if (st.length) { try { await G('loadStadImgs()') } catch (e) {} const SI = G('STIMG'); for (const s of st) await save('s' + s.i, SI[s.i] || '') }
   // club crests (league clubs + every club of the player database)
   const teams = [...new Set([...G('Object.values(CLUBS).map(c=>c[2]).filter(Boolean)'), ...G('CL.map(c=>c[4])')])];
-  for (const n of teams) { const k = 'T:' + n; if (have(k) || !retry(k) || api >= LIMIT) continue; let u = ''; try { u = await G(`findTeam(${JSON.stringify(n)})`) || '' } catch (e) {} api++; await save(k, u); await sleep(2100) }
+  for (const n of teams) { const k = 'T:' + n; if (have(k) || !retry(k) || api >= LIMIT || late()) continue; tick(); let u = ''; try { u = await G(`findTeam(${JSON.stringify(n)})`) || '' } catch (e) {} api++; await save(k, u); await sleep(2100) }
   // players
   const DB = G('DB');
-  for (const p of DB) { const k = 'p' + p.id; if (have(k) || !retry(k)) continue; let u = p.ph || '';
+  for (const p of DB) { const k = 'p' + p.id; if (have(k) || !retry(k) || late()) continue; tick(); let u = p.ph || '';
     if (!u) { if (api >= LIMIT) continue; try { u = await G(`findPlayer(DB[${p.id}])`) || '' } catch (e) {} api++; await sleep(2100) }
     await save(k, u); if ((made + missed) % 25 === 0) console.log(`… ${made} saved, ${missed} missed, ${api} lookups`) }
-  // clean files no longer referenced, write the map
-  const keep = new Set(Object.values(M)); keep.add('map.json'); keep.add('fail.json');
-  for (const f of fs.readdirSync(OUT)) if (!keep.has(f)) fs.unlinkSync(path.join(OUT, f));
-  let bytes = 0; for (const f of keep) { const fp = path.join(OUT, f); if (f.endsWith('.webp') && fs.existsSync(fp)) bytes += fs.statSync(fp).size }
-  const ks = Object.keys(M).sort(), m = {}; ks.forEach(k => m[k] = M[k]);
-  const same = JSON.stringify(m) === JSON.stringify(old.m || {});
-  fs.writeFileSync(mapF, JSON.stringify({ v: same && old.v ? old.v : Date.now(), n: ks.length, bytes, m }));
-  fs.writeFileSync(failF, JSON.stringify(fail));
-  console.log(`photo pack: ${ks.length} photos (${(bytes / 1048576).toFixed(1)} MB) · new ${made} · missed ${missed} · lookups ${api}`);
-  console.log('players', DB.filter(p => M['p' + p.id]).length + '/' + DB.length, '· coaches', G('CO').filter(c => M['c' + c.i]).length + '/' + G('CO.length'), '· stadiums', G('STAD').filter(s => M['s' + s.i]).length + '/' + G('STAD.length'), '· crests', teams.filter(n => M['T:' + n]).length + '/' + teams.length);
+  const w = writeOut(true), todo = DB.filter(p => !M['p' + p.id] && retry('p' + p.id)).length + teams.filter(n => !M['T:' + n] && retry('T:' + n)).length;
+  const rep = { at: new Date().toISOString(), minutes: +((Date.now() - T0) / 60000).toFixed(1), photos: w.n, mb: +(w.bytes / 1048576).toFixed(2), made, missed, lookups: api, todo,
+    players: DB.filter(p => M['p' + p.id]).length + '/' + DB.length, coaches: G('CO').filter(c => M['c' + c.i]).length + '/' + G('CO.length'), stadiums: G('STAD').filter(s => M['s' + s.i]).length + '/' + G('STAD.length'), crests: teams.filter(n => M['T:' + n]).length + '/' + teams.length, http: ST };
+  fs.writeFileSync(path.join(OUT, 'report.json'), JSON.stringify(rep, null, 1));
+  console.log(JSON.stringify(rep));
+  if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `more=${todo > 0 && late() ? 1 : 0}\n`);
   process.exit(0);
 })().catch(e => { console.error(e); process.exit(1) });
