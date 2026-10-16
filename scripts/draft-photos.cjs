@@ -52,7 +52,7 @@ const fileOf = k => k.replace(/[^A-Za-z0-9]/g, '_') + '.webp';
 const have = k => M[k] && fs.existsSync(path.join(OUT, M[k]));
 const retry = k => !fail[k] || Date.now() - fail[k] > 14 * 864e5;
 const miss = k => { fail[k] = Date.now(); missed++ };
-const SIZE = { p: [160, 160, 'contain', 72], c: [160, 160, 'cover', 72], T: [96, 96, 'contain', 80], s: [640, 360, 'cover', 62] };
+const SIZE = { m: [120, 120, 'cover', 62], p: [160, 160, 'contain', 72], c: [160, 160, 'cover', 72], T: [96, 96, 'contain', 80], s: [640, 360, 'cover', 62] };
 let api = 0, made = 0, missed = 0;
 
 async function save(k, url) {
@@ -61,7 +61,7 @@ async function save(k, url) {
   let buf; try { buf = Buffer.from(await r.arrayBuffer()) } catch (e) { fail[k] = Date.now(); missed++; return } if (buf.length < 200) { fail[k] = Date.now(); missed++; return }
   const [w, h, fit, q] = SIZE[k[0]] || SIZE.p;
   try {
-    const out = await sharp(buf).resize(w, h, { fit, background: { r: 0, g: 0, b: 0, alpha: 0 }, withoutEnlargement: false }).webp({ quality: q }).toBuffer();
+    const out = await sharp(buf).resize(w, h, { fit, position: k[0] == 'm' ? 'north' : 'centre', background: { r: 0, g: 0, b: 0, alpha: 0 }, withoutEnlargement: false }).webp({ quality: q }).toBuffer();
     fs.writeFileSync(path.join(OUT, fileOf(k)), out); M[k] = fileOf(k); delete fail[k]; made++;
   } catch (e) { fail[k] = Date.now(); missed++ }
 }
@@ -98,6 +98,7 @@ async function wpSearch(q, size) {
   const p = Object.values((j.query || {}).pages || {})[0]; return p ? { src: (p.thumbnail || {}).source || '', desc: p.description || '' } : null;
 }
 const isFoot = d => /football|soccer/i.test(d || '');
+const rep2 = {};
 (async () => {
   const DB = G('DB'), CO = G('CO'), STAD = G('STAD');
   const teams = [...new Set([...G('Object.values(CLUBS).map(c=>c[2]).filter(Boolean)'), ...G('CL.map(c=>c[4])')])];
@@ -124,9 +125,16 @@ const isFoot = d => /football|soccer/i.test(d || '');
     for (const p of L) { const k = 'p' + p.id; if (late()) break; tick(); let url = found[p.id] || '';
       if (!url && blocked < 5 && api < LIMIT) { try { url = await G(`findPlayer(DB[${p.id}])`) || '' } catch (e) {} api++; const sd = ST['www.thesportsdb.com'] || {}; blocked = (sd[403] || 0) + (sd[429] || 0) > (sd[200] || 0) + 3 ? blocked + 1 : 0; await sleep(2100) }
       await save(k, url); await sleep(200); if ((made + missed) % 25 === 0) console.log(`… ${made} saved, ${missed} missed, ${api} lookups`) } }
-  const w = writeOut(true), todo = DB.filter(p => !M['p' + p.id] && retry('p' + p.id)).length + teams.filter(n => !M['T:' + n] && retry('T:' + n)).length;
+  // ---- the 2026/27 database (db.json): Transfermarkt portraits ('m' + player id) and club crests ('T:' + club name)
+  { const IF = path.join(ROOT, 'public/draft/db-img.json'), DF = path.join(ROOT, 'public/draft/db.json');
+    if (fs.existsSync(IF) && fs.existsSync(DF)) { const I = JSON.parse(fs.readFileSync(IF, 'utf8')), D = JSON.parse(fs.readFileSync(DF, 'utf8'));
+      for (const [id, c] of Object.entries(D.cl)) { const k = 'T:' + c[2]; if (have(k) || !retry(k) || late() || !I.c[id]) continue; tick(); await save(k, I.c[id]); await sleep(120) }
+      const order = D.p.slice().sort((a, b) => b[6] - a[6]);   // best players first: the ones people see most
+      for (const a of order) { const k = 'm' + a[0], u = I.p[a[0]]; if (have(k) || !retry(k) || !u) continue; if (late()) break; tick(); await save(k, u); await sleep(150) }
+      rep2.dbPlayers = D.p.filter(a => M['m' + a[0]]).length + '/' + D.p.length; rep2.dbTodo = D.p.filter(a => !M['m' + a[0]] && I.p[a[0]] && retry('m' + a[0])).length } }
+  const w = writeOut(true), todo = (rep2.dbTodo || 0) + DB.filter(p => !M['p' + p.id] && retry('p' + p.id)).length + teams.filter(n => !M['T:' + n] && retry('T:' + n)).length;
   const rep = { at: new Date().toISOString(), minutes: +((Date.now() - T0) / 60000).toFixed(1), photos: w.n, mb: +(w.bytes / 1048576).toFixed(2), made, missed, lookups: api, todo,
-    players: DB.filter(p => M['p' + p.id]).length + '/' + DB.length, coaches: CO.filter(c => M['c' + c.i]).length + '/' + CO.length, stadiums: STAD.filter(s => M['s' + s.i]).length + '/' + STAD.length, crests: teams.filter(n => M['T:' + n]).length + '/' + teams.length, http: ST };
+    players: DB.filter(p => M['p' + p.id]).length + '/' + DB.length, coaches: CO.filter(c => M['c' + c.i]).length + '/' + CO.length, stadiums: STAD.filter(s => M['s' + s.i]).length + '/' + STAD.length, crests: teams.filter(n => M['T:' + n]).length + '/' + teams.length, ...rep2, http: ST };
   fs.writeFileSync(path.join(OUT, 'report.json'), JSON.stringify(rep, null, 1));
   console.log(JSON.stringify(rep));
   if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `more=${todo > 0 && late() ? 1 : 0}\n`);

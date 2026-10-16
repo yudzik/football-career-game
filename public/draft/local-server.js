@@ -80,6 +80,11 @@ const srv = http.createServer((req, res) => {
   if (u === '/' || u === '/index.html' || u === '/draft-online.html') {
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' }); return fs.createReadStream(GAME).pipe(res);
   }
+  // 2026/27 player database: db.json next to this file (and db/<version>.json for rooms started on an older one)
+  if (u === '/db.json' || /^\/db\/\d+\.json$/.test(u)) {
+    const f = u === '/db.json' ? path.join(__dirname, 'db.json') : path.join(__dirname, 'db', path.basename(u));
+    if (fs.existsSync(f)) { res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' }); return fs.createReadStream(f).pipe(res) }
+  }
   // photo pack: unzip ph.zip next to this file -> ./ph/map.json + ./ph/*.webp
   if (u.startsWith('/ph/')) {
     const f = path.join(__dirname, 'ph', path.basename(decodeURIComponent(u)));

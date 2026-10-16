@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['scripts/draft-photos.cjs', '.github/workflows/draft-photos.yml']
+    paths: ['scripts/draft-photos.cjs', '.github/workflows/draft-photos.yml', 'public/draft/db.json']
   schedule:
     - cron: '17 3 * * 1'
 
