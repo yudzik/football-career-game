@@ -1,0 +1,32 @@
+{
+ "tm_league": {
+  "status": 202,
+  "len": 2411,
+  "ct": "text/html; charset=UTF-8"
+ },
+ "tm_squad": {
+  "status": 202,
+  "len": 2411,
+  "ct": "text/html; charset=UTF-8"
+ },
+ "tm_by": {
+  "status": 202,
+  "len": 2411,
+  "ct": "text/html; charset=UTF-8"
+ },
+ "tm_rpl": {
+  "status": 202,
+  "len": 2411,
+  "ct": "text/html; charset=UTF-8"
+ },
+ "tmapi": {
+  "status": 200,
+  "len": 9678,
+  "ct": "application/json"
+ },
+ "dcaribou": {
+  "status": 200,
+  "len": 4161230,
+  "ct": "application/gzip"
+ }
+}
