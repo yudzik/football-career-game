@@ -1,0 +1,24 @@
+name: Draft data probe
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['scripts/draft-probe.cjs', '.github/workflows/draft-probe.yml']
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/draft-probe.cjs
+      - name: Save to the draft-data branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          mv probe /tmp/probe && git checkout --orphan draft-data-probe && git rm -rfq . && mv /tmp/probe probe
+          git add probe && git commit -qm "probe $(date -u +%FT%TZ)" && git push -fq origin HEAD:draft-data-probe
