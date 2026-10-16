@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // FC Draft Online — local server for playing over one Wi-Fi hotspot WITHOUT internet.
-// Put this file next to the game file (draft-online.html or index.html) and run:  node local-server.js [port]
+// Put this file next to the game file (draft-online.html or index.html) — and, for photos, the unzipped ph/ folder from ph.zip — and run:  node local-server.js [port]
 // Then everybody on the same Wi-Fi opens  http://<this device's IP>:<port>  (the addresses are printed below).
 // No dependencies: plain Node.js (laptop, or Android via Termux: `pkg install nodejs`).
 // It serves the game page and relays the game messages (a tiny MQTT 3.1.1 broker over WebSocket at /mqtt).
@@ -79,6 +79,11 @@ const srv = http.createServer((req, res) => {
   const u = req.url.split('?')[0];
   if (u === '/' || u === '/index.html' || u === '/draft-online.html') {
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' }); return fs.createReadStream(GAME).pipe(res);
+  }
+  // photo pack: unzip ph.zip next to this file -> ./ph/map.json + ./ph/*.webp
+  if (u.startsWith('/ph/')) {
+    const f = path.join(__dirname, 'ph', path.basename(decodeURIComponent(u)));
+    if (fs.existsSync(f)) { res.writeHead(200, { 'Content-Type': f.endsWith('.json') ? 'application/json' : 'image/webp', 'Cache-Control': 'max-age=86400' }); return fs.createReadStream(f).pipe(res) }
   }
   res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); res.end('Not found');
 });
