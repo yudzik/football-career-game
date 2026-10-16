@@ -17,19 +17,23 @@ concurrency:
 jobs:
   db:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Previous Transfermarkt cache
+        run: git fetch -q origin draft-data && git show origin/draft-data:tm-cache.json > /tmp/tm-cache.json || echo '{}' > /tmp/tm-cache.json
       - name: Build the database
+        env:
+          TM_CACHE: /tmp/tm-cache.json
         run: node scripts/draft-db.cjs
       - name: Save the result to the draft-data branch (reviewed before it goes into the game)
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
-          mkdir -p /tmp/out && cp public/draft/db-src.json public/draft/db-report.json /tmp/out/ 2>/dev/null || true
+          mkdir -p /tmp/out && cp public/draft/db-src.json public/draft/db-report.json public/draft/tm-cache.json /tmp/out/ 2>/dev/null || true
           git checkout --orphan draft-data && git rm -rfq . && cp /tmp/out/* . 2>/dev/null || true
           git add -A && git commit -qm "db build $(date -u +%FT%TZ)" && git push -fq origin HEAD:draft-data

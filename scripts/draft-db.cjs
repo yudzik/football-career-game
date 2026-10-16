@@ -38,9 +38,9 @@ const natOf = a => { for (const n of (a || [])) { if (NATN[n]) return NATN[n] } 
 // market value -> rating (log scale), then age / position / league corrections
 const MV = [[2.5e4, 50], [5e4, 54], [1e5, 57], [2.5e5, 61], [5e5, 64], [1e6, 67], [2e6, 70], [4e6, 73], [8e6, 77], [1.5e7, 80], [2.5e7, 83], [4e7, 85], [6e7, 87], [9e7, 89], [1.3e8, 91], [2e8, 93]];
 const mvBase = v => { if (!v || v <= MV[0][0]) return MV[0][1] - 2; for (let i = 1; i < MV.length; i++) if (v <= MV[i][0]) { const [a, x] = MV[i - 1], [b, y] = MV[i], t = (Math.log(v) - Math.log(a)) / (Math.log(b) - Math.log(a)); return x + (y - x) * t } return 93 };
-const AGEF = a => a <= 18 ? -6 : a == 19 ? -5 : a == 20 ? -4 : a == 21 ? -3 : a == 22 ? -2 : a == 23 ? -1 : a <= 29 ? 0 : a <= 31 ? 1 : a <= 33 ? 2 : 3;
+const AGEF = a => a <= 18 ? -4 : a == 19 ? -3 : a == 20 ? -2 : a <= 22 ? -1 : a <= 29 ? 0 : a <= 31 ? 1 : a <= 33 ? 2 : 3;
 const LGF = { RPL: 2, BPL: 2, TUR: 0, POR: 0, NED: 0, BEL: 0 };
-const ratingOf = (v, age, pos, lg) => Math.max(45, Math.min(94, Math.round(mvBase(v) + AGEF(age) + (pos == 'G' ? 2 : 0) + (LGF[lg] || 0))));
+const ratingOf = (v, age, pos, lg) => Math.max(50, Math.min(94, Math.round(mvBase(v) + AGEF(age) + (pos == 'G' ? 2 : 0) + (LGF[lg] || 0))));
 const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
 
 async function sparqlLabels(prop, ids) { // Transfermarkt id -> {ru, en}
@@ -55,7 +55,7 @@ async function sparqlLabels(prop, ids) { // Transfermarkt id -> {ru, en}
   return out;
 }
 // short Russian name from the full label, guided by the Transfermarkt name: «Габриэл Магальяйнс» + «Gabriel» -> «Габриэл»; «Вирджил ван Дейк» -> «ван Дейк»
-function ruShort(ru, tm) { if (!ru || /[A-Za-z]/.test(ru)) return null; ru = ru.replace(/\s*\([^)]*\)\s*$/, '').trim(); const w = ru.split(/\s+/), t = String(tm || '').trim().split(/\s+/); if (w.length == 1) return ru; if (t.length == 1) return w[0]; return w.slice(1).join(' ') }
+function ruShort(ru, tm) { if (!ru || /[A-Za-z]/.test(ru)) return null; ru = ru.replace(/\s*\([^)]*\)\s*$/, '').trim(); if (ru.includes(',')) return ru.split(',')[0].trim(); const w = ru.split(/\s+/), k = String(tm || '').trim().split(/\s+/).length; if (w.length == 1) return ru; if (k == 1) return w[0]; return w.slice(-Math.max(1, k - 1)).join(' ') }
 
 (async () => {
   const T0 = Date.now(), rep = { leagues: {}, http: ST, api: API };
@@ -66,13 +66,20 @@ function ruShort(ru, tm) { if (!ru || /[A-Za-z]/.test(ru)) return null; ru = ru.
     L.forEach(c => clubs.push({ id: String(c.id), name: c.name, lg }));
     rep.leagues[lg].clubs = L.map(c => c.name); await sleep(800);
   }
-  const players = [];
-  for (const c of clubs) {
-    const j = await get(`${API}/clubs/${c.id}/players`); if (!j || !j.players) { c.err = 'no squad'; continue }
-    c.n = j.players.length; c.upd = j.updatedAt;
-    j.players.forEach(p => players.push({ id: String(p.id), name: p.name, img: p.imageUrl || null, pos: p.position, no: p.shirtNumber, dob: p.dateOfBirth, age: p.age, nat: p.nationality, mv: p.marketValue || 0, club: c }));
-    await sleep(700);
+  const CF = process.env.TM_CACHE || '', cache = CF && fs.existsSync(CF) ? JSON.parse(fs.readFileSync(CF, 'utf8')) : {};
+  const good = j => j && j.players && j.players.length >= 15 && j.players.filter(p => p.marketValue).length >= j.players.length * .6;
+  const fresh = j => j && j._t && Date.now() - j._t < 3 * 864e5;   // a squad fetched in the last 3 days is reused
+  for (let pass = 0; pass < 4; pass++) {
+    const todo = clubs.filter(c => !(good(cache[c.id]) && fresh(cache[c.id])) && !(pass && good(cache[c.id])));
+    if (!todo.length) break; rep['pass' + pass] = todo.length;
+    for (const c of todo) { const j = await get(`${API}/clubs/${c.id}/players`); if (j && j.players && (good(j) || !good(cache[c.id]))) cache[c.id] = { ...j, _t: Date.now() }; await sleep(2500 + pass * 1500) }
+    if (clubs.every(c => good(cache[c.id]))) break; await sleep(45000);
   }
+  if (CF) fs.writeFileSync(path.join(OUT, 'tm-cache.json'), JSON.stringify(cache));
+  const players = [];
+  for (const c of clubs) { const j = cache[c.id]; if (!j || !j.players) { c.err = 'no squad'; continue } c.n = j.players.length; c.upd = j.updatedAt; c.mvShare = +(j.players.filter(p => p.marketValue).length / (j.players.length || 1)).toFixed(2);
+    j.players.forEach(p => players.push({ id: String(p.id), name: p.name, img: p.imageUrl || null, pos: p.position, no: p.shirtNumber, dob: p.dateOfBirth, age: p.age, nat: p.nationality, mv: p.marketValue || 0, club: c })) }
+  rep.noMV = clubs.filter(c => c.mvShare < .6).map(c => c.name);
   rep.clubs = clubs.length; rep.clubErr = clubs.filter(c => c.err).map(c => c.name); rep.playersRaw = players.length;
   const PL = await sparqlLabels('P2446', [...new Set(players.map(p => p.id))]), CL = await sparqlLabels('P7223', clubs.map(c => c.id));
   const seen = new Set(), out = [];
@@ -83,7 +90,7 @@ function ruShort(ru, tm) { if (!ru || /[A-Za-z]/.test(ru)) return null; ru = ru.
     clubs: clubs.filter(c => !c.err).map(c => ({ id: c.id, e: c.name, r: (CL[c.id] && CL[c.id].ru || c.name).replace(/\s*\([^)]*\)\s*$/, '').replace(/^(ФК|ПФК|Футбольный клуб)\s+/, ''), lg: c.lg, img: `https://tmssl.akamaized.net/images/wappen/head/${c.id}.png` })), players: out };
   rep.players = out.length; rep.ruNames = out.filter(x => x.rf).length; rep.minutes = +((Date.now() - T0) / 60000).toFixed(1);
   rep.byLeague = {}; LEAGUES.forEach(([lg]) => { const L = out.filter(x => x.lg == lg).sort((a, b) => b.o - a.o); rep.byLeague[lg] = { players: L.length, avg: +(L.reduce((s, x) => s + x.o, 0) / (L.length || 1)).toFixed(1), top: L.slice(0, 6).map(x => `${x.r} ${x.o} (${db.clubs.find(c => c.id == x.c).r}, ${x.age}, €${(x.mv / 1e6).toFixed(1)}m)`), low: L.slice(-3).map(x => `${x.r} ${x.o}`) } });
-  rep.clubsDetail = clubs.map(c => ({ lg: c.lg, e: c.name, r: (CL[c.id] || {}).ru, n: c.n || 0, upd: c.upd, err: c.err }));
+  rep.clubsDetail = clubs.map(c => ({ lg: c.lg, e: c.name, r: (CL[c.id] || {}).ru, n: c.n || 0, mv: c.mvShare, upd: c.upd, err: c.err }));
   fs.writeFileSync(path.join(OUT, 'db-src.json'), JSON.stringify(db));
   fs.writeFileSync(path.join(OUT, 'db-report.json'), JSON.stringify(rep, null, 1));
   console.log(JSON.stringify({ clubs: rep.clubs, players: rep.players, ru: rep.ruNames, minutes: rep.minutes, errs: rep.clubErr.length }));
