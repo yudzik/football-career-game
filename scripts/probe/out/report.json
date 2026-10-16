@@ -1,0 +1,47 @@
+{
+ "team": {
+  "status": 200,
+  "len": 1578268,
+  "type": "text/html; charset=utf-8"
+ },
+ "league": {
+  "status": 200,
+  "len": 2909967,
+  "type": "text/html; charset=utf-8"
+ },
+ "player": {
+  "status": 200,
+  "len": 820681,
+  "type": "text/html; charset=utf-8"
+ },
+ "api1": {
+  "status": 200,
+  "len": 22227,
+  "type": "application/json; charset=utf-8"
+ },
+ "api2": {
+  "status": 200,
+  "len": 22227,
+  "type": "application/json; charset=utf-8"
+ },
+ "wd": {
+  "status": 200,
+  "len": 82156,
+  "type": "application/json; charset=utf-8"
+ },
+ "rpl": {
+  "status": 200,
+  "len": 3707,
+  "type": "application/json; charset=utf-8"
+ },
+ "zenitSquad": {
+  "status": 200,
+  "len": 102695,
+  "type": "text/x-wiki; charset=UTF-8"
+ },
+ "by": {
+  "status": 200,
+  "len": 34519,
+  "type": "text/x-wiki; charset=UTF-8"
+ }
+}
