@@ -1,0 +1,19 @@
+name: Draft data probe
+on:
+  push:
+    branches: [probe]
+    paths: ['scripts/probe/probe.cjs']
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/probe/probe.cjs
+      - run: |
+          git config user.name "github-actions[bot]"; git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git add scripts/probe/out && git commit -qm "probe results" && git push -q origin HEAD:probe
