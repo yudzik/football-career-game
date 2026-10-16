@@ -119,7 +119,7 @@ const isFoot = d => /football|soccer/i.test(d || '');
     L.filter(p => p.ph).forEach(p => found[p.id] = p.ph);
     const pass = async suffix => { const rest = L.filter(p => !found[p.id] && p.e); const W = await wp(rest.map(p => p.e + suffix), 240); rest.forEach(p => { const x = W[p.e + suffix]; if (x && x.src && isFoot(x.desc)) found[p.id] = x.src }) };
     await pass(''); await pass(' (footballer)'); await pass(' (soccer)');
-    for (const p of L.filter(p => !found[p.id] && p.e)) { if (late()) break; const x = await wpSearch(p.e + ' footballer ' + (G(`CLUBS[${JSON.stringify(p.c)}]`) || [])[2], 240); if (x && x.src && isFoot(x.desc)) found[p.id] = x.src }
+    for (const p of L.filter(p => !found[p.id] && p.e)) { if (late()) break; const x = await wpSearch(p.e + ' footballer ' + ((G(`CLUBS[${JSON.stringify(p.c)}]`) || [])[2] || ''), 240); if (x && x.src && isFoot(x.desc)) found[p.id] = x.src }
     let blocked = 0;
     for (const p of L) { const k = 'p' + p.id; if (late()) break; tick(); let url = found[p.id] || '';
       if (!url && blocked < 5 && api < LIMIT) { try { url = await G(`findPlayer(DB[${p.id}])`) || '' } catch (e) {} api++; const sd = ST['www.thesportsdb.com'] || {}; blocked = (sd[403] || 0) + (sd[429] || 0) > (sd[200] || 0) + 3 ? blocked + 1 : 0; await sleep(2100) }
