@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>FC Draft Online</title><meta name="fcv" content="24">
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>FC Draft Online</title><meta name="fcv" content="25">
 <script src="https://cdn.tailwindcss.com/3.4.17"></script><script src="https://telegram.org/js/telegram-web-app.js" async onload="try{tgInit()}catch(e){}"></script>
 <style>/* offline fallback: the utility classes this page uses (same values as Tailwind), so the layout holds without the CDN */
 *,::before,::after{border-width:0;border-style:solid;border-color:#e5e7eb}html{line-height:1.5}h1,h2,h3,p{margin:0}h1,h2,h3{font-size:inherit;font-weight:inherit}button,input,select{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0}button{background:transparent;padding:0;cursor:pointer}a{color:inherit;text-decoration:inherit}img,svg{display:block;max-width:100%}table{border-collapse:collapse}
@@ -22,10 +22,10 @@ h2{font-size:1.2rem;font-weight:900;color:#d4a72c;margin-top:6px}
 .ut{position:relative;flex:none;width:128px;height:178px;border-radius:14px 14px 34px 34px;color:#1a1400;background:linear-gradient(160deg,var(--c) 0%,#fffb 36%,var(--c) 64%,#4a3608 100%);box-shadow:0 6px 18px #000a;overflow:hidden}
 .ut .o{position:absolute;left:11px;top:9px;font-size:30px;font-weight:900;line-height:1}.ut .p{position:absolute;left:12px;top:42px;font-size:12px;font-weight:900}.ut .fl{position:absolute;left:12px;top:60px;font-size:18px}.ut .bd{position:absolute;left:12px;top:84px;width:22px;height:22px;object-fit:contain}
 .ut .ph{position:absolute;right:-6px;top:10px;width:96px;height:104px;object-fit:contain;object-position:bottom}
-.ut .ph.sq{right:8px;top:12px;width:64px;height:82px;object-fit:cover;object-position:50% 12%;border-radius:10px;-webkit-mask-image:linear-gradient(180deg,#000 70%,transparent 100%);mask-image:linear-gradient(180deg,#000 70%,transparent 100%)}
+.ut .ph.sq{right:8px;top:12px;width:64px;height:82px;object-fit:cover;object-position:50% 0;border-radius:10px;-webkit-mask-image:linear-gradient(180deg,#000 70%,transparent 100%);mask-image:linear-gradient(180deg,#000 70%,transparent 100%)}
 .ut.sm .ph.sq{right:6px;top:10px;width:52px;height:66px}
-.pc .ph.sq{right:3px;top:4px;width:30px;height:36px;object-fit:cover;object-position:50% 12%;border-radius:6px;-webkit-mask-image:linear-gradient(180deg,#000 72%,transparent);mask-image:linear-gradient(180deg,#000 72%,transparent)}
-.dph img.sq{object-fit:cover;object-position:50% 12%}
+.pc .ph.sq{right:3px;top:4px;width:30px;height:36px;object-fit:cover;object-position:50% 0;border-radius:6px;-webkit-mask-image:linear-gradient(180deg,#000 72%,transparent);mask-image:linear-gradient(180deg,#000 72%,transparent)}
+.dph img.sq{object-fit:cover;object-position:50% 0}
 .ut .nm{position:absolute;left:4px;right:4px;top:118px;text-align:center;font-weight:900;font-size:13px;white-space:nowrap;overflow:hidden;border-top:1px solid #0003;padding-top:3px}
 .ut .st{position:absolute;left:0;right:0;top:138px;text-align:center;font-size:10px;font-weight:800;opacity:.85}
 .sel .pc{outline:3px solid #fff}.devb{position:fixed;left:10px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:45;width:46px;height:46px;border-radius:50%;background:#7c3aed;color:#fff;font-size:22px;box-shadow:0 4px 16px #0008;border:2px solid #c4b5fd}.dvg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.dvg .b{margin:0;font-size:13px;padding:11px 6px}.dvi{font:11px/1.5 ui-monospace,monospace;opacity:.8;word-break:break-all}
@@ -306,7 +306,7 @@ const stadSVG='<svg viewBox="0 0 200 90" preserveAspectRatio="xMidYMid slice" st
 const PHB='ph/',PHC='fcdraft-ph';let PHM=null,PHN=null,PHP=null,PHOK=ls.get('fdt_phd')||0;
 const phm=k=>PHM&&PHM[k]?PHB+PHM[k]:'';
 function loadPHM(){if(!(ONSITE||LOCALSRV)||!window.fetch)return;fetch(PHB+'map.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.m){PHM=j.m;PHN=j;R();if(ONSITE&&PHOK!=j.v&&navigator.onLine!==false&&!(navigator.connection&&navigator.connection.saveData))setTimeout(()=>dlPhotos(1),3000)}}).catch(()=>{})}
-async function dlPhotos(quiet){if(!PHN||PHP)return;if(!window.caches){if(!quiet)toast('Этот браузер не умеет сохранять фото');return}const L=[...new Set(Object.values(PHM))].map(f=>PHB+f);PHP={n:0,t:L.length,e:0};R();
+async function dlPhotos(quiet){if(!PHN||PHP)return;if(!window.caches){if(!quiet)toast('Этот браузер не умеет сохранять фото');return}const top=NDB?new Set(NDB.p.filter(a=>a[6]>=74).map(a=>'m'+a[0])):null;if(top&&S)S.M.forEach(m=>m.sq.forEach(id=>{const p=DB[id];if(p&&p.tm)top.add('m'+p.tm)}));const L=[...new Set(Object.entries(PHM).filter(([k])=>k[0]!='m'||!top||top.has(k)).map(([k,f])=>f))].map(f=>PHB+f);PHP={n:0,t:L.length,e:0};R();
  let c;try{c=await caches.open(PHC)}catch(e){PHP=null;toast('Не удалось открыть хранилище');return R()}let i=0;
  const w=async()=>{while(i<L.length){const u=L[i++];try{if(!(await c.match(u)))await c.add(u)}catch(e){PHP.e++}PHP.n++;if(PHP.n%12==0)schedR()}};
  await Promise.all([w(),w(),w(),w(),w(),w()]);try{await c.add(PHB+'map.json')}catch(e){}if(!PHP.e){PHOK=PHN.v;ls.set('fdt_phd',PHOK)}if(!quiet||PHP.e)toast(PHP.e?`Скачано ${PHP.n-PHP.e} из ${PHP.t} — нажмите ещё раз, чтобы докачать`:'📷 Все фото сохранены на телефоне');PHP=null;R()}
@@ -1277,7 +1277,7 @@ function menuV(){return`<div class="ov"><div><h2>Меню</h2><div class="c">${o
  <div class="c text-sm"><b>Позиции и сыгранность</b><div style="opacity:.8">Основная позиция — 100%, вторичная −4, чужая −30, вратарь в поле / полевой в воротах — 30. Сыгранность ◆ 0–3 на игрока, до 33 на команду, даёт до +7% силы.</div></div>
  ${phV()}${btn(DEV?'🛠 Режим разработчика: ВКЛ — открыть панель':'🛠 Включить режим разработчика',"DEV=true;ls.set('fdt_dev',true);MENU=false;DEVO=true;R()",'g')}${btn('Закрыть',"MENU=false;R()",'v')}${btn('Выйти из комнаты',"MENU=false;leave()",'r')}${credits()}</div></div>`}
 // new version check: the page asks the site for its own latest copy (bypassing caches) and offers a one-tap reload
-const APPV='24';let UPD=false;
+const APPV='25';let UPD=false;
 function checkUpd(){if(!ONSITE||!window.fetch||navigator.onLine===false||UPD)return;fetch(location.pathname+'?fcv='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(x=>{const m=String(x).match(/name="fcv" content="(\d+)"/);if(m&&+m[1]>+APPV){UPD=true;R()}}).catch(()=>{})}
 function doUpd(){const q=new URLSearchParams(location.search);q.set('u',Date.now());location.replace(location.pathname+'?'+q.toString())}
 const updV=()=>UPD?`<div class="c" style="border-color:#10b981;background:#06281c"><b>🆕 Вышла новая версия игры</b><div class="text-xs mt-1" style="opacity:.8">${S&&isHost?'Комната сохранится — после обновления нажмите «Продолжить как хост».':'Обновите страницу, чтобы получить новые функции. Все игроки в комнате должны обновиться.'}</div>${btn('🔄 Обновить сейчас','doUpd()','v')}</div>`:'';

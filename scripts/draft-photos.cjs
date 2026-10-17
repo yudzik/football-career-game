@@ -45,24 +45,26 @@ const G = e => ctx.__(e);
 
 const mapF = path.join(OUT, 'map.json'), failF = path.join(OUT, 'fail.json');
 const old = fs.existsSync(mapF) ? JSON.parse(fs.readFileSync(mapF, 'utf8')) : { m: {} };
+const MREV = 2;   // Transfermarkt portraits v2: large source, 160x206 portrait (was a blurry 120x120 square) -> fetched again once
 const REV = 3;   // lookup method version: failures from an older method are retried at once
 let fail = fs.existsSync(failF) ? JSON.parse(fs.readFileSync(failF, 'utf8')) : {}; if (fail._rev !== REV) fail = { _rev: REV };
 const M = { ...(old.m || {}) };
-const fileOf = k => k.replace(/[^A-Za-z0-9]/g, '_') + '.webp';
-const have = k => M[k] && fs.existsSync(path.join(OUT, M[k]));
+const pend = new Set(old.mpend || ((old.mrev || 1) !== MREV ? Object.keys(M).filter(k => k[0] == 'm') : []));   // old portraits stay until replaced
+const fileOf = k => k.replace(/[^A-Za-z0-9]/g, '_') + (k[0] == 'm' ? '_2' : '') + '.webp';   // new file name per portrait version -> phones do not keep the old picture
+const have = k => M[k] && fs.existsSync(path.join(OUT, M[k])) && !pend.has(k);
 const retry = k => !fail[k] || Date.now() - fail[k] > 14 * 864e5;
 const miss = k => { fail[k] = Date.now(); missed++ };
-const SIZE = { m: [120, 120, 'cover', 62], p: [160, 160, 'contain', 72], c: [160, 160, 'cover', 72], T: [96, 96, 'contain', 80], s: [640, 360, 'cover', 62] };
+const SIZE = { m: [160, 206, 'cover', 74], p: [160, 160, 'contain', 72], c: [160, 160, 'cover', 72], T: [96, 96, 'contain', 80], s: [640, 360, 'cover', 62] };
 let api = 0, made = 0, missed = 0;
 
-async function save(k, url) {
+async function save(k, url, alt) {
   if (!url) { fail[k] = Date.now(); missed++; return }
-  const r = await ufetch(url); if (!r.ok) { fail[k] = Date.now(); missed++; return }
+  let r = await ufetch(url); if (!r.ok && alt) r = await ufetch(alt); if (!r.ok) { fail[k] = Date.now(); missed++; return }
   let buf; try { buf = Buffer.from(await r.arrayBuffer()) } catch (e) { fail[k] = Date.now(); missed++; return } if (buf.length < 200) { fail[k] = Date.now(); missed++; return }
   const [w, h, fit, q] = SIZE[k[0]] || SIZE.p;
   try {
     const out = await sharp(buf).resize(w, h, { fit, position: k[0] == 'm' ? 'north' : 'centre', background: { r: 0, g: 0, b: 0, alpha: 0 }, withoutEnlargement: false }).webp({ quality: q }).toBuffer();
-    fs.writeFileSync(path.join(OUT, fileOf(k)), out); M[k] = fileOf(k); delete fail[k]; made++;
+    fs.writeFileSync(path.join(OUT, fileOf(k)), out); M[k] = fileOf(k); delete fail[k]; pend.delete(k); made++;
   } catch (e) { fail[k] = Date.now(); missed++ }
 }
 
@@ -72,7 +74,7 @@ function writeOut(final) {
   let bytes = 0; for (const f of keep) { const fp = path.join(OUT, f); if (f.endsWith('.webp') && fs.existsSync(fp)) bytes += fs.statSync(fp).size }
   const ks = Object.keys(M).sort(), m = {}; ks.forEach(k => m[k] = M[k]);
   const same = JSON.stringify(m) === JSON.stringify(old.m || {});
-  fs.writeFileSync(mapF, JSON.stringify({ v: same && old.v ? old.v : Date.now(), n: ks.length, bytes, m }));
+  fs.writeFileSync(mapF, JSON.stringify({ v: same && old.v ? old.v : Date.now(), n: ks.length, bytes, mrev: pend.size ? (old.mrev || 1) : MREV, mpend: pend.size ? [...pend] : undefined, m }));
   fs.writeFileSync(failF, JSON.stringify(fail));
   return { n: ks.length, bytes };
 }
@@ -130,7 +132,7 @@ const rep2 = {};
     if (fs.existsSync(IF) && fs.existsSync(DF)) { const I = JSON.parse(fs.readFileSync(IF, 'utf8')), D = JSON.parse(fs.readFileSync(DF, 'utf8'));
       for (const [id, c] of Object.entries(D.cl)) { const k = 'T:' + c[2]; if (have(k) || !retry(k) || late() || !I.c[id]) continue; tick(); await save(k, I.c[id]); await sleep(120) }
       const order = D.p.slice().sort((a, b) => b[6] - a[6]);   // best players first: the ones people see most
-      for (const a of order) { const k = 'm' + a[0], u = I.p[a[0]]; if (have(k) || !retry(k) || !u) continue; if (late()) break; tick(); await save(k, u); await sleep(150) }
+      for (const a of order) { const k = 'm' + a[0], u = I.p[a[0]]; if (have(k) || !retry(k) || !u) continue; if (late()) break; tick(); await save(k, u.replace('/portrait/big/', '/portrait/header/'), u); await sleep(120) }
       rep2.dbPlayers = D.p.filter(a => M['m' + a[0]]).length + '/' + D.p.length; rep2.dbTodo = D.p.filter(a => !M['m' + a[0]] && I.p[a[0]] && retry('m' + a[0])).length } }
   const w = writeOut(true), todo = (rep2.dbTodo || 0) + DB.filter(p => !M['p' + p.id] && retry('p' + p.id)).length + teams.filter(n => !M['T:' + n] && retry('T:' + n)).length;
   const rep = { at: new Date().toISOString(), minutes: +((Date.now() - T0) / 60000).toFixed(1), photos: w.n, mb: +(w.bytes / 1048576).toFixed(2), made, missed, lookups: api, todo,
