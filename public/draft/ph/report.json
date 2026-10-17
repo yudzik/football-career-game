@@ -1,10 +1,10 @@
 {
- "at": "2026-10-16T23:03:19.905Z",
- "minutes": 15.3,
+ "at": "2026-10-17T08:56:55.773Z",
+ "minutes": 38.7,
  "photos": 6081,
- "mb": 16.23,
- "made": 1276,
- "missed": 14,
+ "mb": 27.01,
+ "made": 5435,
+ "missed": 0,
  "lookups": 0,
  "todo": 0,
  "players": "370/380",
@@ -15,7 +15,7 @@
  "dbTodo": 0,
  "http": {
   "img.a.transfermarkt.technology": {
-   "200": 1290
+   "200": 5435
   }
  }
 }
