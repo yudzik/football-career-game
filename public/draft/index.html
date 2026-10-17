@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>FC Draft Online</title><meta name="fcv" content="25">
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>FC Draft Online</title><meta name="fcv" content="26">
 <script src="https://cdn.tailwindcss.com/3.4.17"></script><script src="https://telegram.org/js/telegram-web-app.js" async onload="try{tgInit()}catch(e){}"></script>
 <style>/* offline fallback: the utility classes this page uses (same values as Tailwind), so the layout holds without the CDN */
 *,::before,::after{border-width:0;border-style:solid;border-color:#e5e7eb}html{line-height:1.5}h1,h2,h3,p{margin:0}h1,h2,h3{font-size:inherit;font-weight:inherit}button,input,select{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0}button{background:transparent;padding:0;cursor:pointer}a{color:inherit;text-decoration:inherit}img,svg{display:block;max-width:100%}table{border-collapse:collapse}
@@ -95,7 +95,7 @@ h2{font-size:1.2rem;font-weight:900;color:#d4a72c;margin-top:6px}
 .ctl{position:relative;display:block;width:100%;text-align:left;background:linear-gradient(180deg,#221a3acc,#0d0b17f0);border:1px solid #ffffff22;border-radius:16px;padding:8px 9px 9px;margin:0;color:#fff;box-shadow:0 8px 20px #0007;transition:transform .15s}
 .ctl:active{transform:scale(.97)}.ctl[disabled]{opacity:.45}
 .ctc{display:flex;gap:4px;align-items:flex-start;justify-content:center;margin-bottom:2px}
-.ctc .ut{width:116px;height:162px}.ctc .ut .o{font-size:27px}.ctc .ut .ph{width:84px;height:94px}.ctc .ut .ph.sq{width:58px;height:74px}.ctc .ut .nm{top:108px}.ctc .ut .st{top:127px}
+.ctc .ut{width:116px;height:162px}.ctc .ut .o{font-size:27px}.ctc .ut .ph{width:84px;height:94px}.ctc .ut .ph.sq{right:8px;top:12px;width:58px;height:76px}.ctc .ut .nm{top:108px}.ctc .ut .st{top:127px}
 .ctp{display:flex;flex-direction:column;gap:3px;margin-top:8px}.ctp i{font-style:normal;font-size:10px;font-weight:900;background:#f5d77a;color:#1a1400;border-radius:5px;padding:2px 4px;text-align:center}
 .ctr{display:flex;align-items:center;gap:7px;font-weight:800;font-size:12.5px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ctr img{width:20px;height:20px;object-fit:contain;flex:none}.ctr .fl{font-size:17px;flex:none}
 .lgb{display:inline-flex;align-items:center;justify-content:center;flex:none;width:20px;height:20px;border-radius:6px;font-size:7.5px;font-weight:900;color:#fff;letter-spacing:-.3px}
@@ -314,7 +314,7 @@ function phV(){if(!PHN)return'';const mb=(PHN.bytes/1048576).toFixed(1),ok=PHOK=
  if(PHP)return`<div class="c text-sm" style="border-color:#3b82f6">📥 Скачиваем фото… <b>${PHP.n}/${PHP.t}</b><div class="pg" style="height:8px;margin-top:6px"><b style="width:${Math.round(PHP.n/PHP.t*100)}%;background:#3b82f6"></b></div></div>`;
  return`<div class="c text-sm" style="border-color:${ok?'#10b981':'#3b82f6'}"><b>📷 Фото игроков, тренеров и стадионов</b><div class="text-xs mt-1" style="opacity:.75">${ok?`✅ Все ${PHN.n} фото сохранены на телефоне — видны и без интернета.`:`${PHN.n} фото · ~${mb} МБ. Сохраняются сами при запуске с интернетом — потом видны даже без сети (офлайн-лига, точка доступа, самолёт).`}</div>${ok?'':btn('📥 Скачать фото для офлайна (~'+mb+' МБ)','dlPhotos()','v')}</div>`}
 function img(k){const f=phm(k);if(f)return f;if(k[0]=='s'&&/^s\d+$/.test(k))return stadImg(+k.slice(1));const d=SIMG[k];if(d!==undefined)return offline()&&d&&!String(d).startsWith('data:')?'':d;if(canLoad()&&!IFAIL.has(k)&&!IQ.includes(k)){IQ.push(k);pumpImg()}return ''}
-const phSq=u=>/(^|\/)m\d+\.webp/.test(u||'')?' sq':'';   // square Transfermarkt portraits get their own frame
+const phSq=u=>/(^|\/)m\d+(_\d+)?\.webp/.test(u||'')?' sq':'';   // square Transfermarkt portraits get their own frame
 const phP=id=>!isFA(id)&&DB[id]?(phm(DB[id].tm?'m'+DB[id].tm:'p'+id)||DB[id].ph||(DB[id].tm?'':img('p'+id))):'',bdgC=c=>c&&c!='FA'&&CLUBS[c]&&CLUBS[c][2]?img('T:'+CLUBS[c][2]):'',phC=i=>phm('c'+i)||(CO[i]&&CO[i].ph)||(CO[i]&&!CO[i].wk?'':img('c'+i));
 async function findPlayer(p){const q=norm(p.e).replace(/ /g,'_'),r=await fetch('https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p='+encodeURIComponent(q));if(!r.ok)return null;const j=await r.json(),L=(j.player||[]).filter(x=>x.strSport=='Soccer'),tk=CLUBS[p.c][3];
  const hit=(tk&&L.find(x=>norm(x.strTeam).includes(tk)))||L.find(x=>norm(x.strPlayer)==norm(p.e));return hit?(hit.strCutout||hit.strThumb||''):''}
@@ -1277,7 +1277,7 @@ function menuV(){return`<div class="ov"><div><h2>Меню</h2><div class="c">${o
  <div class="c text-sm"><b>Позиции и сыгранность</b><div style="opacity:.8">Основная позиция — 100%, вторичная −4, чужая −30, вратарь в поле / полевой в воротах — 30. Сыгранность ◆ 0–3 на игрока, до 33 на команду, даёт до +7% силы.</div></div>
  ${phV()}${btn(DEV?'🛠 Режим разработчика: ВКЛ — открыть панель':'🛠 Включить режим разработчика',"DEV=true;ls.set('fdt_dev',true);MENU=false;DEVO=true;R()",'g')}${btn('Закрыть',"MENU=false;R()",'v')}${btn('Выйти из комнаты',"MENU=false;leave()",'r')}${credits()}</div></div>`}
 // new version check: the page asks the site for its own latest copy (bypassing caches) and offers a one-tap reload
-const APPV='25';let UPD=false;
+const APPV='26';let UPD=false;
 function checkUpd(){if(!ONSITE||!window.fetch||navigator.onLine===false||UPD)return;fetch(location.pathname+'?fcv='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(x=>{const m=String(x).match(/name="fcv" content="(\d+)"/);if(m&&+m[1]>+APPV){UPD=true;R()}}).catch(()=>{})}
 function doUpd(){const q=new URLSearchParams(location.search);q.set('u',Date.now());location.replace(location.pathname+'?'+q.toString())}
 const updV=()=>UPD?`<div class="c" style="border-color:#10b981;background:#06281c"><b>🆕 Вышла новая версия игры</b><div class="text-xs mt-1" style="opacity:.8">${S&&isHost?'Комната сохранится — после обновления нажмите «Продолжить как хост».':'Обновите страницу, чтобы получить новые функции. Все игроки в комнате должны обновиться.'}</div>${btn('🔄 Обновить сейчас','doUpd()','v')}</div>`:'';
