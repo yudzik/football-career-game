@@ -1,9 +1,9 @@
 {
- "at": "2026-10-17T08:56:55.773Z",
- "minutes": 38.7,
+ "at": "2026-10-19T08:53:53.985Z",
+ "minutes": 0,
  "photos": 6081,
  "mb": 27.01,
- "made": 5435,
+ "made": 0,
  "missed": 0,
  "lookups": 0,
  "todo": 0,
@@ -13,9 +13,5 @@
  "crests": "50/50",
  "dbPlayers": "5435/5567",
  "dbTodo": 0,
- "http": {
-  "img.a.transfermarkt.technology": {
-   "200": 5435
-  }
- }
+ "http": {}
 }
