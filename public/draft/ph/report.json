@@ -1,11 +1,11 @@
 {
- "at": "2026-11-02T11:09:15.099Z",
- "minutes": 0.6,
+ "at": "2026-11-09T11:31:32.269Z",
+ "minutes": 0,
  "photos": 6116,
  "mb": 27.25,
- "made": 35,
- "missed": 8,
- "lookups": 14,
+ "made": 0,
+ "missed": 0,
+ "lookups": 0,
  "todo": 0,
  "players": "375/380",
  "coaches": "25/28",
@@ -13,21 +13,5 @@
  "crests": "50/50",
  "dbPlayers": "5464/5567",
  "dbTodo": 0,
- "http": {
-  "en.wikipedia.org": {
-   "200": 10
-  },
-  "thumb.wikimedia.org": {
-   "200": 6
-  },
-  "commons.wikimedia.org": {
-   "200": 20
-  },
-  "www.thesportsdb.com": {
-   "403": 5
-  },
-  "img.a.transfermarkt.technology": {
-   "200": 29
-  }
- }
+ "http": {}
 }
